@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    tools:ignore="UnusedNavigation"
+    app:startDestination="@id/todo_fragment">
+
+    <!--添加动作-->
+    <action
+        android:id="@+id/action_todo_fragment_to_list_fragment"
+        app:destination="@id/list_fragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
+    <!--to_do_fragment-->
+    <fragment
+        android:id="@+id/todo_fragment"
+        android:name="net.onest.time.navigation.fragment.TodoFragment"
+        android:label="todo_fragment"
+        tools:layout="@layout/to_do_fragment">
+
+    </fragment>
+    <!--list_fragment-->
+    <fragment
+        android:id="@+id/list_fragment"
+        android:name="net.onest.time.navigation.fragment.ListFragment"
+        android:label="list_fragment"
+        tools:layout="@layout/list_fragment" />
+    <!--record_fragment-->
+    <fragment
+        android:id="@+id/record_fragment"
+        android:name="net.onest.time.navigation.fragment.RecordFragment"
+        android:label="record_fragment"
+        tools:layout="@layout/record_fragment" />
+    <!--study_room_fragment-->
+    <fragment
+        android:id="@+id/study_room_fragment"
+        android:name="net.onest.time.navigation.fragment.StudyRoomFragment"
+        android:label="study_room_fragment"
+        tools:layout="@layout/study_room_fragment" />
+    <!--person_fragment-->
+    <fragment
+        android:id="@+id/person_fragment"
+        android:name="net.onest.time.navigation.fragment.PersonFragment"
+        android:label="person_fragment"
+        tools:layout="@layout/person_fragment" />
+</navigation>

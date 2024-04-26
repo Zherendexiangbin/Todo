@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/todo_fragment"
+        android:icon="@drawable/home1"
+        android:title="代办"
+        />
+    <item
+        android:id="@+id/list_fragment"
+        android:icon="@drawable/activity1"
+        android:title="清单" />
+    <item
+        android:id="@+id/record_fragment"
+        android:icon="@drawable/statistics1"
+        android:title="记录" />
+    <item
+        android:id="@+id/study_room_fragment"
+        android:icon="@drawable/read1"
+        android:title="自习室" />
+    <item
+        android:id="@+id/person_fragment"
+        android:icon="@drawable/person1"
+        android:title="我的" />
+</menu>
