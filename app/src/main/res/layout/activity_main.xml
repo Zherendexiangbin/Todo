@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:orientation="vertical"
     tools:context=".MainActivity">
     <Button
         android:id="@+id/btn"
@@ -12,4 +13,36 @@
         android:layout_height="wrap_content"
         android:transitionName="fab"
         android:text="Hello World!" />
+    <RadioGroup
+        android:id="@+id/set_time_one_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+        <RadioButton
+            android:id="@+id/set_time_one_group_one_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="25 分钟"
+            android:textSize="20dp"
+            android:checked="true"
+            style="@style/radiobtn_style"/>
+        <RadioButton
+            android:id="@+id/set_time_one_group_two_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="35 分钟"
+            android:layout_marginLeft="15dp"
+            android:textSize="20dp"
+            style="@style/radiobtn_style"/>
+        <RadioButton
+            android:id="@+id/set_time_one_group_three_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自定义"
+            android:layout_marginLeft="15dp"
+            android:textSize="20dp"
+            style="@style/radiobtn_style"/>
+    </RadioGroup>
 </LinearLayout>
