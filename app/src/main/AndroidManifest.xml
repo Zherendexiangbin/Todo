@@ -26,6 +26,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".navigation.activity.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".navigation.activity.ResetPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".navigation.activity.PersonEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".navigation.activity.StudyRoomActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

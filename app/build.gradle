@@ -30,6 +30,10 @@ android {
 }
 
 dependencies {
+    //选择器
+    implementation 'org.lionsoul:ip2region:1.7.2'
+    implementation 'cn.qqtheme.framework:AndroidPicker:latest.integration'
+
     implementation 'com.github.jaeryo2357:circleTimer:1.1.7'
     implementation 'com.github.li-xiaojun:XPopup:2.9.19'
 

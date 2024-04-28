@@ -3,18 +3,11 @@ package net.onest.time.navigation.fragment;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
+import androidx.appcompat.app.AppCompatActivity;
 
 import net.onest.time.R;
 import net.onest.time.navigation.activity.PersonEditActivity;
@@ -24,33 +17,38 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-public class PersonFragment extends Fragment {
-    private View view;
+public class PersonActivity extends AppCompatActivity {
     private ImageView userAvatar;
     private LinearLayout userEdit;
     private TextView userName, userId, userCreateAt, userTotalDay;
     private TextView userTodayComplete, userTotalComplete;
-    @Nullable
+    
+    @SuppressLint("MissingInflatedId")
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.person_fragment, container, false);
-
-        findViewById(view);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.person_fragment);
+        
+        findViewById();
         initData();
         setListeners();
-        return view;
     }
 
     private void setListeners() {
         //点击进入用户信息编辑页面
         userEdit.setOnClickListener(view -> {
-            Intent intent = new Intent(getContext(), PersonEditActivity.class);
+            Intent intent = new Intent(this, PersonEditActivity.class);
             startActivity(intent);
         });
     }
 
     @SuppressLint("SetTextI18n")
     private void initData() {
+        //暂定
+        userAvatar.setOnClickListener(view -> {
+            Intent intent = new Intent(this, StudyRoomActivity.class);
+            startActivity(intent);
+        });
 
         //用户昵称
         userName.setText("时光1");
@@ -70,14 +68,14 @@ public class PersonFragment extends Fragment {
         userTotalComplete.setText("累计完成日程：" + 1144);
     }
 
-    private void findViewById(View view) {
-        userAvatar = view.findViewById(R.id.user_avatar);
-        userEdit = view.findViewById(R.id.user_edit);
-        userName = view.findViewById(R.id.user_name);
-        userId = view.findViewById(R.id.user_id);
-        userCreateAt = view.findViewById(R.id.user_create_time);
-        userTotalDay = view.findViewById(R.id.user_total_day);
-        userTodayComplete = view.findViewById(R.id.user_today_complete);
-        userTotalComplete = view.findViewById(R.id.user_total_complete);
+    private void findViewById() {
+        userAvatar = findViewById(R.id.user_avatar);
+        userEdit = findViewById(R.id.user_edit);
+        userName = findViewById(R.id.user_name);
+        userId = findViewById(R.id.user_id);
+        userCreateAt = findViewById(R.id.user_create_time);
+        userTotalDay = findViewById(R.id.user_total_day);
+        userTodayComplete = findViewById(R.id.user_today_complete);
+        userTotalComplete = findViewById(R.id.user_total_complete);
     }
 }
