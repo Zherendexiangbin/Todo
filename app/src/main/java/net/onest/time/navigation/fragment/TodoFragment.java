@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -31,8 +32,10 @@ import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 import com.lxj.xpopup.interfaces.OnSelectListener;
 
+import net.onest.time.MainActivity;
 import net.onest.time.TimerActivity;
 import net.onest.time.R;
 import net.onest.time.adapter.todo.TodoItemAdapter;
@@ -42,7 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TodoFragment extends Fragment {
-    private Button btn;
     private CalendarLayout calendarLayout;
     private CalendarView calendarView;
     private RecyclerView recyclerView;//待办事项
@@ -55,7 +57,7 @@ public class TodoFragment extends Fragment {
     private RadioGroup todoWant,todoSetTime,setTimeGroup;
     private RadioButton wantOne,wantTwo,wantThree;
     private RadioButton setTimeOne,setTimeTwo,setTimeThree;
-    private RadioButton setTimeGroupOne,getSetTimeGroupTwo,getSetTimeGroupThree;
+    private RadioButton setTimeGroupOne,setTimeGroupTwo,setTimeGroupThree;
     private TextView goalDate,setTimeOneTxt,setTimeTwoTxt,setTimeThreeTxt;
     private Spinner goalUnits,habitDateUnits,habitTimeUnits;
     private LinearLayout goalLinear,habitLinear;
@@ -187,6 +189,21 @@ public class TodoFragment extends Fragment {
                     }
                 });
 
+                setTimeGroupThree.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getContext(), setTimeGroupThree.getText().toString()+"", Toast.LENGTH_SHORT).show();
+                        new XPopup.Builder(getContext()).asInputConfirm("自定义番茄钟时间", "输入倒计时分钟数:",
+                                new OnInputConfirmListener() {
+                                    @Override
+                                    public void onConfirm(String text) {
+                                        setTimeGroupThree.setText(text+" 分钟");
+                                    }
+                                }).show();
+
+                    }
+                });
+
                 addYes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -202,7 +219,20 @@ public class TodoFragment extends Fragment {
                                         item.setTime(setTimeGroupOne.getText().toString());
                                         itemList.add(item);
                                         todoItemAdapter.notifyDataSetChanged();
+                                    } else if (setTimeGroupTwo.isChecked()) {
+                                        Item item = new Item();
+                                        item.setItemName(itemName.getText().toString());
+                                        item.setTime(setTimeGroupTwo.getText().toString());
+                                        itemList.add(item);
+                                        todoItemAdapter.notifyDataSetChanged();
+                                    }else{
+                                        Item item = new Item();
+                                        item.setItemName(itemName.getText().toString());
+                                        item.setTime(setTimeGroupThree.getText().toString());
+                                        itemList.add(item);
+                                        todoItemAdapter.notifyDataSetChanged();
                                     }
+
                                 }
                             }
                             dialog.dismiss();
@@ -221,16 +251,6 @@ public class TodoFragment extends Fragment {
             }
         });
 
-        //跳转:
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                calendarView.scrollToCurrent();//回到“今天日期”
-                Intent intent = new Intent();
-                intent.setClass(getContext(), TimerActivity.class);
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(),btn,"fab").toBundle());
-            }
-        });
 
         //日历选中事件
         calendarView.setOnCalendarSelectListener(new CalendarView.OnCalendarSelectListener() {
@@ -269,8 +289,8 @@ public class TodoFragment extends Fragment {
         setTimeThree = dialogView.findViewById(R.id.set_time_three);
 
         setTimeGroupOne = dialogView.findViewById(R.id.set_time_one_group_one);
-        getSetTimeGroupTwo = dialogView.findViewById(R.id.set_time_one_group_two);
-        getSetTimeGroupThree = dialogView.findViewById(R.id.set_time_one_group_three);
+        setTimeGroupTwo = dialogView.findViewById(R.id.set_time_one_group_two);
+        setTimeGroupThree = dialogView.findViewById(R.id.set_time_one_group_three);
 
         goalDate = dialogView.findViewById(R.id.goal_date);
         setTimeOneTxt = dialogView.findViewById(R.id.set_time_one_txt);
@@ -286,7 +306,6 @@ public class TodoFragment extends Fragment {
 
 
     private void findView(View view) {
-        btn = view.findViewById(R.id.btn);
         calendarLayout = view.findViewById(R.id.cancel_button);
         calendarView = view.findViewById(R.id.calendarView);
         recyclerView = view.findViewById(R.id.recyclerView);
