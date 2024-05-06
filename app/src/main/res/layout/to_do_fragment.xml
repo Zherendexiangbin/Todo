@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:calendar_show_mode="both_month_week_view"
-        app:default_status="expand"
+        app:default_status="shrink"
         app:calendar_content_view_id="@+id/recyclerView">
 
         <com.haibin.calendarview.CalendarView
@@ -63,8 +63,8 @@
             android:layout_height="wrap_content"
             android:background="#fff"
 
-            app:week_view="net.onest.time.calendarview.colorful.ColorfulWeekView"
-            app:month_view="net.onest.time.calendarview.colorful.ColorfulMonthView"
+            app:week_view="net.onest.time.calendarview.meizu.MeizuWeekView"
+            app:month_view="net.onest.time.calendarview.meizu.MeiZuMonthView"
             app:calendar_height="50dp"
             app:current_month_text_color="#333333"
             app:current_month_lunar_text_color="#CFCFCF"
@@ -86,6 +86,7 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        
 
     </com.haibin.calendarview.CalendarLayout>
 

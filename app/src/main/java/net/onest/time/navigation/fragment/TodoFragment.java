@@ -28,10 +28,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 import com.lxj.xpopup.interfaces.OnSelectListener;
 
@@ -42,9 +44,14 @@ import net.onest.time.adapter.todo.TodoItemAdapter;
 import net.onest.time.entity.Item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class TodoFragment extends Fragment {
+public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClickListener,
+        CalendarView.OnCalendarSelectListener,
+        CalendarView.OnYearChangeListener,
+        View.OnClickListener{
     private CalendarLayout calendarLayout;
     private CalendarView calendarView;
     private RecyclerView recyclerView;//待办事项
@@ -53,7 +60,8 @@ public class TodoFragment extends Fragment {
 
     //以下是弹框布局控件：
     private Button addYes,addNo,itemNameAbout;
-    private EditText itemName,goalWorkload,habitWorkload;
+    private EditText goalWorkload,habitWorkload;
+    private TextInputEditText itemName;
     private RadioGroup todoWant,todoSetTime,setTimeGroup;
     private RadioButton wantOne,wantTwo,wantThree;
     private RadioButton setTimeOne,setTimeTwo,setTimeThree;
@@ -64,14 +72,39 @@ public class TodoFragment extends Fragment {
     private TodoItemAdapter todoItemAdapter;
 
 
+    //onCreateView()方法是用于创建Fragment的视图，并返回该视图对象
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.to_do_fragment, container, false);
+        return view;
+    }
+
+    //onViewCreated()方法是在视图创建完毕后被调用，允许你对视图进行初始化和操作。
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         findView(view);
 
         //按钮的监听事件
         btnClickIncidents();
+
+//        calendarView.setSchemeDate();
+
+//        calendarView.setSchemeColor(Color.BLACK,Color.RED,Color.RED);
+
+//        calendarView.setOnCalendarSelectListener(new CalendarView.OnCalendarSelectListener() {
+//            @Override
+//            public void onCalendarOutOfRange(Calendar calendar) {
+//
+//            }
+//
+//            @Override
+//            public void onCalendarSelect(Calendar calendar, boolean isClick) {
+//
+//            }
+//        });
 
         //创建数据源：
         for(int i=1; i<=3;i++){
@@ -81,14 +114,60 @@ public class TodoFragment extends Fragment {
             itemList.add(item);
         }
 
+        //《标记》日期:
+        int year = calendarView.getCurYear();
+        int month = calendarView.getCurMonth();
+
+
+        Map<String, Calendar> map = new HashMap<>();
+        map.put(getSchemeCalendar(year, month+1, 3, 0xFF40db25, "假").toString(),
+                getSchemeCalendar(year, month+1, 3, 0xFF40db25, "假"));
+        map.put(getSchemeCalendar(year, month, 6, 0xFFe69138, "事").toString(),
+                getSchemeCalendar(year, month, 6, 0xFFe69138, "事"));
+        map.put(getSchemeCalendar(year, month, 9, 0xFFdf1356, "议").toString(),
+                getSchemeCalendar(year, month, 9, 0xFFdf1356, "议"));
+        map.put(getSchemeCalendar(year, month, 13, 0xFFedc56d, "记").toString(),
+                getSchemeCalendar(year, month, 13, 0xFFedc56d, "记"));
+        map.put(getSchemeCalendar(year, month, 14, 0xFFedc56d, "记").toString(),
+                getSchemeCalendar(year, month, 14, 0xFFedc56d, "记"));
+        map.put(getSchemeCalendar(year, month, 15, 0xFFaacc44, "假").toString(),
+                getSchemeCalendar(year, month, 15, 0xFFaacc44, "假"));
+        map.put(getSchemeCalendar(year, month, 18, 0xFFbc13f0, "记").toString(),
+                getSchemeCalendar(year, month, 18, 0xFFbc13f0, "记"));
+        map.put(getSchemeCalendar(year, month, 25, 0xFF13acf0, "假").toString(),
+                getSchemeCalendar(year, month, 25, 0xFF13acf0, "假"));
+        map.put(getSchemeCalendar(year, month, 27, 0xFF13acf0, "多").toString(),
+                getSchemeCalendar(year, month, 27, 0xFF13acf0, "多"));
+        //此方法在巨大的数据量上不影响遍历性能，推荐使用
+        calendarView.setSchemeDate(map);
+
+
         //绑定适配器:
         todoItemAdapter = new TodoItemAdapter(getContext(),itemList);
         recyclerView.setAdapter(todoItemAdapter);
+        todoItemAdapter.setOnItemClickListener(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-
-        return view;
     }
+
+    private Calendar getSchemeCalendar(int year, int month, int day, int color, String text) {
+//        Calendar calendar = new Calendar();
+//        calendar.setYear(year);
+//        calendar.setMonth(month);
+//        calendar.setDay(day);
+//        calendar.setSchemeColor(color);//如果单独标记颜色、则会使用这个颜色
+//        calendar.setScheme(text);
+//        return calendar;
+        Calendar calendar = new Calendar();
+        calendar.setYear(year);
+        calendar.setMonth(month);
+        calendar.setDay(day);
+        calendar.setSchemeColor(color);//如果单独标记颜色、则会使用这个颜色
+        calendar.setScheme(text);
+
+        return calendar;
+    }
+
     private void btnClickIncidents() {
         //添加待办：
         todoBtn.setOnClickListener(new View.OnClickListener() {
@@ -113,18 +192,28 @@ public class TodoFragment extends Fragment {
                 goalLinear.setVisibility(View.GONE);
                 habitLinear.setVisibility(View.GONE);
 
-                final XPopup.Builder builderPop = new XPopup.Builder(getContext())
-                        .watchView(itemNameAbout);
+//                final XPopup.Builder builderPop = new XPopup.Builder(getContext()).watchView(itemNameAbout);
                 itemNameAbout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        builderPop.asAttachList(new String[]{"什么是番茄钟", "番茄钟是全身心工作25分钟，休息5分钟的工作方法。","输入事项名称，点击√按钮即可添加一个标准的番茄钟待办。","点击代办卡片上的开始按钮就可以开始一个番茄钟啦"}, null,
-                                        new OnSelectListener() {
+//                        builderPop.asAttachList(new String[]{"什么是番茄钟", "番茄钟是全身心工作25分钟，休息5分钟的工作方法。","输入事项名称，点击√按钮即可添加一个标准的番茄钟待办。","点击代办卡片上的开始按钮就可以开始一个番茄钟啦"}, null,
+//                                        new OnSelectListener() {
+//                                            @Override
+//                                            public void onSelect(int position, String text) {
+//                                                Toast.makeText(getContext(),"click"+text,Toast.LENGTH_SHORT);
+//                                            }
+//                                        })
+//                                .show();
+                        new XPopup.Builder(getContext())
+                                .asConfirm("什么是番茄钟", "1.番茄钟是全身心工作25分钟，休息5分钟的工作方法。\n" +
+                                                "2.输入事项名称，点击√按钮即可添加一个标准的番茄钟待办。\n3.点击代办卡片上的开始按钮就可以开始一个番茄钟啦",
+                                        "关闭", "番茄钟牛逼",
+                                        new OnConfirmListener() {
                                             @Override
-                                            public void onSelect(int position, String text) {
-                                                Toast.makeText(getContext(),"click"+text,Toast.LENGTH_SHORT);
+                                            public void onConfirm() {
+                                                Toast.makeText(getContext(),"click",Toast.LENGTH_SHORT);
                                             }
-                                        })
+                                        }, null, false,R.layout.my_confim_popup)//绑定已有布局
                                 .show();
                     }
                 });
@@ -212,6 +301,8 @@ public class TodoFragment extends Fragment {
                         }else{
                             //普通的番茄时钟:
                             if(wantOne.isChecked()){
+                                //倒计时
+//                                int countDownTimer=0;
                                 if(setTimeOne.isChecked()){
                                     if(setTimeGroupOne.isChecked()){
                                         Item item = new Item();
@@ -232,9 +323,30 @@ public class TodoFragment extends Fragment {
                                         itemList.add(item);
                                         todoItemAdapter.notifyDataSetChanged();
                                     }
+                                }
+                                //正向计时：
+                                if(setTimeTwo.isChecked()){
+//                                    int forwardTimer = 1;
+                                    Item item = new Item();
+                                    item.setItemName(itemName.getText().toString());
+                                    item.setTime("正向计时");
+                                    itemList.add(item);
+                                    todoItemAdapter.notifyDataSetChanged();
 
                                 }
+                                //不计时：
+                                if(setTimeThree.isChecked()){
+//                                    int noTimer = 2;
+                                    Item item = new Item();
+                                    item.setItemName(itemName.getText().toString());
+                                    item.setTime("普通待办");
+                                    itemList.add(item);
+                                    todoItemAdapter.notifyDataSetChanged();
+                                }
                             }
+                            //定目标
+
+                            //养习惯
                             dialog.dismiss();
                         }
 
@@ -250,6 +362,7 @@ public class TodoFragment extends Fragment {
 
             }
         });
+
 
 
         //日历选中事件
@@ -310,7 +423,6 @@ public class TodoFragment extends Fragment {
         calendarView = view.findViewById(R.id.calendarView);
         recyclerView = view.findViewById(R.id.recyclerView);
         todoBtn = view.findViewById(R.id.todo_btn);
-
     }
 
     /**
@@ -349,8 +461,27 @@ public class TodoFragment extends Fragment {
 
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onItemClick(int position) {
+        //点击事项进行编辑:
+        Toast.makeText(getContext(), "你点击了"+itemList.get(position).getItemName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public void onCalendarOutOfRange(Calendar calendar) {
+
+    }
+
+    @Override
+    public void onCalendarSelect(Calendar calendar, boolean isClick) {
+    }
+
+    @Override
+    public void onYearChange(int year) {
 
     }
 }

@@ -1,9 +1,14 @@
 package net.onest.time.adapter.todo;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StrikethroughSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,6 +30,8 @@ import java.util.List;
 public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyViewHolder>{
     private Context context;
     private List<Item> itemList = new ArrayList<>();
+    private OnItemClickListener mItemClickListener;
+    private Intent intent;
 
     public TodoItemAdapter(Context context, List<Item> itemList) {
         this.context = context;
@@ -40,6 +47,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
         return myViewHolder;
     }
 
+    @SuppressLint("RecyclerView")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Item news = itemList.get(position);
@@ -48,13 +56,32 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                String[] parts = holder.time.getText().toString().split(" ");
-                String num = parts[0];
+                if("正向计时".equals(itemList.get(position).getTime())){
+                    //正向计时：
+                    intent = new Intent();
+                    intent.setClass(context, TimerActivity.class);
+                    intent.putExtra("method", "forWard");
+                    context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,holder.btn,"fab").toBundle());
+                } else if ("普通待办".equals(itemList.get(position).getTime())) {
+                    //不计时：
+//                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    SpannableString spannableString = new SpannableString(itemList.get(position).getItemName());
+                    spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    itemList.get(position).setItemName(spannableString.toString());
+//                    TextView textView = findViewById(R.id.textView);
+//                    textView.setText(spannableString);
+                }else{
+                    //倒计时：
+                    intent = new Intent();
+                    String[] parts = holder.time.getText().toString().split(" ");
+                    String num = parts[0];
 //                int num = Integer.parseInt(parts[0]);
-                intent.putExtra("time", num);
-                intent.setClass(context, TimerActivity.class);
-                context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,holder.btn,"fab").toBundle());
+                    intent.putExtra("time", num);
+                    intent.putExtra("method", "countDown");
+                    intent.setClass(context, TimerActivity.class);
+                    context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,holder.btn,"fab").toBundle());
+                }
             }
         });
     }
@@ -75,5 +102,15 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
             time = itemView.findViewById(R.id.txt_time);
             btn = itemView.findViewById(R.id.ry_btn);
         }
+    }
+
+    // 定义一个接口，用于传递点击事件
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    // 设置点击监听器
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mItemClickListener = listener;
     }
 }

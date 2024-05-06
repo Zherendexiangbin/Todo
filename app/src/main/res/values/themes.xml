@@ -31,5 +31,23 @@
         <item name="android:padding">10dp</item>
     </style>
 
+    <style name="record_fragment_left_radio_btn_style">
+        <item name="android:textColor">@drawable/radiobtn_textcolor</item>
+        <item name="android:background">@drawable/record_fg_left_radio_btn_style</item>
+        <item name="android:button">@null</item>
+        <item name="android:padding">5dp</item>
+    </style>
+    <style name="record_fragment_center_radio_btn_style">
+        <item name="android:textColor">@drawable/radiobtn_textcolor</item>
+        <item name="android:background">@drawable/record_fg_center_radio_btn_style</item>
+        <item name="android:button">@null</item>
+        <item name="android:padding">5dp</item>
+    </style>
+    <style name="record_fragment_right_radio_btn_style">
+        <item name="android:textColor">@drawable/radiobtn_textcolor</item>
+        <item name="android:background">@drawable/record_fg_right_radio_btn_style</item>
+        <item name="android:button">@null</item>
+        <item name="android:padding">5dp</item>
+    </style>
 
 </resources>
