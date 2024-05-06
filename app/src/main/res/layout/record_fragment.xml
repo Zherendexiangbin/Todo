@@ -31,94 +31,106 @@
                 android:background="@drawable/menu1"/>
         </LinearLayout>
     </RelativeLayout>
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/gradual_color_change_background">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
                 android:id="@+id/record_fragment_lin1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_margin="6dp"
                 android:background="@drawable/record_fragment_shape_10dp_all_corners"
-                android:padding="10dp"
-                android:layout_margin="6dp">
+                android:orientation="vertical"
+                android:padding="10dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="累计专注"
                     android:textColor="#ff8c00"
                     android:textSize="15dp"
-                    android:textStyle="bold"
-                    android:text="累计专注"/>
+                    android:textStyle="bold" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp">
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#ffa07a"
-                            android:text="次数"/>
+                            android:text="次数"
+                            android:textColor="#ffa07a" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:textSize="15dp"
-                            android:textStyle="bold"
+                            android:text="时长"
                             android:textColor="#ff7f50"
-                            android:text="时长"/>
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#ffa07a"
-                            android:text="时长"/>
+                            android:text="时长"
+                            android:textColor="#ffa07a" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:textSize="15dp"
-                            android:textStyle="bold"
+                            android:text="时长"
                             android:textColor="#ff7f50"
-                            android:text="时长"/>
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#ffa07a"
-                            android:text="日均时长"/>
+                            android:text="日均时长"
+                            android:textColor="#ffa07a" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:textSize="15dp"
-                            android:textStyle="bold"
+                            android:text="时长"
                             android:textColor="#ff7f50"
-                            android:text="时长"/>
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -128,246 +140,271 @@
                 android:id="@+id/record_fragment_lin2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_margin="6dp"
                 android:background="@drawable/record_fragment_shape_10dp_all_corners"
-                android:padding="10dp"
-                android:layout_margin="6dp">
+                android:orientation="vertical"
+                android:padding="10dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="当日专注"
                         android:textColor="#ff8c00"
                         android:textSize="15dp"
-                        android:textStyle="bold"
-                        android:text="当日专注"/>
+                        android:textStyle="bold" />
+
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:text="2024-04-29"
                         android:textColor="#ff8c00"
                         android:textSize="15dp"
-                        android:textStyle="bold"
-                        android:text="2024-04-29"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp">
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#ffa07a"
-                            android:text="次数"/>
+                            android:text="次数"
+                            android:textColor="#ffa07a" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:textSize="15dp"
-                            android:textStyle="bold"
+                            android:text="时长"
                             android:textColor="#ff7f50"
-                            android:text="时长"/>
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#ffa07a"
-                            android:text="时长"/>
+                            android:text="时长"
+                            android:textColor="#ffa07a" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:textSize="15dp"
-                            android:textStyle="bold"
+                            android:text="时长"
                             android:textColor="#ff7f50"
-                            android:text="时长"/>
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
-                
+
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:padding="10dp"
                 android:layout_margin="6dp"
+                android:background="@drawable/record_fragment_shape_10dp_all_corners"
                 android:orientation="vertical"
-                android:background="@drawable/record_fragment_shape_10dp_all_corners">
+                android:padding="10dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#ff8c00"
-                        android:textSize="15dp"
-                        android:textStyle="bold"
-                        android:text="专注时长分布"/>
 
                     <TextView
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="专注时长分布"
                         android:textColor="#ff8c00"
                         android:textSize="15dp"
-                        android:textStyle="bold"
-                        android:text="2024-04-29"/>
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="2024-04-29"
+                        android:textColor="#ff8c00"
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="分享"
                             android:textColor="#ff8c00"
                             android:textSize="15dp"
-                            android:textStyle="bold"
-                            android:text="分享"/>
+                            android:textStyle="bold" />
+
                         <Button
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
                             android:layout_marginLeft="25dp"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:background="@drawable/arrow_left"/>
+                            android:background="@drawable/arrow_left" />
+
                         <Button
-                            android:layout_marginLeft="10dp"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
-                            android:background="@drawable/arrow"/>
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/arrow" />
                     </LinearLayout>
                 </LinearLayout>
+
                 <RadioGroup
                     android:id="@+id/record_fragment_time_data"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
                     android:layout_marginLeft="60dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginRight="60dp"
-                    android:background="@drawable/edge">
+                    android:background="@drawable/edge"
+                    android:orientation="horizontal">
+
                     <RadioButton
                         android:id="@+id/record_fragment_time_data_day"
+                        style="@style/record_fragment_left_radio_btn_style"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="日"
-                        android:textSize="15dp"
-                        android:gravity="center"
                         android:checked="true"
-                        style="@style/record_fragment_left_radio_btn_style"/>
+                        android:gravity="center"
+                        android:text="日"
+                        android:textSize="15dp" />
+
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:background="@color/gray"/>
+                        android:background="@color/gray" />
+
                     <RadioButton
                         android:id="@+id/record_fragment_time_data_week"
+                        style="@style/record_fragment_center_radio_btn_style"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="周"
-                        android:textSize="15dp"
                         android:button="@null"
                         android:gravity="center"
-                        style="@style/record_fragment_center_radio_btn_style"/>
+                        android:text="周"
+                        android:textSize="15dp" />
+
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:background="@color/gray"/>
+                        android:background="@color/gray" />
+
                     <RadioButton
                         android:id="@+id/record_fragment_time_data_month"
+                        style="@style/record_fragment_right_radio_btn_style"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="月"
-                        android:textSize="15dp"
                         android:button="@null"
                         android:gravity="center"
-                        style="@style/record_fragment_right_radio_btn_style"/>
+                        android:text="月"
+                        android:textSize="15dp" />
                 </RadioGroup>
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/record_fragment_pie_chart"
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:padding="10dp"
                 android:layout_margin="6dp"
+                android:background="@drawable/record_fragment_shape_10dp_all_corners"
                 android:orientation="vertical"
-                android:background="@drawable/record_fragment_shape_10dp_all_corners">
+                android:padding="10dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#ff8c00"
-                        android:textSize="15dp"
-                        android:textStyle="bold"
-                        android:text="app前台使用时长分布"/>
 
                     <TextView
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="app前台使用时长分布"
                         android:textColor="#ff8c00"
                         android:textSize="15dp"
-                        android:textStyle="bold"
-                        android:text="2024-04-29"/>
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="2024-04-29"
+                        android:textColor="#ff8c00"
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="分享"
                             android:textColor="#ff8c00"
                             android:textSize="15dp"
-                            android:textStyle="bold"
-                            android:text="分享"/>
+                            android:textStyle="bold" />
+
                         <Button
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
                             android:layout_marginLeft="25dp"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:background="@drawable/arrow_left"/>
+                            android:background="@drawable/arrow_left" />
+
                         <Button
-                            android:layout_marginLeft="10dp"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
-                            android:background="@drawable/arrow"/>
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/arrow" />
                     </LinearLayout>
                 </LinearLayout>
+
                 <com.github.mikephil.charting.charts.HorizontalBarChart
                     android:id="@+id/record_fragment_bar_chart"
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    />
+                    android:layout_marginTop="10dp" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
