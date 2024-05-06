@@ -3,7 +3,7 @@
     <item
         android:id="@+id/todo_fragment"
         android:icon="@drawable/home1"
-        android:title="代办"
+        android:title="待办"
         />
     <item
         android:id="@+id/list_fragment"

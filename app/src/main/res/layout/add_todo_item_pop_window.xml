@@ -14,12 +14,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:background="@color/lightgray">
+            android:background="@color/lightgray"
+            android:gravity="center_vertical">
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:text="待办事项"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textColor="@color/black"/>
@@ -30,15 +31,15 @@
                 android:orientation="horizontal">
                 <Button
                     android:id="@+id/add_todo_item_yes"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:background="@drawable/done"/>
                 <Button
                     android:id="@+id/add_todo_item_no"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="15dp"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:background="@drawable/close"/>
             </LinearLayout>
         </RelativeLayout>
@@ -48,16 +49,17 @@
             android:orientation="horizontal"
             android:layout_marginTop="10dp"
             android:gravity="center">
-            <EditText
-                android:id="@+id/todo_item_name"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:hint="请输入目标名称"
-                android:paddingLeft="10dp"
-                android:textIsSelectable="true"
-                android:selectAllOnFocus="true"
-                android:padding="15dp"
-                android:theme="@style/MyEditTextStyle"/>
+                app:hintTextColor="@color/blue"
+                android:textColorHint="@color/black">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/todo_item_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </com.google.android.material.textfield.TextInputLayout>
             <Button
                 android:id="@+id/todo_item_about"
                 android:layout_width="30dp"
@@ -79,7 +81,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="普通番茄钟"
-                android:textSize="20dp"
                 android:checked="true"
                 style="@style/radiobtn_style"/>
             <RadioButton
@@ -88,7 +89,6 @@
                 android:layout_height="wrap_content"
                 android:text="定目标"
                 android:layout_marginLeft="20dp"
-                android:textSize="20dp"
                 style="@style/radiobtn_style"/>
             <RadioButton
                 android:id="@+id/want_three"
@@ -96,7 +96,6 @@
                 android:layout_height="wrap_content"
                 android:text="养习惯"
                 android:layout_marginLeft="20dp"
-                android:textSize="20dp"
                 style="@style/radiobtn_style" />
         </RadioGroup>
 
@@ -115,8 +114,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="我想在  "
-                    android:textSize="20dp"/>
+                    android:text="我想在  " />
                 <TextView
                     android:id="@+id/goal_date"
                     android:layout_width="wrap_content"
@@ -124,13 +122,11 @@
                     android:text="设定目标日期"
                     android:padding="5dp"
                     android:background="@drawable/shape_10dp_all_corners"
-                    android:textColor="@color/blue"
-                    android:textSize="20dp" />
+                    android:textColor="@color/blue" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="  之前"
-                    android:textSize="20dp"/>
+                    android:text="  之前" />
             </LinearLayout>
             <!--        填写完成量：-->
             <LinearLayout
@@ -141,8 +137,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="一共完成  "
-                    android:textSize="20dp"/>
+                    android:text="一共完成  " />
                 <EditText
                     android:id="@+id/goal_workload"
                     android:layout_width="wrap_content"
@@ -151,8 +146,7 @@
                     android:textColorHint="@color/blue"
                     android:padding="5dp"
                     android:background="@drawable/shape_10dp_all_corners"
-                    android:textColor="@color/blue"
-                    android:textSize="20dp" />
+                    android:textColor="@color/blue" />
 
                 <Spinner
                     android:id="@+id/goal_units"
@@ -166,7 +160,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="20dp"
                 android:text="最后一步，设置单次专注的时长:"/>
         </LinearLayout>
 
@@ -184,8 +177,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="我想  "
-                    android:textSize="20dp"/>
+                    android:text="我想  " />
                 <Spinner
                     android:id="@+id/habit_date_units"
                     android:layout_width="wrap_content"
@@ -203,7 +195,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="完成  "
-                    android:textSize="20dp"
                     android:layout_gravity="center_vertical"/>
                 <EditText
                     android:id="@+id/habit_workload"
@@ -213,8 +204,7 @@
                     android:textColorHint="@color/blue"
                     android:padding="5dp"
                     android:background="@drawable/shape_10dp_all_corners"
-                    android:textColor="@color/blue"
-                    android:textSize="20dp" />
+                    android:textColor="@color/blue" />
                 <Spinner
                     android:id="@+id/habit_time_units"
                     android:layout_width="wrap_content"
@@ -240,7 +230,6 @@
                 android:layout_height="wrap_content"
                 android:text="倒计时"
                 android:checked="true"
-                android:textSize="20dp"
                 style="@style/radiobtn_style"/>
             <RadioButton
                 android:id="@+id/set_time_two"
@@ -248,7 +237,6 @@
                 android:layout_height="wrap_content"
                 android:text="正向计时"
                 android:layout_marginLeft="15dp"
-                android:textSize="20dp"
                 style="@style/radiobtn_style"/>
             <RadioButton
                 android:id="@+id/set_time_three"
@@ -256,7 +244,6 @@
                 android:layout_height="wrap_content"
                 android:text="不计时"
                 android:layout_marginLeft="15dp"
-                android:textSize="20dp"
                 style="@style/radiobtn_style"/>
         </RadioGroup>
 
@@ -273,7 +260,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="25 分钟"
-                android:textSize="20dp"
                 android:checked="true"
                 style="@style/radiobtn_style"/>
             <RadioButton
@@ -282,7 +268,6 @@
                 android:layout_height="wrap_content"
                 android:text="35 分钟"
                 android:layout_marginLeft="15dp"
-                android:textSize="20dp"
                 style="@style/radiobtn_style"/>
             <RadioButton
                 android:id="@+id/set_time_one_group_three"
@@ -290,7 +275,6 @@
                 android:layout_height="wrap_content"
                 android:text="自定义"
                 android:layout_marginLeft="15dp"
-                android:textSize="20dp"
                 style="@style/radiobtn_style"/>
         </RadioGroup>
 
