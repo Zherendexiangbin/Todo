@@ -22,7 +22,7 @@ public class TimerActivity extends AppCompatActivity {
     private CountDownTimer mCountDownTimer;
     private long mTimeLeftInMillis = 0; // 初始计时时间为0秒
 
-    private Button startBtn,stopBtn,restartBtn,btn;
+    private Button startBtn,stopBtn,restartBtn;
     private Intent intent;
 
 
@@ -147,6 +147,5 @@ public class TimerActivity extends AppCompatActivity {
 
         timeTxt = findViewById(R.id.timer_forward);
 
-        btn = findViewById(R.id.btn);
     }
 }
