@@ -35,9 +35,6 @@
         <activity
             android:name=".navigation.activity.PersonEditActivity"
             android:exported="false" />
-        <activity
-            android:name=".navigation.activity.StudyRoomActivity"
-            android:exported="false" />
     </application>
 
 </manifest>

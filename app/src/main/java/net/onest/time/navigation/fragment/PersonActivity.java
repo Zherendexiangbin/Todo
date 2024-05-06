@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import net.onest.time.R;
 import net.onest.time.navigation.activity.PersonEditActivity;
-import net.onest.time.navigation.activity.StudyRoomActivity;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -44,12 +43,6 @@ public class PersonActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void initData() {
-        //暂定
-        userAvatar.setOnClickListener(view -> {
-            Intent intent = new Intent(this, StudyRoomActivity.class);
-            startActivity(intent);
-        });
-
         //用户昵称
         userName.setText("时光1");
 

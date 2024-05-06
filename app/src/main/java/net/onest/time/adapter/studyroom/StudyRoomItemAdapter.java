@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudyRoomItemAdapter extends RecyclerView.Adapter<StudyRoomItemAdapter.ViewHolder> {
-    private List<String> avatarList = new ArrayList<>();
+    private List<String> avatarList;
     private Context context;
 
     public StudyRoomItemAdapter(Context context, List<String> avatarList) {
@@ -26,17 +26,25 @@ public class StudyRoomItemAdapter extends RecyclerView.Adapter<StudyRoomItemAdap
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
         String data = avatarList.get(position);
+
         holder.avatar.setBackgroundResource(R.mipmap.head);
         holder.avatar.setOnClickListener(view -> {
-            Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
-            avatarList.remove(position);
-            notifyDataSetChanged();
+            if(avatarList.size()>1){
+                Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
+                avatarList.remove(position);
+                notifyDataSetChanged();
+            }
         });
+
     }
 
     @Override
     public int getItemCount() {
-        return avatarList.size();
+        if (avatarList.size()==0){
+            return 0;
+        }else {
+            return avatarList.size();
+        }
     }
 
     @Override

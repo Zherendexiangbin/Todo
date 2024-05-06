@@ -65,7 +65,5 @@ public class TimerActivity extends AppCompatActivity {
         startBtn = findViewById(R.id.timer_start);
         stopBtn = findViewById(R.id.timer_stop);
         restartBtn = findViewById(R.id.timer_reset);
-
-        btn = findViewById(R.id.btn);
     }
 }
