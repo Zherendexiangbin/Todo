@@ -5,9 +5,42 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ListFragment"
-        android:textSize="24sp" />
+        android:background="@color/wheat"
+        android:padding="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="待办集"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="20dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true">
+            <Button
+                android:id="@+id/list_fragment_add_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/add_todo"/>
+            <Button
+                android:id="@+id/list_fragment_menu_btn"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/menu1"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ExpandableListView
+        android:id="@+id/list_fragment_backlog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:groupIndicator="@null"
+        android:descendantFocusability="beforeDescendants"
+        android:listSelector="@android:color/transparent"/>
 </LinearLayout>
