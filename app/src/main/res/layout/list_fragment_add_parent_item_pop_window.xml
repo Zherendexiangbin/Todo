@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="25dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@color/lightgray"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="待办事项"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/black"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/add_list_item_yes"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/done"/>
+                <Button
+                    android:id="@+id/add_list_item_no"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/close"/>
+            </LinearLayout>
+        </RelativeLayout>
+        <EditText
+            android:id="@+id/list_fragment_group_edit"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/blue"
+            android:hint="请输入待办集"
+            android:backgroundTint="@color/blue"
+            android:textColor="@color/blue"
+            android:textStyle="bold"
+            android:layout_marginTop="5dp"/>
+
+        <RadioGroup
+            android:id="@+id/list_fragment_pop_window_group_one"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <RadioButton
+                android:id="@+id/list_fragment_group_one_card_view_gray"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:button="@null"
+                android:background="@color/gray" />
+            <RadioButton
+                android:id="@+id/list_fragment_group_one_card_view_pink"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:button="@null"
+                android:layout_marginLeft="25dp"
+                android:background="@color/pink" />
+            <RadioButton
+                android:id="@+id/list_fragment_group_one_card_view_blue"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:button="@null"
+                android:layout_marginLeft="25dp"
+                android:background="@color/blue" />
+            <RadioButton
+                android:id="@+id/list_fragment_group_one_card_view_brown"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:button="@null"
+                android:layout_marginLeft="25dp"
+                android:background="@color/brown" />
+
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/list_fragment_pop_window_group_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/list_fragment_group_two_card_view_red"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:button="@null"
+                android:background="@color/red" />
+            <RadioButton
+                android:id="@+id/list_fragment_group_two_card_view_purple"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:button="@null"
+                android:layout_marginLeft="25dp"
+                android:background="@color/purple" />
+            <RadioButton
+                android:id="@+id/list_fragment_group_two_card_view_blueviolet"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:button="@null"
+                android:layout_marginLeft="25dp"
+                android:background="@color/blueviolet" />
+            <RadioButton
+                android:id="@+id/list_fragment_group_two_card_view_lightgreen"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:button="@null"
+                android:layout_marginLeft="25dp"
+                android:background="@color/lightgreen" />
+        </RadioGroup>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

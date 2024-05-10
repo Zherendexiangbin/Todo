@@ -51,5 +51,13 @@
         <item name="android:padding">5dp</item>
     </style>
 
+    <style name="EditScreenTextInputLayoutStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorControlNormal">@color/blue</item>
+        <item name="colorControlActivated">@color/blue</item>
+        <item name="colorControlHighlight">@color/blue</item>
+        <item name="colorAccent">@color/blue</item>
+        <item name="android:textColorHint">@color/blue</item>
+        <item name="hintTextColor">@color/blue</item>
+    </style>
 
 </resources>

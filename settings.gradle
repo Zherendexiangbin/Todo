@@ -1,6 +1,25 @@
 pluginManagement {
     repositories {
         mavenLocal()
+        maven {
+            name 'central';
+            url 'https://maven.aliyun.com/repository/central/'
+        }
+
+        maven {
+            name 'public';
+            url 'https://maven.aliyun.com/repository/public'
+        }
+
+        maven {
+            url 'https://maven.aliyun.com/repository/google/'
+        }
+
+        maven {
+            name 'apache-snapshots';
+            url 'https://maven.aliyun.com/repository/apache-snapshots/'
+        }
+
         jcenter()
         google()
         mavenCentral()
@@ -17,6 +36,29 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         mavenLocal()
+        maven {
+            name 'central';
+            url 'https://maven.aliyun.com/repository/central/'
+        }
+
+        maven {
+            name 'public';
+            url 'https://maven.aliyun.com/repository/public'
+        }
+
+        maven {
+            name 'spring';
+            url 'https://maven.aliyun.com/repository/spring'
+        }
+
+        maven {
+            url 'https://maven.aliyun.com/repository/google/'
+        }
+
+        maven {
+            name 'apache-snapshots';
+            url 'https://maven.aliyun.com/repository/apache-snapshots/'
+        }
         jcenter()
         google()
         mavenCentral()

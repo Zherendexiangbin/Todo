@@ -12,6 +12,7 @@ import android.text.style.StrikethroughSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,6 +54,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
         Item news = itemList.get(position);
         holder.name.setText(news.getItemName());
         holder.time.setText(news.getTime());
+        holder.backGroundLin.setBackgroundColor(news.getColor());
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,12 +97,14 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
         TextView name;
         TextView time;
         Button btn;
+        LinearLayout backGroundLin;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.txt_name);
-            time = itemView.findViewById(R.id.txt_time);
-            btn = itemView.findViewById(R.id.ry_btn);
+            name = itemView.findViewById(R.id.re_item_txt_name);
+            time = itemView.findViewById(R.id.re_item_txt_time);
+            btn = itemView.findViewById(R.id.re_item_ry_btn);
+            backGroundLin = itemView.findViewById(R.id.re_item_background_lin);
         }
     }
 

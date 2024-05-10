@@ -29,6 +29,7 @@
                 android:textStyle="bold"
                 android:textSize="20dp"/>
             <TextView
+                android:id="@+id/todo_fragment_today"
                 android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,7 +46,6 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/add2"/>
     </LinearLayout>
-
 
 
     <com.haibin.calendarview.CalendarLayout
@@ -85,8 +85,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        
+            android:layout_height="wrap_content"
+            android:background="@color/white"/>
 
     </com.haibin.calendarview.CalendarLayout>
 
