@@ -12,6 +12,15 @@ public class HttpRequestTest {
     }
 
     @Test
+    public void login() {
+        UserDto userDto = new UserDto();
+        userDto.setEmail("2808021998@qq.com");
+        userDto.setPassword("admin");
+        String login = UserApi.login(userDto);
+        System.out.println(login);
+    }
+
+    @Test
     public void postFile() {
         UserDto userDto = new UserDto();
         userDto.setEmail("2808021998@qq.com");

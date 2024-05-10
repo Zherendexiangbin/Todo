@@ -33,6 +33,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import net.onest.time.R;
+import net.onest.time.utils.DateUtil;
 
 import org.w3c.dom.Text;
 
@@ -81,14 +82,11 @@ public class RecordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
 
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDate = dateFormat.format(calendar.getTime());
 
         //当前日期：
-        todayFocus.setText(currentDate);
-        dataDateTxt.setText(currentDate);
-        appDateTxt.setText(currentDate);
+        todayFocus.setText(DateUtil.getCurDay());
+        dataDateTxt.setText(DateUtil.getCurDay());
+        appDateTxt.setText(DateUtil.getCurDay());
 
         List<PieEntry> yVals = new ArrayList<>();
         List<Integer> colors = new ArrayList<>();
@@ -109,53 +107,20 @@ public class RecordFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
                     case R.id.record_fragment_time_data_day:
-                        Calendar calendar = Calendar.getInstance();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        String currentDate = dateFormat.format(calendar.getTime());
-                        //当前日期：
-                        dataDateTxt.setText(currentDate);
+                        dataDateTxt.setText(DateUtil.getCurDay());
 
                         setPieChartData(yVals,colors);
                         pieChart.invalidate();//实时更新数据
                         break;
                     case R.id.record_fragment_time_data_week:
-
-                        Calendar calendarWeek = Calendar.getInstance();
-                        SimpleDateFormat dateFormatWeek = new SimpleDateFormat("yyyy-MM-dd");
-
-// 设置一周的第一天为周一
-                        calendarWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                        String startDate = dateFormatWeek.format(calendarWeek.getTime());
-
-// 获取本周的最后一天（星期日）
-                        calendarWeek.add(Calendar.DATE, 6);
-
-// 判断是否已经是月末，如果是，则将结束日期设置为当月最后一天
-                        if (calendarWeek.get(Calendar.DAY_OF_MONTH) == calendarWeek.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-                            calendarWeek.set(Calendar.DAY_OF_MONTH, calendarWeek.getActualMaximum(Calendar.DAY_OF_MONTH));
-                        } else {
-                            // 如果不是月末，则继续获取本周的结束日期
-                            calendarWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                        }
-
-                        String endDate = dateFormatWeek.format(calendarWeek.getTime());
-                        dataDateTxt.setText(startDate+" ~ "+endDate);
+                        dataDateTxt.setText(DateUtil.getCurWeek());
 
                         pieChart.setData(null);
                         pieChart.notifyDataSetChanged();
                         pieChart.invalidate();
                         break;
                     case R.id.record_fragment_time_data_month:
-                        Calendar calendarMonth = Calendar.getInstance();
-                        SimpleDateFormat dateFormatMonth = new SimpleDateFormat("yyyy-MM-dd");
-                        // 获取当月的第一天
-                        calendarMonth.set(Calendar.DAY_OF_MONTH, 1);
-                        String startDateMonth = dateFormatMonth.format(calendarMonth.getTime());
-                        // 获取当月的最后一天
-                        calendarMonth.set(Calendar.DAY_OF_MONTH, calendarMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
-                        String endDateMonth = dateFormatMonth.format(calendarMonth.getTime());
-
-                        dataDateTxt.setText(startDateMonth+" ~ "+endDateMonth);
+                        dataDateTxt.setText(DateUtil.getCurMonth());
 
                         pieChart.setData(null);
                         pieChart.notifyDataSetChanged();
