@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.animation.ObjectAnimator;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import net.onest.time.navigation.activity.RegisterActivity;
 import net.onest.time.navigation.activity.ResetPasswordActivity;
 
 public class MainActivity extends AppCompatActivity{
+    private SharedPreferences userInfo;
     private TextInputEditText loginUser, loginPassword;
     private Button forgetPassword, btnLogin, btnRegister;
     @Override
@@ -34,10 +36,10 @@ public class MainActivity extends AppCompatActivity{
     private void setListeners() {
         //登录
         btnLogin.setOnClickListener(view -> {
-            String user = loginUser.getText().toString().trim();
+            String account = loginUser.getText().toString().trim();
             String password = loginPassword.getText().toString().trim();
 
-            if (user.length() == 0 || password.length() == 0){
+            if (account.length() == 0 || password.length() == 0){
                 runOnUiThread(() -> Toast.makeText(this, "不可留空，请重新输入！", Toast.LENGTH_SHORT).show());
             } else if (!password.equals("123456")) {
                 runOnUiThread(() -> Toast.makeText(this, "密码错误，请重新输入！", Toast.LENGTH_SHORT).show());

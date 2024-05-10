@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.onest.time.R;
@@ -52,6 +53,7 @@ public class StudyRoomItemAdapter extends RecyclerView.Adapter<StudyRoomItemAdap
         return position;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         context = parent.getContext();
