@@ -1,10 +1,14 @@
 package net.onest.time.navigation.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +57,16 @@ public class ListFragment extends Fragment {
         expandableListAdapter = new ExpandableListAdapter(R.layout.list_fragment_expandable_parent_list,R.layout.list_fragment_expandable_child_list,getContext(),init());
         backLog.setAdapter(expandableListAdapter);
 
-        backLog.expandGroup(0);//默认展开第一项
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        int screenWidth = size.x;
+        int width = display.getWidth();
+//        backLog.setIndicatorBoundsRelative(100,100);
+        backLog.setIndicatorBounds(width-320,width-290);
+
+        //默认展开第一项
+        backLog.expandGroup(0);
 
         backLog.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
@@ -164,13 +177,19 @@ public class ListFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         String parentName = edit.getText().toString().trim();
-                        int parentColor = edit.getCurrentTextColor();
-                        List<Item> childItemList = new ArrayList<>();
-                        ParentItem parentItem = new ParentItem(parentName,parentColor,childItemList);
-                        parentItemList.add(parentItem);
-                        expandableListAdapter.setParentItemList(parentItemList);
-                        expandableListAdapter.notifyDataSetChanged();
-                        dialog.dismiss();
+                        if(!"".equals(parentName)){
+                            int parentColor = edit.getCurrentTextColor();
+                            List<Item> childItemList = new ArrayList<>();
+                            ParentItem parentItem = new ParentItem(parentName,parentColor,childItemList);
+                            parentItemList.add(parentItem);
+                            expandableListAdapter.setParentItemList(parentItemList);
+                            expandableListAdapter.notifyDataSetChanged();
+                            dialog.dismiss();
+                        }else{
+                            Toast toast = Toast.makeText(getContext(), "请输入待办集名称", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.TOP,0,0);
+                            toast.show();
+                        }
                     }
                 });
                 addNo.setOnClickListener(new View.OnClickListener() {

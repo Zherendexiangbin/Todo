@@ -37,6 +37,13 @@ android {
 }
 
 dependencies {
+    //圆形进度条:
+    implementation 'com.github.lzyzsd:circleprogress:1.2.4'
+
+    implementation 'com.google.code.gson:gson:2.10.1'
+//    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+
     //自习室邀请码输入框
     implementation 'com.github.Wynsbin:VerificationCodeInputView:1.0.2'
 

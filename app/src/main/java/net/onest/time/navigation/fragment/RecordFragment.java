@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,7 +34,11 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import net.onest.time.R;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class RecordFragment extends Fragment {
@@ -43,6 +48,8 @@ public class RecordFragment extends Fragment {
     //选择日期：
     private RadioGroup radioDataGroup;
     private RadioButton radioDayButton,radioWeekButton,radioMonthButton;
+
+    private TextView todayFocus,dataDateTxt,appDateTxt;
 
     //水平柱状图:
     private HorizontalBarChart barHor;
@@ -74,6 +81,15 @@ public class RecordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
 
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = dateFormat.format(calendar.getTime());
+
+        //当前日期：
+        todayFocus.setText(currentDate);
+        dataDateTxt.setText(currentDate);
+        appDateTxt.setText(currentDate);
+
         List<PieEntry> yVals = new ArrayList<>();
         List<Integer> colors = new ArrayList<>();
         if(radioDayButton.isChecked()){
@@ -93,15 +109,54 @@ public class RecordFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
                     case R.id.record_fragment_time_data_day:
+                        Calendar calendar = Calendar.getInstance();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        String currentDate = dateFormat.format(calendar.getTime());
+                        //当前日期：
+                        dataDateTxt.setText(currentDate);
+
                         setPieChartData(yVals,colors);
                         pieChart.invalidate();//实时更新数据
                         break;
                     case R.id.record_fragment_time_data_week:
+
+                        Calendar calendarWeek = Calendar.getInstance();
+                        SimpleDateFormat dateFormatWeek = new SimpleDateFormat("yyyy-MM-dd");
+
+// 设置一周的第一天为周一
+                        calendarWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                        String startDate = dateFormatWeek.format(calendarWeek.getTime());
+
+// 获取本周的最后一天（星期日）
+                        calendarWeek.add(Calendar.DATE, 6);
+
+// 判断是否已经是月末，如果是，则将结束日期设置为当月最后一天
+                        if (calendarWeek.get(Calendar.DAY_OF_MONTH) == calendarWeek.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+                            calendarWeek.set(Calendar.DAY_OF_MONTH, calendarWeek.getActualMaximum(Calendar.DAY_OF_MONTH));
+                        } else {
+                            // 如果不是月末，则继续获取本周的结束日期
+                            calendarWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                        }
+
+                        String endDate = dateFormatWeek.format(calendarWeek.getTime());
+                        dataDateTxt.setText(startDate+" ~ "+endDate);
+
                         pieChart.setData(null);
                         pieChart.notifyDataSetChanged();
                         pieChart.invalidate();
                         break;
                     case R.id.record_fragment_time_data_month:
+                        Calendar calendarMonth = Calendar.getInstance();
+                        SimpleDateFormat dateFormatMonth = new SimpleDateFormat("yyyy-MM-dd");
+                        // 获取当月的第一天
+                        calendarMonth.set(Calendar.DAY_OF_MONTH, 1);
+                        String startDateMonth = dateFormatMonth.format(calendarMonth.getTime());
+                        // 获取当月的最后一天
+                        calendarMonth.set(Calendar.DAY_OF_MONTH, calendarMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
+                        String endDateMonth = dateFormatMonth.format(calendarMonth.getTime());
+
+                        dataDateTxt.setText(startDateMonth+" ~ "+endDateMonth);
+
                         pieChart.setData(null);
                         pieChart.notifyDataSetChanged();
                         pieChart.invalidate();
@@ -240,8 +295,6 @@ public class RecordFragment extends Fragment {
 //                return (int) value + "%";
 //            }
 //        });
-
-
     }
 
     private void setPieChartData(List<PieEntry> yVals, List<Integer> colors) {
@@ -292,5 +345,9 @@ public class RecordFragment extends Fragment {
         radioDayButton = view.findViewById(R.id.record_fragment_time_data_day);
         radioWeekButton = view.findViewById(R.id.record_fragment_time_data_week);
         radioMonthButton = view.findViewById(R.id.record_fragment_time_data_month);
+
+        todayFocus = view.findViewById(R.id.record_fragment_today_focus);
+        dataDateTxt = view.findViewById(R.id.record_fragment_time_data_date);
+        appDateTxt = view.findViewById(R.id.record_fragment_app_use_time_txt);
     }
 }

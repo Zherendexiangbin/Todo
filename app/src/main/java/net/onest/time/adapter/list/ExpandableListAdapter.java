@@ -1,10 +1,16 @@
 package net.onest.time.adapter.list;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StrikethroughSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +34,7 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 
 import net.onest.time.R;
-import net.onest.time.adapter.todo.TodoItemAdapter;
+import net.onest.time.TimerActivity;
 import net.onest.time.entity.Item;
 import net.onest.time.entity.list.ParentItem;
 import net.onest.time.utils.ColorUtil;
@@ -40,6 +46,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private int itemViewId;
     private int childViewId;
     private List<ParentItem> parentItemList;
+    private Intent intent;
 
     //以下是弹框布局控件：
     private Button addYes,addNo,itemNameAbout;
@@ -129,7 +136,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                View dialogView = LayoutInflater.from(context).inflate(R.layout.todo_fragment_add_todo_item_pop_window,null);
+                View dialogView = LayoutInflater.from(context).inflate(R.layout.list_fragment_add_expandable_child_item_pop_window,null);
                 getViews(dialogView);//获取控件
                 final Dialog dialog = builder.create();
                 dialog.show();
@@ -324,12 +331,38 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "你点击了"+childName.getText(), Toast.LENGTH_SHORT).show();
+                if("正向计时".equals(parentItemList.get(groupPosition).getChildItemList().get(childPosition).getTime())){
+                    //正向计时：
+                    intent = new Intent();
+                    intent.setClass(context, TimerActivity.class);
+                    intent.putExtra("method", "forWard");
+                    context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,startBtn,"fab").toBundle());
+                } else if ("普通待办".equals(parentItemList.get(groupPosition).getChildItemList().get(childPosition).getTime())) {
+                    //不计时：
+//                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    SpannableString spannableString = new SpannableString(parentItemList.get(groupPosition).getChildItemList().get(childPosition).getItemName());
+                    spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    parentItemList.get(groupPosition).getChildItemList().get(childPosition).setItemName(spannableString.toString());
+//                    TextView textView = findViewById(R.id.textView);
+//                    textView.setText(spannableString);
+                }else{
+                    //倒计时：
+                    intent = new Intent();
+                    String[] parts = childTime.getText().toString().split(" ");
+                    String num = parts[0];
+//                int num = Integer.parseInt(parts[0]);
+                    intent.putExtra("time", num);
+                    intent.putExtra("method", "countDown");
+                    intent.setClass(context, TimerActivity.class);
+                    context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,startBtn,"fab").toBundle());
+                }
             }
         });
 
         return view;
     }
+
 
     //当选择子节点的时候，调用该方法(点击二级列表)
     @Override
