@@ -23,7 +23,8 @@
             <Button
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@drawable/trophy1"/>
+                android:background=
+                        "@drawable/trophy1"/>
             <Button
                 android:layout_width="30dp"
                 android:layout_height="30dp"
