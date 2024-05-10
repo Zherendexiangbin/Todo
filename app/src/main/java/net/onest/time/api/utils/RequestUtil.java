@@ -1,15 +1,22 @@
-package net.onest.time.api.dto;
+package net.onest.time.api.utils;
 
 import android.content.Context;
-import android.net.Uri;
+
 import com.google.gson.Gson;
-import net.onest.time.api.utils.Result;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+
+import net.onest.time.api.dto.TaskDto;
 import net.onest.time.application.TimeApplication;
 import net.onest.time.constant.SharedPreferencesConstant;
 import okhttp3.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.*;
 
 public class RequestUtil {
@@ -31,6 +38,7 @@ public class RequestUtil {
         requestUtil.requestBuilder.header("token", token);
         return requestUtil;
     }
+
 
     public RequestUtil header(String name, String value) {
         this.requestBuilder.header(name, value);
@@ -56,6 +64,11 @@ public class RequestUtil {
         return this;
     }
 
+    public RequestUtil post() {
+        this.requestBuilder.post(RequestBody.create("", MediaType.parse("application/json; charset=utf-8")));
+        return this;
+    }
+
     public RequestUtil postFile(String fileName) {
         File file = new File(fileName);
         MultipartBody body = new MultipartBody.Builder()
@@ -77,6 +90,11 @@ public class RequestUtil {
         return this;
     }
 
+    public RequestUtil put() {
+        this.requestBuilder.put(RequestBody.create("", MediaType.parse("application/json; charset=utf-8")));
+        return this;
+    }
+
     public RequestUtil delete(Object requestBody) {
         RequestBody body = RequestBody.create(
                 gson.toJson(requestBody),
@@ -92,14 +110,26 @@ public class RequestUtil {
     }
 
     public <T> T buildAndSend(Class<T> clazz) {
-        Future<T> future = executorService.submit(() -> {
+        return gson.fromJson(send(), clazz);
+    }
+
+    public <T> T buildAndSend(TypeToken<T> typeToken) {
+        return gson.fromJson(send(), typeToken);
+    }
+
+    public void buildAndSend() {
+        send();
+    }
+
+    private JsonElement send() {
+        Future<JsonElement> future = executorService.submit(() -> {
             Request request = requestBuilder.build();
             Call call = httpClient.newCall(request);
             call.timeout().timeout(15, TimeUnit.SECONDS);
 
             try (Response response = call.execute()) {
                 checkResponse(response);
-                return clazz.cast(gson.fromJson(response.body().string(), Result.class).getData());
+                return gson.fromJson(response.body().string(), JsonObject.class).get("data");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -120,4 +150,35 @@ public class RequestUtil {
         }
     }
 
+    public static String parseParams(Object o){
+        if (o == null) return "?";
+
+        StringBuilder builder = new StringBuilder();
+        for (Field field : o.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                Object o1 = field.get(o);
+                if (o1 == null || o1.toString().isEmpty())
+                    continue;
+
+                builder.append(field.getName())
+                        .append("=")
+                        .append(o1)
+                        .append("&");
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        builder.deleteCharAt(builder.length() - 1);
+        return "?" + builder + "&";
+    }
+
+    public static String parseParams(Object o, Object... params) {
+        StringBuilder builder = new StringBuilder(parseParams(o));
+        for (int i = 0; i < params.length; i += 2) {
+            builder.append(params[i]).append("=").append(params[i + 1]).append("&");
+        }
+        builder.deleteCharAt(builder.length() - 1);
+        return builder.toString();
+    }
 }
