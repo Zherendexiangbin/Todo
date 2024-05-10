@@ -30,6 +30,7 @@
             android:orientation="horizontal"
             android:layout_weight="1"
             android:gravity="right">
+
             <Button
                 android:id="@+id/list_fragment_parent_data"
                 android:layout_width="30dp"
@@ -43,7 +44,6 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
                 android:focusable="false"
-
                 android:background="@drawable/add"/>
 
         </LinearLayout>

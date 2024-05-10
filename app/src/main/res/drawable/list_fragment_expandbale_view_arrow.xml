@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_expanded="false">
+        <layer-list>
+            <item android:drawable="@drawable/right_arrow" android:width="30dp" android:height="20dp" android:gravity="center|right" />
+        </layer-list>
+    </item>
+    <item android:state_expanded="true" >
+        <layer-list>
+            <item android:drawable="@drawable/down_arrow" android:width="30dp" android:height="20dp" android:gravity="center|right"/>
+        </layer-list>
+    </item>
+</selector>

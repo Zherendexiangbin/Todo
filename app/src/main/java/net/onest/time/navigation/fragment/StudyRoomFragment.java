@@ -55,6 +55,7 @@ public class StudyRoomFragment extends Fragment {
 
     private void setListeners() {
         btnAdd.setOnClickListener(view -> {
+
 //            avatarList.add("avatar-");
 //            itemAdapter.updateData(avatarList);
 //            if (recyclerView.getAdapter().getItemCount()>1){
@@ -62,7 +63,7 @@ public class StudyRoomFragment extends Fragment {
 //            }
             if(btnAdd.getHint().equals("add")){
                 RoomCodePopWindow chatMenu = new RoomCodePopWindow(getContext());
-                chatMenu.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+                chatMenu.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.TOP, 0, 0);
             }else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage("确定退出自习室吗").setPositiveButton("确定", ((dialogInterface, i) -> {
@@ -127,7 +128,7 @@ public class StudyRoomFragment extends Fragment {
         public void showAtLocation(View parent, int gravity, int x, int y) {
             super.showAtLocation(parent, gravity, x, y);
             //加入动画
-            ObjectAnimator.ofFloat(getContentView(), "translationY", getHeight(), 0).setDuration(200).start();
+            ObjectAnimator.ofFloat(getContentView(), "translationY", -getHeight(), 0).setDuration(200).start();
         }
         /**
          * 获取屏幕宽高
@@ -156,6 +157,7 @@ public class StudyRoomFragment extends Fragment {
             createRoom = view.findViewById(R.id.create_room);
             joinRoom = view.findViewById(R.id.join_room);
             codeInputView = view.findViewById(R.id.code_input);
+
 
             createRoom.setOnClickListener(view1 -> {
                 joinRoom.setChecked(false);

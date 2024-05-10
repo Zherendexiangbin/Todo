@@ -47,7 +47,7 @@
                 android:id="@+id/record_fragment_lin1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="6dp"
+                android:layout_margin="7dp"
                 android:background="@drawable/record_fragment_shape_10dp_all_corners"
                 android:orientation="vertical"
                 android:padding="10dp">
@@ -76,13 +76,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="次数"
+                            android:textStyle="bold"
                             android:textColor="#ffa07a" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:text="时长"
+                            android:text="0"
                             android:textColor="#ff7f50"
                             android:textSize="15dp"
                             android:textStyle="bold" />
@@ -99,13 +100,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="时长"
+                            android:textStyle="bold"
                             android:textColor="#ffa07a" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:text="时长"
+                            android:text="0"
                             android:textColor="#ff7f50"
                             android:textSize="15dp"
                             android:textStyle="bold" />
@@ -122,13 +124,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="日均时长"
+                            android:textStyle="bold"
                             android:textColor="#ffa07a" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:text="时长"
+                            android:text="0"
                             android:textColor="#ff7f50"
                             android:textSize="15dp"
                             android:textStyle="bold" />
@@ -141,7 +144,7 @@
                 android:id="@+id/record_fragment_lin2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="6dp"
+                android:layout_margin="7dp"
                 android:background="@drawable/record_fragment_shape_10dp_all_corners"
                 android:orientation="vertical"
                 android:padding="10dp">
@@ -160,6 +163,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/record_fragment_today_focus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -185,13 +189,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="次数"
+                            android:textStyle="bold"
                             android:textColor="#ffa07a" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:text="时长"
+                            android:text="0"
                             android:textColor="#ff7f50"
                             android:textSize="15dp"
                             android:textStyle="bold" />
@@ -208,13 +213,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="时长"
+                            android:textStyle="bold"
                             android:textColor="#ffa07a" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:text="时长"
+                            android:text="0"
                             android:textColor="#ff7f50"
                             android:textSize="15dp"
                             android:textStyle="bold" />
@@ -226,7 +232,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:layout_margin="6dp"
+                android:layout_margin="7dp"
                 android:background="@drawable/record_fragment_shape_10dp_all_corners"
                 android:orientation="vertical"
                 android:padding="10dp">
@@ -245,6 +251,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/record_fragment_time_data_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
@@ -253,32 +260,33 @@
                         android:textSize="15dp"
                         android:textStyle="bold" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:orientation="horizontal">
+                        android:text="分享"
+                        android:textColor="#ff8c00"
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="分享"
-                            android:textColor="#ff8c00"
-                            android:textSize="15dp"
-                            android:textStyle="bold" />
+                    <Button
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="25dp"
+                        android:background="@drawable/arrow_left" />
 
-                        <Button
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginLeft="25dp"
-                            android:background="@drawable/arrow_left" />
-
-                        <Button
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginLeft="10dp"
-                            android:background="@drawable/arrow" />
-                    </LinearLayout>
+                    <Button
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/arrow" />
                 </LinearLayout>
 
                 <RadioGroup
@@ -346,7 +354,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:layout_margin="6dp"
+                android:layout_margin="7dp"
                 android:background="@drawable/record_fragment_shape_10dp_all_corners"
                 android:orientation="vertical"
                 android:padding="10dp">
@@ -365,6 +373,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/record_fragment_app_use_time_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"

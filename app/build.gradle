@@ -17,12 +17,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    // 自定义打包名称
-    android.applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "TimerAPK.apk"
-        }
-    }
+
 
     buildTypes {
         release {
@@ -34,23 +29,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-//    sourceSets {
-//        main {
-//            layout.srcDirs = [
-//                    'src/main/res/layout/component',
-//                    'src/main/res/layout',
-//                    'src/main/res'
-//            ]
-//        }
-//    }
 }
 
 dependencies {
-    // Gson
+    //okhttp
     implementation 'com.google.code.gson:gson:2.10.1'
-    // OkHttp
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+//    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
     //自习室邀请码输入框
     implementation 'com.github.Wynsbin:VerificationCodeInputView:1.0.2'

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import java.util.Random;
 
 public class ColorUtil {
+    //随机颜色【各种颜色】
     /**
      * 根据RGB色值获取整型颜色
      *
@@ -106,5 +107,23 @@ public class ColorUtil {
         B = B.length() == 1 ? "0" + B : B;
 
         return "#" + R + G + B;
+    }
+
+    //柔和颜色:
+    static final Random mRandom = new Random(System.currentTimeMillis());
+
+    public static int generateRandomColor() {
+        // This is the base color which will be mixed with the generated one
+        final int baseColor = Color.LTGRAY;
+
+        final int baseRed = Color.red(baseColor);
+        final int baseGreen = Color.green(baseColor);
+        final int baseBlue = Color.blue(baseColor);
+
+        final int red = (baseRed + mRandom.nextInt(256)) / 2;
+        final int green = (baseGreen + mRandom.nextInt(256)) / 2;
+        final int blue = (baseBlue + mRandom.nextInt(256)) / 2;
+
+        return Color.rgb(red, green, blue);
     }
 }
