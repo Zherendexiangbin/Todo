@@ -12,8 +12,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.google.gson.Gson;
 import com.mut_jaeryo.circletimer.CircleTimer;
 
