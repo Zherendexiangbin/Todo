@@ -1,9 +1,14 @@
 package net.onest.time.api.dto;
 
+import android.content.Context;
+import android.net.Uri;
 import com.google.gson.Gson;
 import net.onest.time.api.utils.Result;
+import net.onest.time.application.TimeApplication;
+import net.onest.time.constant.SharedPreferencesConstant;
 import okhttp3.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.*;
 
@@ -17,7 +22,13 @@ public class RequestUtil {
     public static RequestUtil builder() {
         RequestUtil requestUtil = new RequestUtil();
         requestUtil.requestBuilder = new Request.Builder();
-        requestUtil.requestBuilder.header("token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiZXhwIjoxNzE3OTE3MTMxLCJ1c2VySWQiOjIsImVtYWlsIjoiMjgwODAyMTk5OEBxcS5jb20ifQ.XfpEKf-zAc0ItN8onFSSqkgxI_GcJkL-LYAsFro74to");
+
+        String token = TimeApplication
+                .getApplication()
+                .getApplicationContext()
+                .getSharedPreferences(SharedPreferencesConstant.USER_INFO, Context.MODE_PRIVATE)
+                .getString("token", "");
+        requestUtil.requestBuilder.header("token", token);
         return requestUtil;
     }
 
@@ -41,6 +52,18 @@ public class RequestUtil {
                 gson.toJson(requestBody),
                 MediaType.parse("application/json; charset=utf-8")
         );
+        this.requestBuilder.post(body);
+        return this;
+    }
+
+    public RequestUtil postFile(String fileName) {
+        File file = new File(fileName);
+        MultipartBody body = new MultipartBody.Builder()
+                .addFormDataPart(
+                        "avatar", file.getName(),
+                        RequestBody.create(file, MediaType.parse("image/*"))
+                )
+                .build();
         this.requestBuilder.post(body);
         return this;
     }
@@ -96,4 +119,5 @@ public class RequestUtil {
             throw new RuntimeException("Unexpected response code: " + response.code());
         }
     }
+
 }

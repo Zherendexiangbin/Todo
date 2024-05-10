@@ -1,8 +1,11 @@
 package net.onest.time.api;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import net.onest.time.api.dto.RequestUtil;
 import net.onest.time.api.dto.UserDto;
-import net.onest.time.api.utils.Result;
+import net.onest.time.application.TimeApplication;
+import net.onest.time.constant.SharedPreferencesConstant;
 
 public class UserApi {
     private final static String PREFIX = "/user";
@@ -41,6 +44,31 @@ public class UserApi {
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + GET_EMAIL_CODE_KEY + "?email=" + email)
                 .get()
+                .buildAndSend(String.class);
+    }
+
+    public static String login(UserDto userDto) {
+        String token = RequestUtil.builder()
+                .url(ServerConstant.ADDRESS + PREFIX + LOGIN)
+                .post(userDto)
+                .buildAndSend(String.class);
+
+        // 将token存入SharedPreferences
+        SharedPreferences preferences = TimeApplication
+                .getApplication()
+                .getApplicationContext()
+                .getSharedPreferences(SharedPreferencesConstant.USER_INFO, Context.MODE_PRIVATE);
+        preferences.edit()
+                .putString("token", token)
+                .apply();
+
+        return token;
+    }
+
+    public static String uploadAvatar(String avatar) {
+        return RequestUtil.builder()
+                .url(ServerConstant.ADDRESS + PREFIX + UPLOAD_AVATAR)
+                .postFile(avatar)
                 .buildAndSend(String.class);
     }
 }
