@@ -117,7 +117,7 @@ public class UserApi {
     }
 
     // 修改用户个人信息
-    public UserVo modifyUserInfo(UserDto userDto){
+    public static UserVo modifyUserInfo(UserDto userDto){
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + MODIFY_USER_INFO)
                 .put(userDto)
@@ -125,7 +125,7 @@ public class UserApi {
     }
 
     // 获取用户信息
-    public UserVo getUserInfo(){
+    public static UserVo getUserInfo(){
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + GET_USER_INFO)
                 .get()

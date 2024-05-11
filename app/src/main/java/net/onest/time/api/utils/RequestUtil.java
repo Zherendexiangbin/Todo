@@ -128,8 +128,9 @@ public class RequestUtil {
             call.timeout().timeout(15, TimeUnit.SECONDS);
 
             try (Response response = call.execute()) {
-                checkResponse(response);
-                return gson.fromJson(response.body().string(), JsonObject.class).get("data");
+                Result<?> result = gson.fromJson(response.body().string(), Result.class);
+                checkResult(result);
+                return gson.toJsonTree(request);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -142,11 +143,11 @@ public class RequestUtil {
         }
     }
 
-    private void checkResponse(Response response) {
-        if (response == null) {
-            throw new RuntimeException("Response is null");
-        } else if (response.code() != 200) {
-            throw new RuntimeException("Unexpected response code: " + response.code());
+    private void checkResult(Result<?> result) {
+        if (result == null) {
+            throw new RuntimeException("Result is null");
+        } else if (!result.getCode().equals("200")) {
+            throw new RuntimeException(result.getMsg());
         }
     }
 
@@ -158,7 +159,7 @@ public class RequestUtil {
             field.setAccessible(true);
             try {
                 Object o1 = field.get(o);
-                if (o1 == null || o1.toString().isEmpty())
+                if (o1 == null)
                     continue;
 
                 builder.append(field.getName())
