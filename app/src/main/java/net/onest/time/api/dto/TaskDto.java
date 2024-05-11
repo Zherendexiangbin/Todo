@@ -13,6 +13,8 @@ public class TaskDto {
 
     private List<Integer> estimate;
 
+    private Integer clockDuration;
+
     private Integer tomatoClockTimes;
     private List<TomatoClock> tomatoClocks;
 
@@ -122,6 +124,14 @@ public class TaskDto {
         this.completedAt = completedAt;
     }
 
+    public Integer getClockDuration() {
+        return clockDuration;
+    }
+
+    public void setClockDuration(Integer clockDuration) {
+        this.clockDuration = clockDuration;
+    }
+
     @Override
     public String toString() {
         return "TaskDto{" +
@@ -129,6 +139,7 @@ public class TaskDto {
                 ", userId=" + userId +
                 ", taskName='" + taskName + '\'' +
                 ", estimate=" + estimate +
+                ", clockDuration=" + clockDuration +
                 ", tomatoClockTimes=" + tomatoClockTimes +
                 ", tomatoClocks=" + tomatoClocks +
                 ", stopTimes=" + stopTimes +
