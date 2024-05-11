@@ -12,9 +12,6 @@ import android.widget.Toast;
 
 
 import com.google.android.material.textfield.TextInputEditText;
-
-import net.onest.time.api.UserApi;
-import net.onest.time.api.dto.UserDto;
 import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.navigation.activity.RegisterActivity;
 import net.onest.time.navigation.activity.ResetPasswordActivity;
