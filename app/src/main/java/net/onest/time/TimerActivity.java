@@ -4,14 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.mut_jaeryo.circletimer.CircleTimer;
 
@@ -43,16 +48,29 @@ public class TimerActivity extends AppCompatActivity {
     private CountDownTimer mCountDownTimer;
     private long mTimeLeftInMillis = 0; // 初始计时时间为0秒
 
-    private Button startBtn,stopBtn,restartBtn,alterBtn;
+    private Button startBtn,stopOuterBtn,restartBtn,alterBtn,stopInnerBtn;
     private LinearLayout draLin;
     private Intent intent;
-    private TextView text;
+    private TextView text,taskName;
 
     private OkHttpClient httpClient;//可以复用，定义全局
     private Request request;
     private Response response;
     private Call call;
     private Gson gson = new Gson();
+
+    private RelativeLayout timerEntire;
+
+    /** 获取屏幕坐标点 **/
+    Point startPoint;// 起始点
+    Point endPoint;// 终点
+    /** 记录按下的坐标点（起始点）**/
+    private float mPosX = 0;
+    private float mPosY = 0;
+    /** 记录移动后抬起坐标点（终点）**/
+    private float mCurPosX = 0;
+    private float mCurPosY = 0;
+
 
 
     @Override
@@ -77,8 +95,49 @@ public class TimerActivity extends AppCompatActivity {
             }
         });
 
+        timerEntire.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+                switch (event.getAction()) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        mPosX = event.getX();
+                        mPosY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        mCurPosX = event.getX();
+                        mCurPosY = event.getY();
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (mCurPosY - mPosY > 60
+                                && (Math.abs(mCurPosY - mPosY) > 60)) {
+                            //向下滑動
+                            Toast.makeText(TimerActivity.this, "向下滑动😊", Toast.LENGTH_SHORT).show();
+                        } else if (mCurPosY - mPosY < -60
+                                && (Math.abs(mCurPosY - mPosY) > 60)) {
+                            //向上滑动
+                            Toast.makeText(TimerActivity.this, "向上滑动😊", Toast.LENGTH_SHORT).show();
+                        }else if (mCurPosX - mPosX > 60
+                                && (Math.abs(mCurPosX - mPosX) > 60)) {
+                            //向上滑动
+                            Toast.makeText(TimerActivity.this, "向右滑动😊", Toast.LENGTH_SHORT).show();
+                        }else if (mCurPosX - mPosX < -60
+                                && (Math.abs(mCurPosX - mPosX) > 60)) {
+                            //向上滑动
+                            Toast.makeText(TimerActivity.this, "向左滑动😊", Toast.LENGTH_SHORT).show();
+                        }
+
+                        break;
+                }
+                return true;
+            }
+        });
+
 
         intent = getIntent();
+        taskName.setText(intent.getStringExtra("name"));
 
         if("countDown".equals(intent.getStringExtra("method"))){
             timeTxt.setVisibility(View.GONE);
@@ -94,7 +153,7 @@ public class TimerActivity extends AppCompatActivity {
                 }
             });
 
-            stopBtn.setOnClickListener(new View.OnClickListener() {
+            stopOuterBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     circleTimer.stop();
@@ -126,9 +185,20 @@ public class TimerActivity extends AppCompatActivity {
 //            });
             startTimer();
 
-            stopBtn.setOnClickListener(new View.OnClickListener() {
+            //外部打断:
+            stopOuterBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Toast.makeText(TimerActivity.this, "外部打断", Toast.LENGTH_SHORT).show();
+                    stopTimer();
+                }
+            });
+
+            //内部打断:
+            stopInnerBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(TimerActivity.this, "内部打断", Toast.LENGTH_SHORT).show();
                     stopTimer();
                 }
             });
@@ -139,6 +209,7 @@ public class TimerActivity extends AppCompatActivity {
                     restartTimer();
                 }
             });
+
 
 
         }
@@ -197,14 +268,12 @@ public class TimerActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            text.setText(result);
+                            text.setText("“ "+result+" ”");
                         }
                     });
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-
-
             }
         }).start();
     }
@@ -249,14 +318,16 @@ public class TimerActivity extends AppCompatActivity {
         //计时器：
         circleTimer = findViewById(R.id.circle_timer);
         startBtn = findViewById(R.id.timer_start);
-        stopBtn = findViewById(R.id.timer_stop);
+        stopOuterBtn = findViewById(R.id.timer_outer_stop);
+        stopInnerBtn = findViewById(R.id.timer_inner_btn);
         restartBtn = findViewById(R.id.timer_reset);
         draLin = findViewById(R.id.timer_background_lin);
         timeTxt = findViewById(R.id.timer_forward);
 
         alterBtn = findViewById(R.id.alter_btn);
         text = findViewById(R.id.timer_text);
+        taskName = findViewById(R.id.timer_name);
+
+        timerEntire = findViewById(R.id.timer_entirely);
     }
-
-
 }

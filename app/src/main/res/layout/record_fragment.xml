@@ -416,6 +416,26 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="7dp"
+                android:background="@drawable/record_fragment_shape_10dp_all_corners"
+                android:orientation="vertical"
+                android:padding="10dp">
+                <TextView
+                    android:id="@+id/app_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="app使用时间"/>
+                <ImageView
+                    android:id="@+id/app_head"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@mipmap/head"/>
+
+            </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

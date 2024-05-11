@@ -1,5 +1,14 @@
 package net.onest.time.navigation.fragment;
 
+import static android.content.ContentValues.TAG;
+
+import android.app.ActivityManager;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -7,9 +16,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -19,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -37,12 +50,22 @@ import net.onest.time.utils.DateUtil;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class RecordFragment extends Fragment {
+    private TextView appTime;
+    private ImageView appHead;
+
     //饼状图:
     private PieChart pieChart;
 
@@ -81,6 +104,9 @@ public class RecordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
+
+        //获取app运行时间及其头像:
+        getAppTimeAndHead();
 
 
         //当前日期：
@@ -262,6 +288,47 @@ public class RecordFragment extends Fragment {
 //        });
     }
 
+    private void getAppTimeAndHead() {
+        UsageStatsManager usageStatsManager = (UsageStatsManager) getContext().getSystemService(Context.USAGE_STATS_SERVICE);
+        PackageManager packageManager = getContext().getPackageManager();
+
+        // 获取当前时间的毫秒数
+        long currentTime = System.currentTimeMillis();
+
+        // 获取前一小时内的应用使用情况（可根据需求自定义时间范围）
+        List<UsageStats> usageStatsList = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, currentTime - 60*60*1000, currentTime);
+
+        // 用于存储应用程序包名与使用时间的映射关系
+        SortedMap<String, Long> appUsageMap = new TreeMap<>();
+
+        for (UsageStats usageStats : usageStatsList) {
+            String packageName = usageStats.getPackageName();
+            long totalTimeInForeground = usageStats.getTotalTimeInForeground() / 1000; // 转换为秒
+
+            if (totalTimeInForeground > 0) {
+                appUsageMap.put(packageName, totalTimeInForeground);
+            }
+        }
+
+        // 获取应用程序的头像并打印输出
+        for (String packageName : appUsageMap.keySet()) {
+            try {
+                ApplicationInfo appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+                String appName = (String) packageManager.getApplicationLabel(appInfo);
+                Drawable appIcon = packageManager.getApplicationIcon(appInfo);
+
+                // 打印应用程序的名称、头像和使用时间
+                System.out.println("App Name: " + appName);
+                System.out.println("App Icon: " + appIcon);
+                System.out.println("Usage Time (seconds): " + appUsageMap.get(packageName));
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+
     private void setPieChartData(List<PieEntry> yVals, List<Integer> colors) {
         PieDataSet pieDataSet = new PieDataSet(yVals, "");
         pieDataSet.setColors(colors);
@@ -314,5 +381,8 @@ public class RecordFragment extends Fragment {
         todayFocus = view.findViewById(R.id.record_fragment_today_focus);
         dataDateTxt = view.findViewById(R.id.record_fragment_time_data_date);
         appDateTxt = view.findViewById(R.id.record_fragment_app_use_time_txt);
+
+        appTime = view.findViewById(R.id.app_time);
+        appHead = view.findViewById(R.id.app_head);
     }
 }
