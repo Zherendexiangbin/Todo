@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -59,7 +60,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
 
     private RadioButton setTimeOne,setTimeTwo,setTimeThree;
     private RadioButton setTimeGroupOne,setTimeGroupTwo,setTimeGroupThree;
-    private TextView setTimeOneTxt,setTimeTwoTxt,setTimeThreeTxt;
+    private TextView setTimeOneTxt,setTimeTwoTxt,setTimeThreeTxt,higherSet;
     private TodoItemAdapter todoItemAdapter;
 
 
@@ -180,6 +181,60 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
 
                 setTimeTwoTxt.setVisibility(View.GONE);
                 setTimeThreeTxt.setVisibility(View.GONE);
+
+                higherSet.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.CustomDialogStyle);
+                        LayoutInflater inflater = LayoutInflater.from(getContext());
+                        View dialogView = inflater.inflate(R.layout.todo_fragment_add_higher_setting,null);
+                        final Dialog dialog = builder.create();
+                        dialog.show();
+                        dialog.getWindow().setContentView(dialogView);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                        EditText remark = dialogView.findViewById(R.id.todo_fragment_add_higher_remark);
+                        EditText clockTimes = dialogView.findViewById(R.id.todo_fragment_add_clock_times);
+                        EditText rest = dialogView.findViewById(R.id.todo_fragment_add_rest_time);
+                        Button clockAbout = dialogView.findViewById(R.id.todo_clock_times_about);
+                        Button btnYes = dialogView.findViewById(R.id.add_todo_higher_setting_item_yes);
+                        Button btnNo = dialogView.findViewById(R.id.add_todo_higher_setting_item_no);
+
+                        clockAbout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new XPopup.Builder(getContext())
+                                        .asConfirm("什么是单次循环次数", "举例:\n" +
+                                                        "小明每次学习想学75分钟，但是75分钟太长学的太累，那么可以设定一个番茄钟的时间为25分钟，单次预期循环次数为3次。\n" +
+                                                        "这样的番茄钟就会按照:\n" +
+                                                        "学习25分钟-休息-学习25分钟-休息-学习25分钟-休息(共循环三次)\n" +
+                                                        "来执行",
+                                                "关闭", "确认",
+                                                new OnConfirmListener() {
+                                                    @Override
+                                                    public void onConfirm() {
+                                                        Toast.makeText(getContext(),"click",Toast.LENGTH_SHORT);
+                                                    }
+                                                }, null, false,R.layout.my_confim_popup)//绑定已有布局
+                                        .show();
+                            }
+                        });
+
+                        btnYes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        btnNo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                });
 
                 itemNameAbout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -339,6 +394,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         setTimeTwoTxt = dialogView.findViewById(R.id.set_time_two_txt);
         setTimeThreeTxt = dialogView.findViewById(R.id.set_time_three_txt);
 
+        higherSet = dialogView.findViewById(R.id.todo_fragment_add_item_higher_setting);
     }
 
     private void findView(View view) {

@@ -319,8 +319,9 @@ public class RecordFragment extends Fragment {
 
                 // 打印应用程序的名称、头像和使用时间
                 System.out.println("App Name: " + appName);
+                appTime.setText("App Name: " + appName+"Usage Time (seconds): " + appUsageMap.get(packageName));
                 System.out.println("App Icon: " + appIcon);
-                System.out.println("Usage Time (seconds): " + appUsageMap.get(packageName));
+                Glide.with(getContext()).load(appIcon).circleCrop().into(appHead);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
