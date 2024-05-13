@@ -24,8 +24,8 @@
         <com.mut_jaeryo.circletimer.CircleTimer
             android:layout_gravity="center"
             android:id="@+id/circle_timer"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
             app:show_text="true"
             app:outline_color="#FFFFFFFF"
             app:isOutline="true"
@@ -85,11 +85,10 @@
     <TextView
         android:id="@+id/timer_text"
         android:layout_marginTop="15dp"
-        android:layout_width="250dp"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:layout_alignParentRight="true"
-        android:textSize="17dp"
         android:layout_below="@+id/alter_btn" />
 
 </RelativeLayout>

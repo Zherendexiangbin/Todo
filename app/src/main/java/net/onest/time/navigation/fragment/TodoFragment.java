@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +36,7 @@ import net.onest.time.R;
 import net.onest.time.adapter.todo.TodoItemAdapter;
 import net.onest.time.entity.Item;
 import net.onest.time.utils.ColorUtil;
+import net.onest.time.utils.DrawableUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,6 +64,8 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
     private RadioButton setTimeGroupOne,setTimeGroupTwo,setTimeGroupThree;
     private TextView setTimeOneTxt,setTimeTwoTxt,setTimeThreeTxt,higherSet;
     private TodoItemAdapter todoItemAdapter;
+
+    private CardView cardView;
 
 
     //onCreateView()方法是用于创建Fragment的视图，并返回该视图对象
@@ -106,7 +110,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
             item.setItemName("事件 "+i);
             item.setTime(i+"0 分钟");
 //            item.setColor(ColorUtil.getColorByRgb(null));
-            item.setColor(ColorUtil.generateRandomColor());
+            item.setDrawable(DrawableUtil.getRandomImage(getContext()));
             itemList.add(item);
         }
 
