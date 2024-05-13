@@ -63,6 +63,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
                     intent = new Intent();
                     intent.setClass(context, TimerActivity.class);
                     intent.putExtra("method", "forWard");
+                    intent.putExtra("name", itemList.get(position).getItemName());
                     context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,holder.btn,"fab").toBundle());
                 } else if ("普通待办".equals(itemList.get(position).getTime())) {
                     //不计时：
@@ -81,6 +82,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
 //                int num = Integer.parseInt(parts[0]);
                     intent.putExtra("time", num);
                     intent.putExtra("method", "countDown");
+                    intent.putExtra("name", itemList.get(position).getItemName());
                     intent.setClass(context, TimerActivity.class);
                     context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,holder.btn,"fab").toBundle());
                 }

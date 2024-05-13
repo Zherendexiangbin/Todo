@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         findViews();
-        loginUser.setText("shiguang@qq.com");
-        loginPassword.setText("123456");
+        loginUser.setText("2808021998@qq.com");
+        loginPassword.setText("admin");
 
         setListeners();
         setAnimator();
@@ -36,19 +36,26 @@ public class MainActivity extends AppCompatActivity{
     private void setListeners() {
         //登录
         btnLogin.setOnClickListener(view -> {
-            String account = loginUser.getText().toString().trim();
-            String password = loginPassword.getText().toString().trim();
+            Toast.makeText(this, "登录成功，欢迎来到时光！", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, NavigationActivity.class);
+            startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,btnLogin,"fab").toBundle());
 
-            if (account.length() == 0 || password.length() == 0){
-                runOnUiThread(() -> Toast.makeText(this, "不可留空，请重新输入！", Toast.LENGTH_SHORT).show());
-            } else if (!password.equals("123456")) {
-                runOnUiThread(() -> Toast.makeText(this, "密码错误，请重新输入！", Toast.LENGTH_SHORT).show());
-            }else {
-                runOnUiThread(() -> Toast.makeText(this, "登录成功，欢迎来到时光！", Toast.LENGTH_SHORT).show());
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, NavigationActivity.class);
-                startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,btnLogin,"fab").toBundle());
-            }
+//            String account = loginUser.getText().toString().trim();
+//            String password = loginPassword.getText().toString().trim();
+//            if (account.length() == 0 || password.length() == 0){
+//                Toast.makeText(this, "不可留空，请重新输入！", Toast.LENGTH_SHORT).show();
+//            } else {
+//                UserDto userDto = new UserDto();
+//                userDto.setEmail(account);
+//                userDto.setPassword(password);
+//                String token = UserApi.login(userDto);
+//                if(token.isEmpty()){
+//                    Toast.makeText(this, "账号密码不正确", Toast.LENGTH_SHORT).show();
+//                }else{
+//
+//                }
+//            }
         });
 
         //忘记密码

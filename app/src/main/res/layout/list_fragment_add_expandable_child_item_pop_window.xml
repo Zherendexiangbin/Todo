@@ -303,6 +303,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="*不需要计时的待办，比如:取快递、喝水 等"/>
+
+        <TextView
+            android:id="@+id/list_fragment_add_item_higher_setting"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="展示更高级设置"
+            android:background="@drawable/button_wheat"
+            android:textSize="15dp"
+            android:textColor="@color/blue"/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
