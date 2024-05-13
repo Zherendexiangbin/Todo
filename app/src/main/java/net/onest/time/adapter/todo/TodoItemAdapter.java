@@ -3,16 +3,22 @@ package net.onest.time.adapter.todo;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -88,6 +94,35 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
                 }
             }
         });
+
+        //点击查看数据
+        holder.statistics.setOnClickListener(view -> {
+            //设置弹窗
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View dialogView = inflater.inflate(R.layout.item_pop, null);
+            setViews(dialogView);
+            final Dialog dialog = builder.create();
+            dialog.show();
+            dialog.getWindow().setContentView(dialogView);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        });
+    }
+
+    private void setViews(View dialogView) {
+        TextView title,learnFrequency, learnTime;
+        Button changeBackground, setItem, moveItem, deleteItem, timing;
+        LinearLayout learnHistory, learnStatistics;
+
+        title = dialogView.findViewById(R.id.txt_title);//待办标题txt
+        changeBackground = dialogView.findViewById(R.id.btn_changeBackground);//设置背景button
+        setItem = dialogView.findViewById(R.id.btn_set);//编辑待办button
+        moveItem = dialogView.findViewById(R.id.btn_move);//排序或移动待办button
+        deleteItem = dialogView.findViewById(R.id.btn_delete);//删除待办button
+        learnFrequency = dialogView.findViewById(R.id.txt_learn_frequency);//累计学习次数txt
+        learnTime = dialogView.findViewById(R.id.txt_learn_time);//累计学习时间txt单位分钟
+        learnHistory = dialogView.findViewById(R.id.learn_history);//历史记录(页面跳转)
+        learnStatistics = dialogView.findViewById(R.id.learn_statistics);//数据统计(页面跳转)
     }
 
     @Override
@@ -96,6 +131,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
+        RelativeLayout statistics;
         TextView name;
         TextView time;
         Button btn;
@@ -103,6 +139,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
+            statistics  =itemView.findViewById(R.id.click_statistics);
             name = itemView.findViewById(R.id.re_item_txt_name);
             time = itemView.findViewById(R.id.re_item_txt_time);
             btn = itemView.findViewById(R.id.re_item_ry_btn);

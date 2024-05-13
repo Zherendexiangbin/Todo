@@ -17,6 +17,7 @@
             android:layout_margin="5dp"
             android:background="@color/gray">
             <RelativeLayout
+                android:id="@+id/click_statistics"
                 android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
