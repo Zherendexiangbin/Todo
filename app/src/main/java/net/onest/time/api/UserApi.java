@@ -76,7 +76,10 @@ public class UserApi {
                 .buildAndSend(String.class);
     }
 
-    // 注册
+    /*
+     * 注册
+     * 参数 整个 UserDto对象所有参数
+     */
     public static String register(UserDto userDto) {
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + REGISTER)
