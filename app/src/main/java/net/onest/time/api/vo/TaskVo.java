@@ -12,6 +12,8 @@ public class TaskVo {
 
     private Integer clockDuration;
 
+    private String category;
+
     private Integer tomatoClockTimes;
     private List<TomatoClock> tomatoClocks;
     private Integer stopTimes;
@@ -136,6 +138,14 @@ public class TaskVo {
         this.completedAt = completedAt;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return "TaskVo{" +
@@ -144,6 +154,7 @@ public class TaskVo {
                 ", taskName='" + taskName + '\'' +
                 ", estimate=" + estimate +
                 ", clockDuration=" + clockDuration +
+                ", category='" + category + '\'' +
                 ", tomatoClockTimes=" + tomatoClockTimes +
                 ", tomatoClocks=" + tomatoClocks +
                 ", stopTimes=" + stopTimes +

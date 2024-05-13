@@ -15,6 +15,8 @@ public class TaskDto {
 
     private Integer clockDuration;
 
+    private String category;
+
     private Integer tomatoClockTimes;
     private List<TomatoClock> tomatoClocks;
 
@@ -132,6 +134,14 @@ public class TaskDto {
         this.clockDuration = clockDuration;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return "TaskDto{" +
@@ -140,6 +150,7 @@ public class TaskDto {
                 ", taskName='" + taskName + '\'' +
                 ", estimate=" + estimate +
                 ", clockDuration=" + clockDuration +
+                ", category='" + category + '\'' +
                 ", tomatoClockTimes=" + tomatoClockTimes +
                 ", tomatoClocks=" + tomatoClocks +
                 ", stopTimes=" + stopTimes +

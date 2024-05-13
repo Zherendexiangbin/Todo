@@ -33,6 +33,12 @@ public class TaskApi {
     // 完成任务，同步番茄钟与任务数据
     private final static String COMPLETE = "/complete";
 
+    // 查询一个类别的任务
+    private final static String FIND_BY_CATEGORY = "/findByCategory";
+
+    // 查询某一天的任务
+    private final static String FIND_BY_DAY = "/findByDay";
+
 
     // 添加一项任务
     public static TaskVo addTask(TaskDto taskDto){
@@ -88,5 +94,20 @@ public class TaskApi {
             .url(ServerConstant.ADDRESS + PREFIX + COMPLETE + "/" + taskId)
             .put()
             .buildAndSend();
+    }
+
+    public List<TaskVo> findByCategory(String category){
+        return RequestUtil.builder()
+                .url(ServerConstant.ADDRESS + PREFIX + FIND_BY_CATEGORY + "/" + category)
+                .get()
+                .buildAndSend(new TypeToken<List<TaskVo>>(){});
+    }
+
+    //时间戳以 毫秒 为单位
+    public List<TaskVo> findByDay(Long timestamp){
+        return RequestUtil.builder()
+                .url(ServerConstant.ADDRESS + PREFIX + FIND_BY_DAY + "?timestamp=" + timestamp)
+                .get()
+                .buildAndSend(new TypeToken<List<TaskVo>>(){});
     }
 }
