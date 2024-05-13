@@ -1,5 +1,7 @@
 package net.onest.time.entity;
 
+import android.graphics.drawable.Drawable;
+
 import java.util.Date;
 
 public class Item {
@@ -8,6 +10,15 @@ public class Item {
 
     private Date createdTime;
     private int color;
+    private Drawable drawable;
+
+    public Drawable getDrawable() {
+        return drawable;
+    }
+
+    public void setDrawable(Drawable drawable) {
+        this.drawable = drawable;
+    }
 
     public Item() {
     }
@@ -34,6 +45,19 @@ public class Item {
         this.time = time;
         this.createdTime = createdTime;
         this.color = color;
+    }
+
+    public Item(String itemName, String time, Date createdTime, Drawable drawable) {
+        this.itemName = itemName;
+        this.time = time;
+        this.createdTime = createdTime;
+        this.drawable = drawable;
+    }
+
+    public Item(String itemName, String time, Drawable drawable) {
+        this.itemName = itemName;
+        this.time = time;
+        this.drawable = drawable;
     }
 
     public int getColor() {

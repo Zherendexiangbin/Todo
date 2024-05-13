@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 
 import com.google.android.material.textfield.TextInputEditText;
+
+import net.onest.time.api.UserApi;
+import net.onest.time.api.dto.UserDto;
 import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.navigation.activity.RegisterActivity;
 import net.onest.time.navigation.activity.ResetPasswordActivity;
@@ -36,26 +39,26 @@ public class MainActivity extends AppCompatActivity{
     private void setListeners() {
         //登录
         btnLogin.setOnClickListener(view -> {
-            Toast.makeText(this, "登录成功，欢迎来到时光！", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent();
-            intent.setClass(MainActivity.this, NavigationActivity.class);
-            startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,btnLogin,"fab").toBundle());
 
-//            String account = loginUser.getText().toString().trim();
-//            String password = loginPassword.getText().toString().trim();
-//            if (account.length() == 0 || password.length() == 0){
-//                Toast.makeText(this, "不可留空，请重新输入！", Toast.LENGTH_SHORT).show();
-//            } else {
-//                UserDto userDto = new UserDto();
-//                userDto.setEmail(account);
-//                userDto.setPassword(password);
-//                String token = UserApi.login(userDto);
-//                if(token.isEmpty()){
-//                    Toast.makeText(this, "账号密码不正确", Toast.LENGTH_SHORT).show();
-//                }else{
-//
-//                }
-//            }
+            String account = loginUser.getText().toString().trim();
+            String password = loginPassword.getText().toString().trim();
+            if (account.length() == 0 || password.length() == 0){
+                Toast.makeText(this, "不可留空，请重新输入！", Toast.LENGTH_SHORT).show();
+            } else {
+                UserDto userDto = new UserDto();
+                userDto.setEmail(account);
+                userDto.setPassword(password);
+                String token = UserApi.login(userDto);
+                if(token.isEmpty()){
+                    Toast.makeText(this, "账号密码不正确", Toast.LENGTH_SHORT).show();
+                }else{
+
+                    Toast.makeText(this, "登录成功，欢迎来到时光！", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    intent.setClass(MainActivity.this, NavigationActivity.class);
+                    startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,btnLogin,"fab").toBundle());
+                }
+            }
         });
 
         //忘记密码

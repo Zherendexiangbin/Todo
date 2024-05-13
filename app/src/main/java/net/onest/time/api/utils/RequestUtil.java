@@ -128,9 +128,10 @@ public class RequestUtil {
             call.timeout().timeout(15, TimeUnit.SECONDS);
 
             try (Response response = call.execute()) {
-                Result<?> result = gson.fromJson(response.body().string(), Result.class);
+                String body = response.body().string();
+                Result<?> result = gson.fromJson(body, Result.class);
                 checkResult(result);
-                return gson.toJsonTree(request);
+                return gson.fromJson(body, JsonObject.class).get("data");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

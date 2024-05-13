@@ -60,7 +60,8 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
         Item news = itemList.get(position);
         holder.name.setText(news.getItemName());
         holder.time.setText(news.getTime());
-        holder.backGroundLin.setBackgroundColor(news.getColor());
+//        holder.backGroundLin.setBackgroundColor(news.getColor());
+        holder.backGroundLin.setBackground(news.getDrawable());
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

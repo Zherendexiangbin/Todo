@@ -7,15 +7,16 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="25dp">
+        android:layout_margin="5dp"
+        app:cardCornerRadius="15dp">
         <LinearLayout
             android:id="@+id/re_item_background_lin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:orientation="horizontal"
             android:padding="5dp"
-            android:layout_margin="5dp"
-            android:background="@color/gray">
+            android:scaleType="center"
+            android:background="@drawable/ic_bgm_custom">
             <RelativeLayout
                 android:id="@+id/click_statistics"
                 android:layout_gravity="center"
@@ -40,6 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/re_item_txt_name"
                     android:textColor="@color/white"
+                    android:textStyle="bold"
                     android:text="时间"/>
             </RelativeLayout>
             <Button

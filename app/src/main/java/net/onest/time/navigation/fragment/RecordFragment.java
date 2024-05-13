@@ -11,6 +11,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -65,6 +66,7 @@ import java.util.TreeMap;
 public class RecordFragment extends Fragment {
     private TextView appTime;
     private ImageView appHead;
+    private int i=0;
 
     //饼状图:
     private PieChart pieChart;
@@ -104,9 +106,6 @@ public class RecordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
-
-        //获取app运行时间及其头像:
-        getAppTimeAndHead();
 
 
         //当前日期：
@@ -200,15 +199,18 @@ public class RecordFragment extends Fragment {
 //        Drawable drawable5 = getContext().getResources().getDrawable(R.drawable.person1,null);
 //        drawable1.setBounds(0,40,0,40);
 
+        //获取app运行时间及其头像:
+//        getAppTimeAndHead();
+
         //水平柱状图:X、Y轴颠倒   //设置图片大小及其距离：
-        list.add(new BarEntry(1,3,setImageSizeAndDistance("add")));
-        list.add(new BarEntry(2,5,setImageSizeAndDistance("trophy")));
-        list.add(new BarEntry(3,6,setImageSizeAndDistance("trophy1")));
-        list.add(new BarEntry(4,4,setImageSizeAndDistance("home1")));
-        list.add(new BarEntry(5,2,setImageSizeAndDistance("person1")));
+//        list.add(new BarEntry(1,3,setImageSizeAndDistance("add")));
+//        list.add(new BarEntry(2,5,setImageSizeAndDistance("trophy")));
+//        list.add(new BarEntry(3,6,setImageSizeAndDistance("trophy1")));
+//        list.add(new BarEntry(4,4,setImageSizeAndDistance("home1")));
+//        list.add(new BarEntry(5,2,setImageSizeAndDistance("person1")));
 
 
-        BarDataSet barDataSet=new BarDataSet(list,"App前台使用时间");
+        BarDataSet barDataSet=new BarDataSet(getAppTimeAndHead(),"App前台使用时间");
         BarData barData=new BarData(barDataSet);
         barData.setBarWidth(0.5f);//设置条形柱的宽度
         barDataSet.setBarBorderWidth(1);//设置条形图边框宽度
@@ -242,7 +244,7 @@ public class RecordFragment extends Fragment {
                 return "";
             }
         });
-        barHor.getAxisLeft().setAxisMaximum(50);   //Y轴最大数值
+        barHor.getAxisLeft().setAxisMaximum(500);   //Y轴最大数值
         barHor.getAxisLeft().setAxisMinimum(0);   //Y轴最小数值
 
         //设置动画
@@ -288,7 +290,7 @@ public class RecordFragment extends Fragment {
 //        });
     }
 
-    private void getAppTimeAndHead() {
+    private List<BarEntry> getAppTimeAndHead() {
         UsageStatsManager usageStatsManager = (UsageStatsManager) getContext().getSystemService(Context.USAGE_STATS_SERVICE);
         PackageManager packageManager = getContext().getPackageManager();
 
@@ -322,11 +324,16 @@ public class RecordFragment extends Fragment {
                 appTime.setText("App Name: " + appName+"Usage Time (seconds): " + appUsageMap.get(packageName));
                 System.out.println("App Icon: " + appIcon);
                 Glide.with(getContext()).load(appIcon).circleCrop().into(appHead);
+    //          list.add(new BarEntry(5,2,setImageSizeAndDistance("person1")));
+
+                float time = appUsageMap.get(packageName)/60;
+                list.add(new BarEntry(i++,time,setImageSizeAndDistance(appIcon)));
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
         }
-
+        i=0;
+        return list;
     }
 
 
@@ -355,13 +362,38 @@ public class RecordFragment extends Fragment {
         pieChart.animateXY(1000,1000);//XY两轴混合动画
     }
 
-    private Drawable setImageSizeAndDistance(String name) {
-        int imageResId = getContext().getResources().getIdentifier(name,"drawable", getActivity().getPackageName());
-        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(),imageResId);
-        Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,50,50,false);
-        Drawable drawable = new BitmapDrawable(getActivity().getResources(),bitmap1);
-        drawable.setBounds(100,0,0,0);
-        return drawable;
+    private Drawable setImageSizeAndDistance(Drawable drawable) {
+//        int imageResId = getContext().getResources().getIdentifier(name,"drawable", getActivity().getPackageName());
+//        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(),imageResId);
+//        Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,50,50,false);
+//        Drawable alteredDrawable = new BitmapDrawable(getActivity().getResources(),bitmap1);
+//        alteredDrawable.setBounds(100,0,0,0);
+
+        Bitmap bitmap;
+        if (drawable instanceof BitmapDrawable) {
+            bitmap = ((BitmapDrawable) drawable).getBitmap();
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+        }
+
+// 缩放比例
+        float scale = 0.3f; // 缩放比例
+
+// 缩放后的宽高
+        int width = (int) (bitmap.getWidth() * scale);
+        int height = (int) (bitmap.getHeight() * scale);
+
+// 缩放Bitmap对象
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+
+// 将缩放后的Bitmap对象转换为Drawable
+        Drawable scaledDrawable = new BitmapDrawable(getResources(), scaledBitmap);
+        scaledDrawable.setBounds(100,0,0,0);
+
+        return scaledDrawable;
     }
 
     public void setExtraOffsets(float left, float top, float right, float bottom) {
