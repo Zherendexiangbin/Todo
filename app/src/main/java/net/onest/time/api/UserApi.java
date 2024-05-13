@@ -77,7 +77,7 @@ public class UserApi {
     }
 
     // 注册
-    public String register(UserDto userDto) {
+    public static String register(UserDto userDto) {
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + REGISTER)
                 .post(userDto)
@@ -85,7 +85,7 @@ public class UserApi {
     }
 
     // 修改密码/忘记密码
-    public String modifyPassword(UserDto userDto){
+    public static String modifyPassword(UserDto userDto){
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + MODIFY_PASSWORD)
                 .put(userDto)
@@ -93,7 +93,7 @@ public class UserApi {
     }
 
     // 修改头像
-    public String modifyAvatar(String avatar){
+    public static String modifyAvatar(String avatar){
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + MODIFY_AVATAR)
                 .put(avatar)
@@ -101,7 +101,7 @@ public class UserApi {
     }
 
     // 修改用户名
-    public String modifyUserName(String userName){
+    public static String modifyUserName(String userName){
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + MODIFY_USER_NAME)
                 .put(userName)
@@ -109,7 +109,7 @@ public class UserApi {
     }
 
     // 修改个性签名
-    public String modifySignature(String signature){
+    public static String modifySignature(String signature){
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + MODIFY_SIGNATURE)
                 .put(signature)
@@ -117,7 +117,7 @@ public class UserApi {
     }
 
     // 修改用户个人信息
-    public UserVo modifyUserInfo(UserDto userDto){
+    public static UserVo modifyUserInfo(UserDto userDto){
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + MODIFY_USER_INFO)
                 .put(userDto)
@@ -125,7 +125,7 @@ public class UserApi {
     }
 
     // 获取用户信息
-    public UserVo getUserInfo(){
+    public static UserVo getUserInfo(){
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + GET_USER_INFO)
                 .get()
@@ -133,7 +133,7 @@ public class UserApi {
     }
 
     // 用户注销
-    public String logout(){
+    public static String logout(){
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + LOGOUT)
                 .get()

@@ -69,7 +69,7 @@ public class HttpRequestTest {
     @Test
     public void findRooms() {
         RoomDto roomDto = new RoomDto();
-        roomDto.setRoomName("自习");
+        roomDto.setRoomName("haha");
         System.out.println(RoomApi.findRooms(roomDto, 1, 20));
     }
 
@@ -80,6 +80,6 @@ public class HttpRequestTest {
 
     @Test
     public void generateInvitationCode() {
-        System.out.println(RoomApi.generateInvitationCode(1782930102082654209L));
+        System.out.println(RoomApi.generateInvitationCode(111L));
     }
 }

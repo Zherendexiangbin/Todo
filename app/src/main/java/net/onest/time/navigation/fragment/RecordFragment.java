@@ -1,5 +1,14 @@
 package net.onest.time.navigation.fragment;
 
+import static android.content.ContentValues.TAG;
+
+import android.app.ActivityManager;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -7,9 +16,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -19,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -33,15 +46,26 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import net.onest.time.R;
+import net.onest.time.utils.DateUtil;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class RecordFragment extends Fragment {
+    private TextView appTime;
+    private ImageView appHead;
+
     //饼状图:
     private PieChart pieChart;
 
@@ -81,14 +105,14 @@ public class RecordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
 
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDate = dateFormat.format(calendar.getTime());
+        //获取app运行时间及其头像:
+        getAppTimeAndHead();
+
 
         //当前日期：
-        todayFocus.setText(currentDate);
-        dataDateTxt.setText(currentDate);
-        appDateTxt.setText(currentDate);
+        todayFocus.setText(DateUtil.getCurDay());
+        dataDateTxt.setText(DateUtil.getCurDay());
+        appDateTxt.setText(DateUtil.getCurDay());
 
         List<PieEntry> yVals = new ArrayList<>();
         List<Integer> colors = new ArrayList<>();
@@ -109,53 +133,20 @@ public class RecordFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
                     case R.id.record_fragment_time_data_day:
-                        Calendar calendar = Calendar.getInstance();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        String currentDate = dateFormat.format(calendar.getTime());
-                        //当前日期：
-                        dataDateTxt.setText(currentDate);
+                        dataDateTxt.setText(DateUtil.getCurDay());
 
                         setPieChartData(yVals,colors);
                         pieChart.invalidate();//实时更新数据
                         break;
                     case R.id.record_fragment_time_data_week:
-
-                        Calendar calendarWeek = Calendar.getInstance();
-                        SimpleDateFormat dateFormatWeek = new SimpleDateFormat("yyyy-MM-dd");
-
-// 设置一周的第一天为周一
-                        calendarWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                        String startDate = dateFormatWeek.format(calendarWeek.getTime());
-
-// 获取本周的最后一天（星期日）
-                        calendarWeek.add(Calendar.DATE, 6);
-
-// 判断是否已经是月末，如果是，则将结束日期设置为当月最后一天
-                        if (calendarWeek.get(Calendar.DAY_OF_MONTH) == calendarWeek.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-                            calendarWeek.set(Calendar.DAY_OF_MONTH, calendarWeek.getActualMaximum(Calendar.DAY_OF_MONTH));
-                        } else {
-                            // 如果不是月末，则继续获取本周的结束日期
-                            calendarWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                        }
-
-                        String endDate = dateFormatWeek.format(calendarWeek.getTime());
-                        dataDateTxt.setText(startDate+" ~ "+endDate);
+                        dataDateTxt.setText(DateUtil.getCurWeek());
 
                         pieChart.setData(null);
                         pieChart.notifyDataSetChanged();
                         pieChart.invalidate();
                         break;
                     case R.id.record_fragment_time_data_month:
-                        Calendar calendarMonth = Calendar.getInstance();
-                        SimpleDateFormat dateFormatMonth = new SimpleDateFormat("yyyy-MM-dd");
-                        // 获取当月的第一天
-                        calendarMonth.set(Calendar.DAY_OF_MONTH, 1);
-                        String startDateMonth = dateFormatMonth.format(calendarMonth.getTime());
-                        // 获取当月的最后一天
-                        calendarMonth.set(Calendar.DAY_OF_MONTH, calendarMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
-                        String endDateMonth = dateFormatMonth.format(calendarMonth.getTime());
-
-                        dataDateTxt.setText(startDateMonth+" ~ "+endDateMonth);
+                        dataDateTxt.setText(DateUtil.getCurMonth());
 
                         pieChart.setData(null);
                         pieChart.notifyDataSetChanged();
@@ -297,6 +288,48 @@ public class RecordFragment extends Fragment {
 //        });
     }
 
+    private void getAppTimeAndHead() {
+        UsageStatsManager usageStatsManager = (UsageStatsManager) getContext().getSystemService(Context.USAGE_STATS_SERVICE);
+        PackageManager packageManager = getContext().getPackageManager();
+
+        // 获取当前时间的毫秒数
+        long currentTime = System.currentTimeMillis();
+
+        // 获取前一小时内的应用使用情况（可根据需求自定义时间范围）
+        List<UsageStats> usageStatsList = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, currentTime - 60*60*1000, currentTime);
+
+        // 用于存储应用程序包名与使用时间的映射关系
+        SortedMap<String, Long> appUsageMap = new TreeMap<>();
+
+        for (UsageStats usageStats : usageStatsList) {
+            String packageName = usageStats.getPackageName();
+            long totalTimeInForeground = usageStats.getTotalTimeInForeground() / 1000; // 转换为秒
+
+            if (totalTimeInForeground > 0) {
+                appUsageMap.put(packageName, totalTimeInForeground);
+            }
+        }
+
+        // 获取应用程序的头像并打印输出
+        for (String packageName : appUsageMap.keySet()) {
+            try {
+                ApplicationInfo appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+                String appName = (String) packageManager.getApplicationLabel(appInfo);
+                Drawable appIcon = packageManager.getApplicationIcon(appInfo);
+
+                // 打印应用程序的名称、头像和使用时间
+                System.out.println("App Name: " + appName);
+                appTime.setText("App Name: " + appName+"Usage Time (seconds): " + appUsageMap.get(packageName));
+                System.out.println("App Icon: " + appIcon);
+                Glide.with(getContext()).load(appIcon).circleCrop().into(appHead);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+
     private void setPieChartData(List<PieEntry> yVals, List<Integer> colors) {
         PieDataSet pieDataSet = new PieDataSet(yVals, "");
         pieDataSet.setColors(colors);
@@ -349,5 +382,8 @@ public class RecordFragment extends Fragment {
         todayFocus = view.findViewById(R.id.record_fragment_today_focus);
         dataDateTxt = view.findViewById(R.id.record_fragment_time_data_date);
         appDateTxt = view.findViewById(R.id.record_fragment_app_use_time_txt);
+
+        appTime = view.findViewById(R.id.app_time);
+        appHead = view.findViewById(R.id.app_head);
     }
 }

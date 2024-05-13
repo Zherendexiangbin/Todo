@@ -56,7 +56,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private RadioButton wantOne,wantTwo,wantThree;
     private RadioButton setTimeOne,setTimeTwo,setTimeThree;
     private RadioButton setTimeGroupOne,setTimeGroupTwo,setTimeGroupThree;
-    private TextView goalDate,setTimeOneTxt,setTimeTwoTxt,setTimeThreeTxt;
+    private TextView goalDate,setTimeOneTxt,setTimeTwoTxt,setTimeThreeTxt,higherSet;
     private Spinner goalUnits,habitDateUnits,habitTimeUnits;
     private LinearLayout goalLinear,habitLinear;
 
@@ -148,6 +148,60 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 setTimeThreeTxt.setVisibility(View.GONE);
                 goalLinear.setVisibility(View.GONE);
                 habitLinear.setVisibility(View.GONE);
+
+                higherSet.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.CustomDialogStyle);
+                        LayoutInflater inflater = LayoutInflater.from(context);
+                        View dialogView = inflater.inflate(R.layout.todo_fragment_add_higher_setting,null);
+                        final Dialog dialog = builder.create();
+                        dialog.show();
+                        dialog.getWindow().setContentView(dialogView);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                        EditText remark = dialogView.findViewById(R.id.todo_fragment_add_higher_remark);
+                        EditText clockTimes = dialogView.findViewById(R.id.todo_fragment_add_clock_times);
+                        EditText rest = dialogView.findViewById(R.id.todo_fragment_add_rest_time);
+                        Button clockAbout = dialogView.findViewById(R.id.todo_clock_times_about);
+                        Button btnYes = dialogView.findViewById(R.id.add_todo_higher_setting_item_yes);
+                        Button btnNo = dialogView.findViewById(R.id.add_todo_higher_setting_item_no);
+
+                        clockAbout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new XPopup.Builder(context)
+                                        .asConfirm("什么是单次循环次数", "举例:\n" +
+                                                        "小明每次学习想学75分钟，但是75分钟太长学的太累，那么可以设定一个番茄钟的时间为25分钟，单次预期循环次数为3次。\n" +
+                                                        "这样的番茄钟就会按照:\n" +
+                                                        "学习25分钟-休息-学习25分钟-休息-学习25分钟-休息(共循环三次)\n" +
+                                                        "来执行",
+                                                "关闭", "确认",
+                                                new OnConfirmListener() {
+                                                    @Override
+                                                    public void onConfirm() {
+                                                        Toast.makeText(context,"click",Toast.LENGTH_SHORT);
+                                                    }
+                                                }, null, false,R.layout.my_confim_popup)//绑定已有布局
+                                        .show();
+                            }
+                        });
+
+                        btnYes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        btnNo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                });
 
                 itemNameAbout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -433,6 +487,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         setTimeOneTxt = dialogView.findViewById(R.id.set_time_one_txt);
         setTimeTwoTxt = dialogView.findViewById(R.id.set_time_two_txt);
         setTimeThreeTxt = dialogView.findViewById(R.id.set_time_three_txt);
+        higherSet = dialogView.findViewById(R.id.list_fragment_add_item_higher_setting);
 
         goalUnits = dialogView.findViewById(R.id.goal_units);
         habitDateUnits = dialogView.findViewById(R.id.habit_date_units);
