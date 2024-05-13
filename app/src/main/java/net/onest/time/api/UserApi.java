@@ -69,6 +69,26 @@ public class UserApi {
         return token;
     }
 
+    /*
+     * 注册
+     * 参数 整个 UserDto对象所有参数
+     */
+    public static void register(UserDto userDto) {
+        RequestUtil.builder()
+            .url(ServerConstant.ADDRESS + PREFIX + REGISTER)
+            .post(userDto)
+            .buildAndSend();
+    }
+
+    // 修改密码/忘记密码
+    public static void modifyPassword(UserDto userDto){
+        RequestUtil.builder()
+            .url(ServerConstant.ADDRESS + PREFIX + MODIFY_PASSWORD)
+            .put(userDto)
+            .buildAndSend(String.class);
+    }
+
+    // 上传头像
     public static String uploadAvatar(String avatar) {
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + UPLOAD_AVATAR)
@@ -76,47 +96,29 @@ public class UserApi {
                 .buildAndSend(String.class);
     }
 
-    /*
-     * 注册
-     * 参数 整个 UserDto对象所有参数
-     */
-    public static String register(UserDto userDto) {
-        return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + REGISTER)
-                .post(userDto)
-                .buildAndSend(String.class);
-    }
-
-    // 修改密码/忘记密码
-    public static String modifyPassword(UserDto userDto){
-        return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + MODIFY_PASSWORD)
-                .put(userDto)
-                .buildAndSend(String.class);
-    }
 
     // 修改头像
-    public static String modifyAvatar(String avatar){
-        return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + MODIFY_AVATAR)
-                .put(avatar)
-                .buildAndSend(String.class);
+    public static void modifyAvatar(String avatar){
+        RequestUtil.builder()
+            .url(ServerConstant.ADDRESS + PREFIX + MODIFY_AVATAR + "?avatar=" + avatar)
+            .put(avatar)
+            .buildAndSend(String.class);
     }
 
     // 修改用户名
-    public static String modifyUserName(String userName){
-        return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + MODIFY_USER_NAME)
-                .put(userName)
-                .buildAndSend(String.class);
+    public static void modifyUserName(String userName){
+        RequestUtil.builder()
+            .url(ServerConstant.ADDRESS + PREFIX + MODIFY_USER_NAME + "?userName=" + userName)
+            .put(userName)
+            .buildAndSend(String.class);
     }
 
     // 修改个性签名
-    public static String modifySignature(String signature){
-        return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + MODIFY_SIGNATURE)
-                .put(signature)
-                .buildAndSend(String.class);
+    public static void modifySignature(String signature){
+        RequestUtil.builder()
+            .url(ServerConstant.ADDRESS + PREFIX + MODIFY_SIGNATURE + "?signature=" + signature)
+            .put(signature)
+            .buildAndSend(String.class);
     }
 
     // 修改用户个人信息
@@ -136,10 +138,10 @@ public class UserApi {
     }
 
     // 用户注销
-    public static String logout(){
-        return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + LOGOUT)
-                .get()
-                .buildAndSend(String.class);
+    public static void logout(){
+        RequestUtil.builder()
+            .url(ServerConstant.ADDRESS + PREFIX + LOGOUT)
+            .get()
+            .buildAndSend(String.class);
     }
 }
