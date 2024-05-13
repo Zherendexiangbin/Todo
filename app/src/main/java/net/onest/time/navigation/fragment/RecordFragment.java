@@ -46,6 +46,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
+import net.onest.time.MainActivity;
 import net.onest.time.R;
 import net.onest.time.utils.DateUtil;
 
@@ -291,6 +292,14 @@ public class RecordFragment extends Fragment {
     }
 
     private List<BarEntry> getAppTimeAndHead() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            try {
+                startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+            } catch (Exception e) {
+                Toast.makeText(getContext(),"无法开启允许查看使用情况的应用界面",Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+        }
         UsageStatsManager usageStatsManager = (UsageStatsManager) getContext().getSystemService(Context.USAGE_STATS_SERVICE);
         PackageManager packageManager = getContext().getPackageManager();
 
@@ -326,8 +335,11 @@ public class RecordFragment extends Fragment {
                 Glide.with(getContext()).load(appIcon).circleCrop().into(appHead);
     //          list.add(new BarEntry(5,2,setImageSizeAndDistance("person1")));
 
-                float time = appUsageMap.get(packageName)/60;
-                list.add(new BarEntry(i++,time,setImageSizeAndDistance(appIcon)));
+                if (appUsageMap.get(packageName)/60!=0){
+                    float time = appUsageMap.get(packageName)/60;
+                    list.add(new BarEntry(i++,time,setImageSizeAndDistance(appIcon)));
+                }
+
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
