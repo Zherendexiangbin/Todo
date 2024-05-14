@@ -55,91 +55,91 @@ public class RoomApi {
 
     public static RoomVo createRoom(RoomDto roomDto) {
         return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + CREATE)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + CREATE)
                 .post(roomDto)
                 .buildAndSend(RoomVo.class);
     }
 
     public static String generateInvitationCode(Long roomId) {
         return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + GENERATE_INVITATION_CODE + "?roomId=" + roomId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + GENERATE_INVITATION_CODE + "?roomId=" + roomId)
                 .get()
                 .buildAndSend(String.class);
     }
 
     public static void acceptInvitation(String invitationCode) {
         RequestUtil.builder()
-            .url(ServerConstant.ADDRESS + PREFIX + ACCEPT_INVITATION + "?invitationCode=" + invitationCode)
+            .url(ServerConstant.HTTP_ADDRESS + PREFIX + ACCEPT_INVITATION + "?invitationCode=" + invitationCode)
             .post()
             .buildAndSend();
     }
 
     public static List<UserVo> listUsers(Long roomId) {
         return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + USER_LIST + "?roomId=" + roomId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + USER_LIST + "?roomId=" + roomId)
                 .get()
                 .buildAndSend(new TypeToken<List<UserVo>>(){});
     }
 
     public static List<RoomVo> listRooms() {
        return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + LIST_ROOM)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + LIST_ROOM)
                 .get()
                 .buildAndSend(new TypeToken<List<RoomVo>>(){});
     }
 
     public static void removeUser(Long roomId, Long userId){
         RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + REMOVE_USER + "?roomId=" + roomId + "&userId=" + userId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + REMOVE_USER + "?roomId=" + roomId + "&userId=" + userId)
                 .delete()
                 .buildAndSend();
     }
 
     public static void userExit(Long roomId){
         RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + USER_EXIT + "?roomId=" + roomId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + USER_EXIT + "?roomId=" + roomId)
                 .delete()
                 .buildAndSend();
     }
 
     public static void deleteRoom(Long roomId){
         RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + DELETE_ROOM + "?roomId=" + roomId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + DELETE_ROOM + "?roomId=" + roomId)
                 .delete()
                 .buildAndSend();
     }
 
     public static void updateRoom(RoomDto roomDto) {
         RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + UPDATE_ROOM)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + UPDATE_ROOM)
                 .put(roomDto)
                 .buildAndSend();
     }
 
     public static Page<RoomVo> findRooms(RoomDto roomDto, int pageNum, int pageSize) {
         return RequestUtil.builder()
-                    .url(ServerConstant.ADDRESS + PREFIX + FIND_ROOMS + RequestUtil.parseParams(roomDto, "pageNum", pageNum, "pageSize", pageSize))
+                    .url(ServerConstant.HTTP_ADDRESS + PREFIX + FIND_ROOMS + RequestUtil.parseParams(roomDto, "pageNum", pageNum, "pageSize", pageSize))
                     .get()
                     .buildAndSend(new TypeToken<Page<RoomVo>>(){});
     }
 
     public static void requestJoin(Long roomId){
         RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + REQUEST_JOIN + "?roomId=" + roomId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + REQUEST_JOIN + "?roomId=" + roomId)
                 .post()
                 .buildAndSend();
     }
 
     public static void acceptRequest(Long roomId, Long userId) {
         RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + ACCEPT_REQUEST + "?roomId=" + roomId + "&userId=" + userId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + ACCEPT_REQUEST + "?roomId=" + roomId + "&userId=" + userId)
                 .post()
                 .buildAndSend();
     }
 
     public static List<UserVo> findRequests(Long roomId) {
         return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + FIND_REQUESTS + "?roomId=" + roomId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + FIND_REQUESTS + "?roomId=" + roomId)
                 .get()
                 .buildAndSend(new TypeToken<List<UserVo>>(){});
     }

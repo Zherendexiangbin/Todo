@@ -46,14 +46,14 @@ public class UserApi {
 
     public static String getEmailCodeKey(String email) {
         return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + GET_EMAIL_CODE_KEY + "?email=" + email)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + GET_EMAIL_CODE_KEY + "?email=" + email)
                 .get()
                 .buildAndSend(String.class);
     }
 
     public static String login(UserDto userDto) {
         String token = RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + LOGIN)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + LOGIN)
                 .post(userDto)
                 .buildAndSend(String.class);
 
@@ -63,7 +63,7 @@ public class UserApi {
                 .getApplicationContext()
                 .getSharedPreferences(SharedPreferencesConstant.USER_INFO, Context.MODE_PRIVATE);
         preferences.edit()
-                .putString("token", token)
+                .putString("token9", token)
                 .apply();
 
         return token;
@@ -75,7 +75,7 @@ public class UserApi {
      */
     public static void register(UserDto userDto) {
         RequestUtil.builder()
-            .url(ServerConstant.ADDRESS + PREFIX + REGISTER)
+            .url(ServerConstant.HTTP_ADDRESS + PREFIX + REGISTER)
             .post(userDto)
             .buildAndSend();
     }
@@ -83,7 +83,7 @@ public class UserApi {
     // 修改密码/忘记密码
     public static void modifyPassword(UserDto userDto){
         RequestUtil.builder()
-            .url(ServerConstant.ADDRESS + PREFIX + MODIFY_PASSWORD)
+            .url(ServerConstant.HTTP_ADDRESS + PREFIX + MODIFY_PASSWORD)
             .put(userDto)
             .buildAndSend(String.class);
     }
@@ -91,7 +91,7 @@ public class UserApi {
     // 上传头像
     public static String uploadAvatar(String avatar) {
         return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + UPLOAD_AVATAR)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + UPLOAD_AVATAR)
                 .postFile(avatar)
                 .buildAndSend(String.class);
     }
@@ -100,7 +100,7 @@ public class UserApi {
     // 修改头像
     public static void modifyAvatar(String avatar){
         RequestUtil.builder()
-            .url(ServerConstant.ADDRESS + PREFIX + MODIFY_AVATAR + "?avatar=" + avatar)
+            .url(ServerConstant.HTTP_ADDRESS + PREFIX + MODIFY_AVATAR + "?avatar=" + avatar)
             .put(avatar)
             .buildAndSend(String.class);
     }
@@ -108,7 +108,7 @@ public class UserApi {
     // 修改用户名
     public static void modifyUserName(String userName){
         RequestUtil.builder()
-            .url(ServerConstant.ADDRESS + PREFIX + MODIFY_USER_NAME + "?userName=" + userName)
+            .url(ServerConstant.HTTP_ADDRESS + PREFIX + MODIFY_USER_NAME + "?userName=" + userName)
             .put(userName)
             .buildAndSend(String.class);
     }
@@ -116,7 +116,7 @@ public class UserApi {
     // 修改个性签名
     public static void modifySignature(String signature){
         RequestUtil.builder()
-            .url(ServerConstant.ADDRESS + PREFIX + MODIFY_SIGNATURE + "?signature=" + signature)
+            .url(ServerConstant.HTTP_ADDRESS + PREFIX + MODIFY_SIGNATURE + "?signature=" + signature)
             .put(signature)
             .buildAndSend(String.class);
     }
@@ -124,7 +124,7 @@ public class UserApi {
     // 修改用户个人信息
     public static UserVo modifyUserInfo(UserDto userDto){
         return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + MODIFY_USER_INFO)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + MODIFY_USER_INFO)
                 .put(userDto)
                 .buildAndSend(UserVo.class);
     }
@@ -132,7 +132,7 @@ public class UserApi {
     // 获取用户信息
     public static UserVo getUserInfo(){
         return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + GET_USER_INFO)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + GET_USER_INFO)
                 .get()
                 .buildAndSend(UserVo.class);
     }
@@ -140,7 +140,7 @@ public class UserApi {
     // 用户注销
     public static void logout(){
         RequestUtil.builder()
-            .url(ServerConstant.ADDRESS + PREFIX + LOGOUT)
+            .url(ServerConstant.HTTP_ADDRESS + PREFIX + LOGOUT)
             .get()
             .buildAndSend(String.class);
     }
