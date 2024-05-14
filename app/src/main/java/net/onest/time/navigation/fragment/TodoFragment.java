@@ -34,6 +34,9 @@ import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 
 import net.onest.time.R;
 import net.onest.time.adapter.todo.TodoItemAdapter;
+import net.onest.time.api.TaskApi;
+import net.onest.time.api.dto.TaskDto;
+import net.onest.time.api.vo.TaskVo;
 import net.onest.time.entity.Item;
 import net.onest.time.utils.ColorUtil;
 import net.onest.time.utils.DrawableUtil;
@@ -52,7 +55,8 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
     private RecyclerView recyclerView;//待办事项
     private Button todoBtn;//添加按钮
     private TextView todayTxt;
-    private List<Item> itemList = new ArrayList<>();//待办事项数据源
+//    private List<Item> itemList = new ArrayList<>();//待办事项数据源
+    private List<TaskVo> itemListByDay  = new ArrayList<>();//待办事项数据源
 
 
     //以下是弹框布局控件：
@@ -104,15 +108,34 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
 //            }
 //        });
 
-        //创建数据源：
-        for(int i=1; i<=3;i++){
-            Item item = new Item();
-            item.setItemName("事件 "+i);
-            item.setTime(i+"0 分钟");
-//            item.setColor(ColorUtil.getColorByRgb(null));
-            item.setDrawable(DrawableUtil.getRandomImage(getContext()));
-            itemList.add(item);
-        }
+        // 获取当前时间的时间戳
+        long currentTimeMillis = System.currentTimeMillis();
+
+// 获取当天零点的时间戳
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        calendar.set(java.util.Calendar.MINUTE, 0);
+        calendar.set(java.util.Calendar.SECOND, 0);
+        calendar.set(java.util.Calendar.MILLISECOND, 0);
+        long currentDayStartTimeMillis = calendar.getTimeInMillis();
+
+// 计算当天的时间戳
+        long currentDayTimeMillis = currentTimeMillis - currentDayStartTimeMillis;
+        itemListByDay = TaskApi.findByDay(currentDayTimeMillis);
+
+//        System.out.println("当前时间的时间戳：" + currentTimeMillis);
+//        System.out.println("当天零点的时间戳：" + currentDayStartTimeMillis);
+//        System.out.println("当天的时间戳：" + currentDayTimeMillis);
+
+//        //创建数据源：
+//        for(int i=1; i<=3;i++){
+//            Item item = new Item();
+//            item.setItemName("事件 "+i);
+//            item.setTime(i+"0 分钟");
+////            item.setColor(ColorUtil.getColorByRgb(null));
+//            item.setDrawable(DrawableUtil.getRandomImage(getContext()));
+//            itemList.add(item);
+//        }
 
         //《标记》日期:
         int year = calendarView.getCurYear();
@@ -143,7 +166,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
 
 
         //绑定适配器:
-        todoItemAdapter = new TodoItemAdapter(getContext(),itemList);
+        todoItemAdapter = new TodoItemAdapter(getContext(),itemListByDay);
         recyclerView.setAdapter(todoItemAdapter);
         todoItemAdapter.setOnItemClickListener(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -307,46 +330,56 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                         }else{
                             if(setTimeOne.isChecked()){
                                 if(setTimeGroupOne.isChecked()){
-                                    Item item = new Item();
-                                    item.setItemName(itemName.getText().toString());
-                                    item.setTime(setTimeGroupOne.getText().toString());
-                                    item.setColor(ColorUtil.getColorByRgb(null));
-                                    itemList.add(item);
+                                    String strings = setTimeGroupOne.getText().toString().split(" ")[0];
+
+                                    ArrayList<Integer> estimate = new ArrayList<>();
+                                    estimate.add(Integer.valueOf(strings));
+                                    TaskDto taskDto = new TaskDto();
+                                    taskDto.setTaskName(itemName.getText().toString());
+                                    taskDto.setEstimate(estimate);
+                                    TaskApi.addTask(taskDto);
                                     todoItemAdapter.notifyDataSetChanged();
                                 } else if (setTimeGroupTwo.isChecked()) {
-                                    Item item = new Item();
-                                    item.setItemName(itemName.getText().toString());
-                                    item.setTime(setTimeGroupTwo.getText().toString());
-                                    item.setColor(ColorUtil.getColorByRgb(null));
-                                    itemList.add(item);
+                                    String strings = setTimeGroupOne.getText().toString().split(" ")[0];
+
+                                    ArrayList<Integer> estimate = new ArrayList<>();
+                                    estimate.add(Integer.valueOf(strings));
+                                    TaskDto taskDto = new TaskDto();
+                                    taskDto.setTaskName(itemName.getText().toString());
+                                    taskDto.setEstimate(estimate);
+                                    TaskApi.addTask(taskDto);
+
                                     todoItemAdapter.notifyDataSetChanged();
                                 }else{
-                                    Item item = new Item();
-                                    item.setItemName(itemName.getText().toString());
-                                    item.setTime(setTimeGroupThree.getText().toString());
-                                    item.setColor(ColorUtil.getColorByRgb(null));
-                                    itemList.add(item);
+                                    String strings = setTimeGroupOne.getText().toString().split(" ")[0];
+
+                                    ArrayList<Integer> estimate = new ArrayList<>();
+                                    estimate.add(Integer.valueOf(strings));
+                                    TaskDto taskDto = new TaskDto();
+                                    taskDto.setTaskName(itemName.getText().toString());
+                                    taskDto.setEstimate(estimate);
+                                    TaskApi.addTask(taskDto);
                                     todoItemAdapter.notifyDataSetChanged();
                                 }
                             }
                             //正向计时：
                             if(setTimeTwo.isChecked()){
 //                                    int forwardTimer = 1;
-                                Item item = new Item();
-                                item.setItemName(itemName.getText().toString());
-                                item.setTime("正向计时");
-                                itemList.add(item);
-                                todoItemAdapter.notifyDataSetChanged();
+//                                Item item = new Item();
+//                                item.setItemName(itemName.getText().toString());
+//                                item.setTime("正向计时");
+//                                itemListByDay.add(item);
+//                                todoItemAdapter.notifyDataSetChanged();
 
                             }
                             //不计时：
                             if(setTimeThree.isChecked()){
 //                                    int noTimer = 2;
-                                Item item = new Item();
-                                item.setItemName(itemName.getText().toString());
-                                item.setTime("普通待办");
-                                itemList.add(item);
-                                todoItemAdapter.notifyDataSetChanged();
+//                                Item item = new Item();
+//                                item.setItemName(itemName.getText().toString());
+//                                item.setTime("普通待办");
+//                                itemListByDay.add(item);
+//                                todoItemAdapter.notifyDataSetChanged();
                             }
                             dialog.dismiss();
                         }
@@ -369,6 +402,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
 
             @Override
             public void onCalendarSelect(Calendar calendar, boolean isClick) {
+                Toast.makeText(getContext(), "你选中了"+calendar.getDay(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -413,7 +447,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
     @Override
     public void onItemClick(int position) {
         //点击事项进行编辑:
-        Toast.makeText(getContext(), "你点击了"+itemList.get(position).getItemName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "你点击了"+itemListByDay.get(position).getTaskName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override

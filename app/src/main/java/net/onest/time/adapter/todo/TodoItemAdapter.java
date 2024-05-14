@@ -7,9 +7,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
@@ -22,11 +25,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import net.onest.time.MainActivity;
 import net.onest.time.R;
 import net.onest.time.TimerActivity;
+import net.onest.time.api.vo.TaskVo;
 import net.onest.time.entity.Item;
 import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.navigation.fragment.TodoFragment;
@@ -36,13 +45,14 @@ import java.util.List;
 
 public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyViewHolder>{
     private Context context;
-    private List<Item> itemList = new ArrayList<>();
+//    private List<Item> itemList = new ArrayList<>();
+    private List<TaskVo> itemListByDay  = new ArrayList<>();
     private OnItemClickListener mItemClickListener;
     private Intent intent;
 
-    public TodoItemAdapter(Context context, List<Item> itemList) {
+    public TodoItemAdapter(Context context, List<TaskVo> itemListByDay) {
         this.context = context;
-        this.itemList = itemList;
+        this.itemListByDay = itemListByDay;
     }
 
 
@@ -57,28 +67,36 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
     @SuppressLint("RecyclerView")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Item news = itemList.get(position);
-        holder.name.setText(news.getItemName());
-        holder.time.setText(news.getTime());
+//        Item news = itemList.get(position);
+        TaskVo item = itemListByDay.get(position);
+        holder.name.setText(item.getTaskName());
+        holder.time.setText(item.getEstimate().get(0));
 //        holder.backGroundLin.setBackgroundColor(news.getColor());
-        holder.backGroundLin.setBackground(news.getDrawable());
+//        holder.backGroundLin.setBackground(news.getDrawable());
+        Glide.with(context).asBitmap().load(item.getBackground()).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                Drawable drawable = new BitmapDrawable(resource);
+                holder.backGroundLin.setBackground(drawable);
+            }
+        });
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if("正向计时".equals(itemList.get(position).getTime())){
+                if("正向计时".equals(itemListByDay.get(position).getEstimate().get(0))){
                     //正向计时：
                     intent = new Intent();
                     intent.setClass(context, TimerActivity.class);
                     intent.putExtra("method", "forWard");
-                    intent.putExtra("name", itemList.get(position).getItemName());
+                    intent.putExtra("name", itemListByDay.get(position).getTaskName());
                     context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,holder.btn,"fab").toBundle());
-                } else if ("普通待办".equals(itemList.get(position).getTime())) {
+                } else if ("普通待办".equals(itemListByDay.get(position).getEstimate().get(0))) {
                     //不计时：
 //                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    SpannableString spannableString = new SpannableString(itemList.get(position).getItemName());
+                    SpannableString spannableString = new SpannableString(itemListByDay.get(position).getTaskName());
                     spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                    itemList.get(position).setItemName(spannableString.toString());
+                    itemListByDay.get(position).setTaskName(spannableString.toString());
 //                    TextView textView = findViewById(R.id.textView);
 //                    textView.setText(spannableString);
                 }else{
@@ -89,7 +107,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
 //                int num = Integer.parseInt(parts[0]);
                     intent.putExtra("time", num);
                     intent.putExtra("method", "countDown");
-                    intent.putExtra("name", itemList.get(position).getItemName());
+                    intent.putExtra("name", itemListByDay.get(position).getTaskName());
                     intent.setClass(context, TimerActivity.class);
                     context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,holder.btn,"fab").toBundle());
                 }
@@ -128,7 +146,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return itemListByDay.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {

@@ -96,7 +96,7 @@ public class TaskApi {
             .buildAndSend();
     }
 
-    public List<TaskVo> findByCategory(String category){
+    public static List<TaskVo> findByCategory(String category){
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + FIND_BY_CATEGORY + "/" + category)
                 .get()
@@ -104,7 +104,7 @@ public class TaskApi {
     }
 
     //时间戳以 毫秒 为单位
-    public List<TaskVo> findByDay(Long timestamp){
+    public static List<TaskVo> findByDay(Long timestamp){
         return RequestUtil.builder()
                 .url(ServerConstant.ADDRESS + PREFIX + FIND_BY_DAY + "?timestamp=" + timestamp)
                 .get()
