@@ -2,11 +2,25 @@ package net.onest.time.api.utils;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.TypeAdapter;
+import com.google.gson.internal.bind.DateTypeAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
+import net.onest.time.api.dto.MessageDto;
 import net.onest.time.api.dto.TaskDto;
 import net.onest.time.application.TimeApplication;
 import net.onest.time.constant.SharedPreferencesConstant;
@@ -15,28 +29,58 @@ import okhttp3.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.*;
 
 public class RequestUtil {
     private static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
-    private static final Gson gson = new Gson();
+    private static final Gson gson;
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
     private Request.Builder requestBuilder = null;
+
+    private static WebSocket webSocket;
+
+    static {
+        gson = new GsonBuilder()
+                .registerTypeHierarchyAdapter(Date.class, new DateTimeSerializer())
+                .create();
+    }
 
     public static RequestUtil builder() {
         RequestUtil requestUtil = new RequestUtil();
         requestUtil.requestBuilder = new Request.Builder();
 
-        String token = TimeApplication
+        String token = getToken();
+        requestUtil.requestBuilder.header("token", token);
+        return requestUtil;
+    }
+
+    public static void webSocketConnect(String url, MessageListener messageListener) {
+        String token = getToken();
+        webSocket = httpClient.newWebSocket(
+                new Request.Builder()
+                        .url(url + "?token=" + token)
+                        .header("token", token)
+                        .build(),
+                messageListener
+        );
+    }
+
+    @NonNull
+    private static String getToken() {
+        return TimeApplication
                 .getApplication()
                 .getApplicationContext()
                 .getSharedPreferences(SharedPreferencesConstant.USER_INFO, Context.MODE_PRIVATE)
                 .getString("token", "");
-        requestUtil.requestBuilder.header("token", token);
-        return requestUtil;
+    }
+
+    public static void sendMessage(MessageDto messageDto) {
+        webSocket.send(gson.toJson(messageDto));
     }
 
 
@@ -182,5 +226,22 @@ public class RequestUtil {
         }
         builder.deleteCharAt(builder.length() - 1);
         return builder.toString();
+    }
+
+    public static Gson getGson(){
+        return gson;
+    }
+
+    static class DateTimeSerializer implements JsonSerializer<Date>, JsonDeserializer<Date> {
+
+        @Override
+        public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            return new Date(json.getAsLong());
+        }
+
+        @Override
+        public JsonElement serialize(Date src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.getTime());
+        }
     }
 }

@@ -40,7 +40,7 @@ public class TomatoClockApi {
     // 添加番茄钟  --------点击 开始按钮 发送该请求
     public static List<TomatoClockVo> addTomatoClock(Long taskId, Integer estimate){
         return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + ADD_TOMATO_CLOCK + "/" + taskId + "/" + estimate)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + ADD_TOMATO_CLOCK + "/" + taskId + "/" + estimate)
                 .post()
                 .buildAndSend(new TypeToken<List<TomatoClockVo>>(){});
     }
@@ -50,7 +50,7 @@ public class TomatoClockApi {
     // ----------  后续番茄钟 都需要发送该请求
     public static void startTomatoClock(Long clockId) {
         RequestUtil.builder()
-            .url(ServerConstant.ADDRESS + PREFIX + START_TOMATO_CLOCK + "/" + clockId)
+            .url(ServerConstant.HTTP_ADDRESS + PREFIX + START_TOMATO_CLOCK + "/" + clockId)
             .put()
             .buildAndSend();
     }
@@ -58,7 +58,7 @@ public class TomatoClockApi {
     // 完成一个番茄钟  ---------- 完成任一 番茄钟 都需要发送该请求
     public static void completeTomatoClock(Long clockId) {
         RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + COMPLETE_TOMATO_CLOCK + "/" + clockId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + COMPLETE_TOMATO_CLOCK + "/" + clockId)
                 .put()
                 .buildAndSend();
     }
@@ -66,7 +66,7 @@ public class TomatoClockApi {
     // 内部中断 ------------ 内部中断 点击事件
     public static void innerInterrupt(Long clockId) {
         RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + INNER_INTERRUPT + "/" + clockId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + INNER_INTERRUPT + "/" + clockId)
                 .put()
                 .buildAndSend();
     }
@@ -74,7 +74,7 @@ public class TomatoClockApi {
     // 外部中断 ------------ 外部中断 点击事件
     public static void outerInterrupt(Long clockId) {
         RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + OUTER_INTERRUPT + "/" + clockId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + OUTER_INTERRUPT + "/" + clockId)
                 .put()
                 .buildAndSend();
     }
@@ -82,7 +82,7 @@ public class TomatoClockApi {
     // 停止番茄钟 ------------- 任务提前终止  参数 stopReason停止原因 为可选参数  不强制传参
     public static void stopTomatoClock(Long taskId, String stopReason){
         RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + STOP_TOMATO_CLOCK + "/" + taskId + "?stopReason=" + stopReason)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + STOP_TOMATO_CLOCK + "/" + taskId + "?stopReason=" + stopReason)
                 .put()
                 .buildAndSend();
     }
@@ -90,7 +90,7 @@ public class TomatoClockApi {
     // 查询一个番茄钟
     public static TomatoClockVo findTomatoClock(Long clockId) {
         return RequestUtil.builder()
-                    .url(ServerConstant.ADDRESS + PREFIX + FIND_TOMATO_CLOCK + "/" + clockId)
+                    .url(ServerConstant.HTTP_ADDRESS + PREFIX + FIND_TOMATO_CLOCK + "/" + clockId)
                     .get()
                     .buildAndSend(TomatoClockVo.class);
     }
@@ -98,7 +98,7 @@ public class TomatoClockApi {
     // 查询一个任务的所有番茄钟 --------  点击 任务 查询详情
     public static List<TomatoClockVo> findTomatoClockAll(Long taskId) {
         return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + FIND_TOMATO_CLOCK_ALL + "/" + taskId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + FIND_TOMATO_CLOCK_ALL + "/" + taskId)
                 .get()
                 .buildAndSend(new TypeToken<List<TomatoClockVo>>(){});
     }
@@ -106,7 +106,7 @@ public class TomatoClockApi {
     // 删除番茄钟  ------------- 任务已完成  但 用户把该任务删除
     public static void deleteTomatoClock(Long taskId) {
         RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + DELETE_TOMATO_CLOCK + "/" + taskId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + DELETE_TOMATO_CLOCK + "/" + taskId)
                 .delete()
                 .buildAndSend();
     }

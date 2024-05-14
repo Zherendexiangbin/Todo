@@ -14,7 +14,7 @@ public class StatisticApi {
 
     public static Map<String, Object> statistic() {
         return RequestUtil.builder()
-                .url(ServerConstant.ADDRESS + PREFIX + STATISTIC)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC)
                 .get()
                 .buildAndSend(new TypeToken<Map<String, Object>>(){});
     }
