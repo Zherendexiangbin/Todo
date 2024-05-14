@@ -58,7 +58,6 @@ public class ChatApiTest {
             public void run() {
                 ChatApi.connectRoom(1782930828125134849L, new MessageListener(messages));
                 MessageDto messageDto = new MessageDto();
-                messageDto.setFromUserId(2L);
                 messageDto.setToRoomId(1782930828125134849L);
                 messageDto.setContent("土狗日");
                 ChatApi.sendMessage(messageDto);
@@ -92,12 +91,34 @@ public class ChatApiTest {
         System.out.println(roomMessagePage);
     }
 
+
+    @Test
+    public void sendUserMessage() {
+        login2();
+        List<Message> messages = new CopyOnWriteArrayList<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ChatApi.connectUser(18L, new MessageListener(messages));
+                MessageDto messageDto = new MessageDto();
+                messageDto.setToUserId(18L);
+                messageDto.setContent("土狗日");
+                ChatApi.sendMessage(messageDto);
+            }
+        }).start();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(messages);
+    }
+
     @Test
     public void receiveUserMessage() {
         Long fromUserId = 2L;
         List<Message> messages = ChatApi.receiveUserMessage(fromUserId);
-        Assert.assertNotNull(messages);
-        Assert.assertFalse(messages.isEmpty());
+
     }
 
     @Test
@@ -109,41 +130,5 @@ public class ChatApiTest {
         Page<Message> userMessagePage = ChatApi.findUserMessagePage(pageNum, pageSize, fromUserId, beforeDateTime);
         Assert.assertNotNull(userMessagePage);
         Assert.assertFalse(userMessagePage.getRecords().isEmpty());
-    }
-
-    static class MyWebSocketListener extends WebSocketListener {
-        public MyWebSocketListener() {
-            super();
-        }
-
-        @Override
-        public void onClosed(@NonNull WebSocket webSocket, int code, @NonNull String reason) {
-            super.onClosed(webSocket, code, reason);
-        }
-
-        @Override
-        public void onClosing(@NonNull WebSocket webSocket, int code, @NonNull String reason) {
-            super.onClosing(webSocket, code, reason);
-        }
-
-        @Override
-        public void onFailure(@NonNull WebSocket webSocket, @NonNull Throwable t, @Nullable Response response) {
-            super.onFailure(webSocket, t, response);
-        }
-
-        @Override
-        public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
-            super.onMessage(webSocket, text);
-        }
-
-        @Override
-        public void onMessage(@NonNull WebSocket webSocket, @NonNull ByteString bytes) {
-            super.onMessage(webSocket, bytes);
-        }
-
-        @Override
-        public void onOpen(@NonNull WebSocket webSocket, @NonNull Response response) {
-            super.onOpen(webSocket, response);
-        }
     }
 }

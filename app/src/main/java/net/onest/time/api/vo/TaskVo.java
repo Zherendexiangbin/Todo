@@ -1,9 +1,10 @@
 package net.onest.time.api.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class TaskVo {
+public class TaskVo implements Serializable {
     private Long taskId;
     private Long userId;
 

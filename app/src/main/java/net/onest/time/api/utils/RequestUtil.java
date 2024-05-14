@@ -30,9 +30,14 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.*;
 
 public class RequestUtil {
@@ -236,6 +241,8 @@ public class RequestUtil {
 
         @Override
         public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            TimeZone timeZone = TimeZone.getTimeZone("GMT+8");
+            TimeZone.setDefault(timeZone);
             return new Date(json.getAsLong());
         }
 

@@ -11,6 +11,12 @@ import net.onest.time.constant.SharedPreferencesConstant;
 
 import org.junit.Test;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+
 public class UserApiTest {
 
     @Test
@@ -93,5 +99,11 @@ public class UserApiTest {
     @Test
     public void logout() {
         UserApi.logout();
+    }
+
+    @Test
+    public void dateConver() {
+        System.out.println(LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.of("+8")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        System.out.println(LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.of("+8")).getMonth());
     }
 }

@@ -8,7 +8,12 @@ import net.onest.time.api.vo.TaskVo;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TaskApiTest {
@@ -100,5 +105,7 @@ public class TaskApiTest {
         Long timestamp = 1715588988000L;
         List<TaskVo> taskVoList = TaskApi.findByDay(timestamp);
         Assert.assertNotNull(taskVoList);
+        taskVoList.forEach(System.out::println);
+//        System.out.println(taskVoList);
     }
 }
