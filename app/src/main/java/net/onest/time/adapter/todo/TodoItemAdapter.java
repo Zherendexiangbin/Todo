@@ -70,7 +70,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
 //        Item news = itemList.get(position);
         TaskVo item = itemListByDay.get(position);
         holder.name.setText(item.getTaskName());
-        holder.time.setText(item.getEstimate().get(0));
+        holder.time.setText(item.getClockDuration()+" 分钟");
 //        holder.backGroundLin.setBackgroundColor(news.getColor());
 //        holder.backGroundLin.setBackground(news.getDrawable());
         Glide.with(context).asBitmap().load(item.getBackground()).into(new SimpleTarget<Bitmap>() {
@@ -83,14 +83,14 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if("正向计时".equals(itemListByDay.get(position).getEstimate().get(0))){
+                if("正向计时".equals(itemListByDay.get(position).getClockDuration()+" 分钟")){
                     //正向计时：
                     intent = new Intent();
                     intent.setClass(context, TimerActivity.class);
                     intent.putExtra("method", "forWard");
                     intent.putExtra("name", itemListByDay.get(position).getTaskName());
                     context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,holder.btn,"fab").toBundle());
-                } else if ("普通待办".equals(itemListByDay.get(position).getEstimate().get(0))) {
+                } else if ("普通待办".equals(itemListByDay.get(position).getClockDuration()+" 分钟")) {
                     //不计时：
 //                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     SpannableString spannableString = new SpannableString(itemListByDay.get(position).getTaskName());

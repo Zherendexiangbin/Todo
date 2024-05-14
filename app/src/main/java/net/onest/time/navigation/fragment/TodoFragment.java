@@ -41,6 +41,8 @@ import net.onest.time.entity.Item;
 import net.onest.time.utils.ColorUtil;
 import net.onest.time.utils.DrawableUtil;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -108,20 +110,34 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
 //            }
 //        });
 
-        // 获取当前时间的时间戳
-        long currentTimeMillis = System.currentTimeMillis();
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        // 从今天起 往上推一天
+        LocalDateTime yesterdays = currentDateTime.minusDays(1);
+        // 从今天起 往上推一周
+        LocalDateTime weeks = currentDateTime.minusWeeks(1).plusDays(1);
+        // 从今天起 往上推一个月
+        LocalDateTime months = currentDateTime.minusMonths(1).plusDays(1);
 
-// 获取当天零点的时间戳
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-        calendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
-        calendar.set(java.util.Calendar.MINUTE, 0);
-        calendar.set(java.util.Calendar.SECOND, 0);
-        calendar.set(java.util.Calendar.MILLISECOND, 0);
-        long currentDayStartTimeMillis = calendar.getTimeInMillis();
-
-// 计算当天的时间戳
-        long currentDayTimeMillis = currentTimeMillis - currentDayStartTimeMillis;
-        itemListByDay = TaskApi.findByDay(currentDayTimeMillis);
+        long yesterdayEpochMilli = yesterdays.toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        long weekEpochMilli = weeks.toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        long monthEpochMilli = months.toInstant(ZoneOffset.of("+8")).toEpochMilli();
+//        System.out.println("从今天起 往上推一天 " + yesterdayEpochMilli);
+//        System.out.println("从今天起 往上推一周 " + weekEpochMilli);
+//        System.out.println("从今天起 往上推一个月 " + monthEpochMilli);
+//        // 获取当前时间的时间戳
+//        long currentTimeMillis = System.currentTimeMillis();
+//
+//// 获取当天零点的时间戳
+//        java.util.Calendar calendar = java.util.Calendar.getInstance();
+//        calendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
+//        calendar.set(java.util.Calendar.MINUTE, 0);
+//        calendar.set(java.util.Calendar.SECOND, 0);
+//        calendar.set(java.util.Calendar.MILLISECOND, 0);
+//        long currentDayStartTimeMillis = calendar.getTimeInMillis();
+//
+//// 计算当天的时间戳
+//        long currentDayTimeMillis = currentTimeMillis - currentDayStartTimeMillis;
+        itemListByDay = TaskApi.findByDay(yesterdayEpochMilli);
 
 //        System.out.println("当前时间的时间戳：" + currentTimeMillis);
 //        System.out.println("当天零点的时间戳：" + currentDayStartTimeMillis);
@@ -209,6 +225,8 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                 setTimeTwoTxt.setVisibility(View.GONE);
                 setTimeThreeTxt.setVisibility(View.GONE);
 
+                List<String> integerList = new ArrayList<>();
+
                 higherSet.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -226,6 +244,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                         Button clockAbout = dialogView.findViewById(R.id.todo_clock_times_about);
                         Button btnYes = dialogView.findViewById(R.id.add_todo_higher_setting_item_yes);
                         Button btnNo = dialogView.findViewById(R.id.add_todo_higher_setting_item_no);
+
 
                         clockAbout.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -250,6 +269,8 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                         btnYes.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+
+                                integerList.add(clockTimes.getText().toString().trim());
                                 dialog.dismiss();
                             }
                         });
@@ -333,20 +354,22 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                                     String strings = setTimeGroupOne.getText().toString().split(" ")[0];
 
                                     ArrayList<Integer> estimate = new ArrayList<>();
-                                    estimate.add(Integer.valueOf(strings));
+                                    estimate.add(Integer.valueOf(integerList.get(0)));
                                     TaskDto taskDto = new TaskDto();
                                     taskDto.setTaskName(itemName.getText().toString());
                                     taskDto.setEstimate(estimate);
+                                    taskDto.setClockDuration(Integer.valueOf(strings.trim()));
                                     TaskApi.addTask(taskDto);
                                     todoItemAdapter.notifyDataSetChanged();
                                 } else if (setTimeGroupTwo.isChecked()) {
                                     String strings = setTimeGroupOne.getText().toString().split(" ")[0];
 
                                     ArrayList<Integer> estimate = new ArrayList<>();
-                                    estimate.add(Integer.valueOf(strings));
+                                    estimate.add(Integer.valueOf(integerList.get(0)));
                                     TaskDto taskDto = new TaskDto();
                                     taskDto.setTaskName(itemName.getText().toString());
                                     taskDto.setEstimate(estimate);
+                                    taskDto.setClockDuration(Integer.valueOf(strings.trim()));
                                     TaskApi.addTask(taskDto);
 
                                     todoItemAdapter.notifyDataSetChanged();
@@ -354,10 +377,11 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                                     String strings = setTimeGroupOne.getText().toString().split(" ")[0];
 
                                     ArrayList<Integer> estimate = new ArrayList<>();
-                                    estimate.add(Integer.valueOf(strings));
+                                    estimate.add(Integer.valueOf(integerList.get(0)));
                                     TaskDto taskDto = new TaskDto();
                                     taskDto.setTaskName(itemName.getText().toString());
                                     taskDto.setEstimate(estimate);
+                                    taskDto.setClockDuration(Integer.valueOf(strings.trim()));
                                     TaskApi.addTask(taskDto);
                                     todoItemAdapter.notifyDataSetChanged();
                                 }
