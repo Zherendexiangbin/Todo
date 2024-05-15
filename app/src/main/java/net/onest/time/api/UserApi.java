@@ -63,7 +63,7 @@ public class UserApi {
                 .getApplicationContext()
                 .getSharedPreferences(SharedPreferencesConstant.USER_INFO, Context.MODE_PRIVATE);
         preferences.edit()
-                .putString("token9", token)
+                .putString("token", token)
                 .apply();
 
         return token;

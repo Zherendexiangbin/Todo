@@ -65,6 +65,14 @@ public class DrawableUtil {
         return context.getResources().getDrawable(drawableArray[index]);
     }
 
+    public static int randomIntBack(Context context){
+        Random random = new Random();
+        int index = random.nextInt(drawableArray.length);
+        return drawableArray[index];
+    }
+
+//---------------------------------------------------------------
+
     //随机不重复返回item背景图：
     public static Drawable getRandomImage(Context context){
         Random random = new Random();
@@ -83,17 +91,12 @@ public class DrawableUtil {
 
         return context.getResources().getDrawable(itemDrawableArray[randomIndex]);
     }
+
     //随机返回item背景图：
     public static Drawable getRandomImageTwo(Context context){
         Random random = new Random();
         int index = random.nextInt(itemDrawableArray.length);
         return context.getResources().getDrawable(itemDrawableArray[index]);
-    }
-
-    public static int randomIntBack(Context context){
-        Random random = new Random();
-        int index = random.nextInt(drawableArray.length);
-        return drawableArray[index];
     }
 
 }

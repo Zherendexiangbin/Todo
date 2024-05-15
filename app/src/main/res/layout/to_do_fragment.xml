@@ -82,6 +82,7 @@
             app:week_text_size="20dp"
             app:week_bar_view=""/>
 
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
