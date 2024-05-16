@@ -55,7 +55,7 @@
         android:orientation="vertical"
         app:calendar_show_mode="both_month_week_view"
         app:default_status="shrink"
-        app:calendar_content_view_id="@+id/recyclerView">
+        app:calendar_content_view_id="@+id/my_recyclerView">
 
         <com.haibin.calendarview.CalendarView
             android:id="@+id/calendarView"
@@ -83,11 +83,17 @@
             app:week_bar_view=""/>
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/recyclerView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/white"/>-->
+        <net.onest.time.RecyclerViewEmptySupport
+            android:id="@+id/my_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"/>
+        <include layout="@layout/null_item_page"/>
 
     </com.haibin.calendarview.CalendarLayout>
 
