@@ -8,6 +8,7 @@ import net.onest.time.api.vo.Page;
 import net.onest.time.api.vo.TaskVo;
 
 import java.util.List;
+import java.util.Map;
 
 public class TaskApi {
     private final static String PREFIX = "/task";
@@ -35,6 +36,9 @@ public class TaskApi {
 
     // 查询一个类别的任务
     private final static String FIND_BY_CATEGORY = "/findByCategory";
+
+    // 查询某个人所有类别的任务
+    private final static String FIND_BY_USER_ID = "/findByCategory";
 
     // 查询某一天的任务
     private final static String FIND_BY_DAY = "/findByDay";
@@ -102,6 +106,13 @@ public class TaskApi {
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + FIND_BY_CATEGORY + "/" + category)
                 .get()
                 .buildAndSend(new TypeToken<List<TaskVo>>(){});
+    }
+
+    public static Map<String, List<TaskVo>> findByUserId() {
+        return RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + FIND_BY_USER_ID)
+                .get()
+                .buildAndSend(new TypeToken<Map<String, List<TaskVo>>>(){});
     }
 
     //时间戳以 毫秒 为单位

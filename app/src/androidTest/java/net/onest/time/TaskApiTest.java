@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class TaskApiTest {
 
@@ -107,5 +108,15 @@ public class TaskApiTest {
         Assert.assertNotNull(taskVoList);
         taskVoList.forEach(System.out::println);
 //        System.out.println(taskVoList);
+    }
+
+    @Test
+    public void findByUserId() {
+        Map<String, List<TaskVo>> result = TaskApi.findByUserId();
+        result.forEach(
+                (k, v) -> {
+                    System.out.println("类别:" + k + "\n任务:");
+                    v.forEach(System.out::println);
+                });
     }
 }

@@ -87,7 +87,8 @@ public class UserApiTest {
 //        userDto.setUserName("风花雪月");
         userDto.setAvatar("http://8.130.17.7:9000/todo-bucket/user/809dc3467e044925851838f6276b4553.jpeg");
         userDto.setSignature("人生几何时");
-        UserApi.modifyUserInfo(userDto);
+        UserVo userVo = UserApi.modifyUserInfo(userDto);
+        System.out.println(userVo);
     }
 
     @Test
