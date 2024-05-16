@@ -88,13 +88,13 @@
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="wrap_content"-->
 <!--            android:background="@color/white"/>-->
+
         <net.onest.time.RecyclerViewEmptySupport
             android:id="@+id/my_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"/>
         <include layout="@layout/null_item_page"/>
-
     </com.haibin.calendarview.CalendarLayout>
 
 </LinearLayout>
