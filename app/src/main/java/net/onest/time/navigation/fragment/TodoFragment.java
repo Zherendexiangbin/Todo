@@ -373,8 +373,8 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                                     taskDto.setAgain(1);
                                     TaskVo taskVo = TaskApi.addTask(taskDto);
                                     itemListByDay.add(taskVo);
-                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
-//                                    todoItemAdapter.notifyDataSetChanged();
+//                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
+                                    todoItemAdapter.notifyDataSetChanged();
                                 }else{
                                     String strings = setTimeGroupOne.getText().toString().split(" ")[0];
 
@@ -395,8 +395,8 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                                     taskDto.setAgain(1);
                                     TaskVo taskVo = TaskApi.addTask(taskDto);
                                     itemListByDay.add(taskVo);
-                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
-//                                    todoItemAdapter.notifyDataSetChanged();
+//                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
+                                    todoItemAdapter.notifyDataSetChanged();
                                 }
                             }
                             //正向计时：
@@ -439,8 +439,8 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
 
             @Override
             public void onCalendarSelect(Calendar calendar, boolean isClick) {
-                List<TaskVo> byDay = TaskApi.findByDay(calendar.getTimeInMillis());
-                todoItemAdapter.setItemListByDay(byDay);
+                itemListByDay = TaskApi.findByDay(calendar.getTimeInMillis());
+                todoItemAdapter.setItemListByDay(itemListByDay);
                 todoItemAdapter.notifyDataSetChanged();
 
             }
