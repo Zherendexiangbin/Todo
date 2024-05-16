@@ -48,7 +48,13 @@ public class MainActivity extends AppCompatActivity{
                 UserDto userDto = new UserDto();
                 userDto.setEmail(account);
                 userDto.setPassword(password);
-                String token = UserApi.login(userDto);
+                String token=null;
+                try {
+                    token = UserApi.login(userDto);
+                }catch (Exception e){
+                    Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    System.out.println(e.getMessage());
+                }
                 if(token.isEmpty()){
                     Toast.makeText(this, "账号密码不正确", Toast.LENGTH_SHORT).show();
                 }else{

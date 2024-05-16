@@ -1,8 +1,9 @@
 package net.onest.time.api.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class TomatoClockVo {
+public class TomatoClockVo implements Serializable {
     private Long clockId;
     private Long taskId;
     private Integer sequence;

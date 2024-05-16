@@ -45,28 +45,19 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 
-import net.onest.time.MainActivity;
 import net.onest.time.R;
 import net.onest.time.utils.DateUtil;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class RecordFragment extends Fragment {
-    private TextView appTime;
-    private ImageView appHead;
     private int i=0;
 
     //饼状图:
@@ -292,14 +283,46 @@ public class RecordFragment extends Fragment {
     }
 
     private List<BarEntry> getAppTimeAndHead() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            try {
-                startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
-            } catch (Exception e) {
-                Toast.makeText(getContext(),"无法开启允许查看使用情况的应用界面",Toast.LENGTH_LONG).show();
-                e.printStackTrace();
-            }
-        }
+
+//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+//            try {
+//                startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+//            } catch (Exception e) {
+//                Toast.makeText(getContext(),"无s法开启允许查看使用情况的应用界面",Toast.LENGTH_LONG).show();
+//                e.printStackTrace();
+//            }
+//        }
+        XXPermissions.with(this)
+                // 申请单个权限
+                .permission(Permission.PACKAGE_USAGE_STATS)
+                // 设置权限请求拦截器（局部设置）
+                //.interceptor(new PermissionInterceptor())
+                // 设置不触发错误检测机制（局部设置）
+                //.unchecked()
+                .request(new OnPermissionCallback() {
+
+                    @Override
+                    public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
+                        if (!allGranted) {
+                            Toast.makeText(getContext(), "获取部分权限成功，但部分权限未正常授予", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        Toast.makeText(getContext(), "获取权限成功", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onDenied(@NonNull List<String> permissions, boolean doNotAskAgain) {
+                        if (doNotAskAgain) {
+                            Toast.makeText(getContext(), "被拒绝授权，请手动授予权限", Toast.LENGTH_SHORT).show();
+                            // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.startPermissionActivity(getContext(), permissions);
+                        } else {
+                            Toast.makeText(getContext(), "获取权限失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
         UsageStatsManager usageStatsManager = (UsageStatsManager) getContext().getSystemService(Context.USAGE_STATS_SERVICE);
         PackageManager packageManager = getContext().getPackageManager();
 
@@ -330,16 +353,12 @@ public class RecordFragment extends Fragment {
 
                 // 打印应用程序的名称、头像和使用时间
                 System.out.println("App Name: " + appName);
-                appTime.setText("App Name: " + appName+"Usage Time (seconds): " + appUsageMap.get(packageName));
                 System.out.println("App Icon: " + appIcon);
-                Glide.with(getContext()).load(appIcon).circleCrop().into(appHead);
     //          list.add(new BarEntry(5,2,setImageSizeAndDistance("person1")));
-
-                if (appUsageMap.get(packageName)/60!=0){
+                if(appUsageMap.get(packageName)/60!=0){
                     float time = appUsageMap.get(packageName)/60;
                     list.add(new BarEntry(i++,time,setImageSizeAndDistance(appIcon)));
                 }
-
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
@@ -427,7 +446,5 @@ public class RecordFragment extends Fragment {
         dataDateTxt = view.findViewById(R.id.record_fragment_time_data_date);
         appDateTxt = view.findViewById(R.id.record_fragment_app_use_time_txt);
 
-        appTime = view.findViewById(R.id.app_time);
-        appHead = view.findViewById(R.id.app_head);
     }
 }

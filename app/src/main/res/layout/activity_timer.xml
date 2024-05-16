@@ -14,7 +14,7 @@
         android:layout_height="40dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
-        android:background="@drawable/rotate_screen"/>
+        android:background="@drawable/test_icon_33"/>
 
     <LinearLayout
         android:id="@+id/timer_background_lin"

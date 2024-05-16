@@ -11,6 +11,12 @@ import net.onest.time.constant.SharedPreferencesConstant;
 
 import org.junit.Test;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+
 public class UserApiTest {
 
     @Test
@@ -34,8 +40,8 @@ public class UserApiTest {
     @Test
     public void login() {
         UserDto userDto = new UserDto();
-        userDto.setEmail("luohua_666@163.com");
-        userDto.setPassword("123456");
+        userDto.setEmail("2808021998@qq.com");
+        userDto.setPassword("admin");
         String token = UserApi.login(userDto);
         System.out.println(token);
     }
@@ -93,5 +99,11 @@ public class UserApiTest {
     @Test
     public void logout() {
         UserApi.logout();
+    }
+
+    @Test
+    public void dateConver() {
+        System.out.println(LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.of("+8")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        System.out.println(LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.of("+8")).getMonth());
     }
 }
