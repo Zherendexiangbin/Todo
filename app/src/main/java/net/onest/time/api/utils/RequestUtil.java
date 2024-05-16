@@ -239,10 +239,13 @@ public class RequestUtil {
 
     static class DateTimeSerializer implements JsonSerializer<Date>, JsonDeserializer<Date> {
 
-        @Override
-        public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        static {
             TimeZone timeZone = TimeZone.getTimeZone("GMT+8");
             TimeZone.setDefault(timeZone);
+        }
+
+        @Override
+        public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             return new Date(json.getAsLong());
         }
 

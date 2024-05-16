@@ -10,10 +10,15 @@ public class TaskDto {
     private Long userId;
 
     private String taskName;
+    private Integer clockDuration;
+
+    private String remark;
 
     private List<Integer> estimate;
 
-    private Integer clockDuration;
+    private Integer restTime;
+
+    private Integer again;
 
     private String category;
 
@@ -142,14 +147,29 @@ public class TaskDto {
         this.category = category;
     }
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Integer getRestTime() {
+        return restTime;
+    }
+
     @Override
     public String toString() {
         return "TaskDto{" +
                 "taskId=" + taskId +
                 ", userId=" + userId +
                 ", taskName='" + taskName + '\'' +
-                ", estimate=" + estimate +
                 ", clockDuration=" + clockDuration +
+                ", remark='" + remark + '\'' +
+                ", estimate=" + estimate +
+                ", restTime=" + restTime +
+                ", again=" + again +
                 ", category='" + category + '\'' +
                 ", tomatoClockTimes=" + tomatoClockTimes +
                 ", tomatoClocks=" + tomatoClocks +
@@ -160,5 +180,17 @@ public class TaskDto {
                 ", startedAt=" + startedAt +
                 ", completedAt=" + completedAt +
                 '}';
+    }
+
+    public void setRestTime(Integer restTime) {
+        this.restTime = restTime;
+    }
+
+    public Integer getAgain() {
+        return again;
+    }
+
+    public void setAgain(Integer again) {
+        this.again = again;
     }
 }

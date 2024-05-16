@@ -7,19 +7,19 @@ import java.util.List;
 public class TaskVo implements Serializable {
     private Long taskId;
     private Long userId;
-
     private String taskName;
-    private List<Integer> estimate;
-
+    private Integer taskStatus;
     private Integer clockDuration;
+    private String remark;
+    private List<Integer> estimate;
+    private Integer restTime;
+    private Integer again;
 
     private String category;
-
     private Integer tomatoClockTimes;
     private List<TomatoClock> tomatoClocks;
     private Integer stopTimes;
 
-    private Integer taskStatus;
     private String background;
     private Integer innerInterrupt;
     private Integer outerInterrupt;
@@ -147,19 +147,46 @@ public class TaskVo implements Serializable {
         this.category = category;
     }
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Integer getRestTime() {
+        return restTime;
+    }
+
+    public void setRestTime(Integer restTime) {
+        this.restTime = restTime;
+    }
+
+    public Integer getAgain() {
+        return again;
+    }
+
+    public void setAgain(Integer again) {
+        this.again = again;
+    }
+
     @Override
     public String toString() {
         return "TaskVo{" +
                 "taskId=" + taskId +
                 ", userId=" + userId +
                 ", taskName='" + taskName + '\'' +
-                ", estimate=" + estimate +
                 ", clockDuration=" + clockDuration +
+                ", taskStatus=" + taskStatus +
+                ", remark='" + remark + '\'' +
+                ", estimate=" + estimate +
+                ", restTime=" + restTime +
+                ", again=" + again +
                 ", category='" + category + '\'' +
                 ", tomatoClockTimes=" + tomatoClockTimes +
                 ", tomatoClocks=" + tomatoClocks +
                 ", stopTimes=" + stopTimes +
-                ", taskStatus=" + taskStatus +
                 ", background='" + background + '\'' +
                 ", innerInterrupt=" + innerInterrupt +
                 ", outerInterrupt=" + outerInterrupt +
