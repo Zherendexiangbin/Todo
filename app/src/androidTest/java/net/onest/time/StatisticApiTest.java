@@ -3,6 +3,7 @@ package net.onest.time;
 import net.onest.time.api.StatisticApi;
 import net.onest.time.api.TaskApi;
 import net.onest.time.api.vo.TaskVo;
+import net.onest.time.api.vo.statistic.StatisticVo;
 import net.onest.time.utils.StatisticUtil;
 
 import org.junit.Test;
@@ -14,7 +15,7 @@ public class StatisticApiTest {
 
     @Test
     public void statistic() {
-        Map<String, Object> statistic = StatisticApi.statistic();
+        StatisticVo statistic = StatisticApi.statistic();
         System.out.println(statistic);
     }
 

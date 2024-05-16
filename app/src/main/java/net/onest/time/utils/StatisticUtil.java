@@ -72,7 +72,7 @@ public class StatisticUtil {
 
         // 日均时长
         statisticVo.setAvgTomatoTimes(tomatoDays == 0 ? 0 : (int) (tomatoDuration.get() / tomatoDays));
-        statisticVo.setAvgTomatoDuration(tomatoDays == 0 ? 0 : tomatoTimes.get() / tomatoDays);
+        statisticVo.setAvgTomatoDuration(tomatoDays == 0 ? 0L : tomatoTimes.get() / tomatoDays);
 
         return statisticVo;
     }
