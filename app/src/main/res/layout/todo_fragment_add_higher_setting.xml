@@ -49,6 +49,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="80dp">
+            <CheckBox
+                android:id="@+id/todo_fragment_add_higher_again"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="完成后第二天不再显示"
+                android:textSize="20dp"
+                android:checked="true"/>
             <EditText
                 android:id="@+id/todo_fragment_add_higher_remark"
                 android:layout_width="250dp"
@@ -86,7 +93,7 @@
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/blue"
-                android:hint="自定义休息时间"
+                android:hint="自定义休息时间/分钟"
                 android:backgroundTint="@color/blue"
                 android:textColor="@color/blue"
                 android:textStyle="bold"

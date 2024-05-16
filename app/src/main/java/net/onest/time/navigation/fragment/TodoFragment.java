@@ -9,10 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +36,7 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 
 import net.onest.time.R;
+import net.onest.time.RecyclerViewEmptySupport;
 import net.onest.time.adapter.todo.TodoItemAdapter;
 import net.onest.time.api.TaskApi;
 import net.onest.time.api.dto.TaskDto;
@@ -54,7 +58,8 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         View.OnClickListener{
     private CalendarLayout calendarLayout;
     private CalendarView calendarView;
-    private RecyclerView recyclerView;//待办事项
+//    private RecyclerView recyclerView;//待办事项
+    private RecyclerViewEmptySupport recyclerView;
     private Button todoBtn;//添加按钮
     private TextView todayTxt;
 //    private List<Item> itemList = new ArrayList<>();//待办事项数据源
@@ -62,7 +67,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
 
 
     //以下是弹框布局控件：
-    private Button addYes,addNo,itemNameAbout;
+    private Button addYes,addNo,itemNameAbout,relaChange;
     private TextInputEditText itemName;
     private RadioGroup todoSetTime,setTimeGroup;
 
@@ -70,6 +75,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
     private RadioButton setTimeGroupOne,setTimeGroupTwo,setTimeGroupThree;
     private TextView setTimeOneTxt,setTimeTwoTxt,setTimeThreeTxt,higherSet;
     private TodoItemAdapter todoItemAdapter;
+    private RelativeLayout popRela;
 
     private CardView cardView;
 
@@ -94,21 +100,6 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         //按钮的监听事件
         btnClickIncidents();
 
-//        calendarView.setSchemeDate();
-
-//        calendarView.setSchemeColor(Color.BLACK,Color.RED,Color.RED);
-
-//        calendarView.setOnCalendarSelectListener(new CalendarView.OnCalendarSelectListener() {
-//            @Override
-//            public void onCalendarOutOfRange(Calendar calendar) {
-//
-//            }
-//
-//            @Override
-//            public void onCalendarSelect(Calendar calendar, boolean isClick) {
-//
-//            }
-//        });
 
         LocalDateTime currentDateTime = LocalDateTime.now();
         // 从今天起 往上推一天
@@ -118,40 +109,19 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         // 从今天起 往上推一个月
         LocalDateTime months = currentDateTime.minusMonths(1).plusDays(1);
 
-        long yesterdayEpochMilli = yesterdays.toInstant(ZoneOffset.of("+8")).toEpochMilli();
-        long weekEpochMilli = weeks.toInstant(ZoneOffset.of("+8")).toEpochMilli();
-        long monthEpochMilli = months.toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        long todayEpochMill = currentDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        long yesterdayEpochMilli = yesterdays.toInstant(ZoneOffset.of("+8")).toEpochMilli() + 8*60*60*1000;
+        long weekEpochMilli = weeks.toInstant(ZoneOffset.of("+8")).toEpochMilli() + 8*60*60*1000;
+        long monthEpochMilli = months.toInstant(ZoneOffset.of("+8")).toEpochMilli() + 8*60*60*1000;
 //        System.out.println("从今天起 往上推一天 " + yesterdayEpochMilli);
 //        System.out.println("从今天起 往上推一周 " + weekEpochMilli);
 //        System.out.println("从今天起 往上推一个月 " + monthEpochMilli);
-//        // 获取当前时间的时间戳
-//        long currentTimeMillis = System.currentTimeMillis();
-//
-//// 获取当天零点的时间戳
-//        java.util.Calendar calendar = java.util.Calendar.getInstance();
-//        calendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
-//        calendar.set(java.util.Calendar.MINUTE, 0);
-//        calendar.set(java.util.Calendar.SECOND, 0);
-//        calendar.set(java.util.Calendar.MILLISECOND, 0);
-//        long currentDayStartTimeMillis = calendar.getTimeInMillis();
-//
+
 //// 计算当天的时间戳
 //        long currentDayTimeMillis = currentTimeMillis - currentDayStartTimeMillis;
-        itemListByDay = TaskApi.findByDay(yesterdayEpochMilli);
 
-//        System.out.println("当前时间的时间戳：" + currentTimeMillis);
-//        System.out.println("当天零点的时间戳：" + currentDayStartTimeMillis);
-//        System.out.println("当天的时间戳：" + currentDayTimeMillis);
 
-//        //创建数据源：
-//        for(int i=1; i<=3;i++){
-//            Item item = new Item();
-//            item.setItemName("事件 "+i);
-//            item.setTime(i+"0 分钟");
-////            item.setColor(ColorUtil.getColorByRgb(null));
-//            item.setDrawable(DrawableUtil.getRandomImage(getContext()));
-//            itemList.add(item);
-//        }
+        itemListByDay = TaskApi.findByDay(todayEpochMill);
 
         //《标记》日期:
         int year = calendarView.getCurYear();
@@ -181,6 +151,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         calendarView.setSchemeDate(map);
 
 
+        recyclerView.setEmptyView(View.inflate(getContext(),R.layout.null_item_page,null));
         //绑定适配器:
         todoItemAdapter = new TodoItemAdapter(getContext(),itemListByDay);
         recyclerView.setAdapter(todoItemAdapter);
@@ -222,10 +193,12 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                 dialog.getWindow().setContentView(dialogView);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+                relaChange.setVisibility(View.GONE);
                 setTimeTwoTxt.setVisibility(View.GONE);
                 setTimeThreeTxt.setVisibility(View.GONE);
 
-                List<String> integerList = new ArrayList<>();
+//                List<String> integerList = new ArrayList<>();
+                HashMap<String,String> map = new HashMap<String,String>();
 
                 higherSet.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -241,6 +214,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                         EditText remark = dialogView.findViewById(R.id.todo_fragment_add_higher_remark);
                         EditText clockTimes = dialogView.findViewById(R.id.todo_fragment_add_clock_times);
                         EditText rest = dialogView.findViewById(R.id.todo_fragment_add_rest_time);
+                        CheckBox checkBox = dialogView.findViewById(R.id.todo_fragment_add_higher_again);
                         Button clockAbout = dialogView.findViewById(R.id.todo_clock_times_about);
                         Button btnYes = dialogView.findViewById(R.id.add_todo_higher_setting_item_yes);
                         Button btnNo = dialogView.findViewById(R.id.add_todo_higher_setting_item_no);
@@ -269,8 +243,15 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                         btnYes.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
-                                integerList.add(clockTimes.getText().toString().trim());
+//                                integerList.add(clockTimes.getText().toString().trim());
+                                map.put("remark",remark.getText().toString().trim());
+                                map.put("clockTimes",clockTimes.getText().toString().trim());
+                                map.put("rest",rest.getText().toString().trim());
+                                if(checkBox.isChecked()){
+                                    map.put("again","1");
+                                }else{
+                                    map.put("again","0");
+                                }
                                 dialog.dismiss();
                             }
                         });
@@ -354,36 +335,68 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                                     String strings = setTimeGroupOne.getText().toString().split(" ")[0];
 
                                     ArrayList<Integer> estimate = new ArrayList<>();
-                                    estimate.add(Integer.valueOf(integerList.get(0)));
+                                    if(map.get("clockTimes")==null){
+                                        map.put("clockTimes","1");
+                                    }
+                                    estimate.add(Integer.valueOf(map.get("clockTimes")));
                                     TaskDto taskDto = new TaskDto();
                                     taskDto.setTaskName(itemName.getText().toString());
                                     taskDto.setEstimate(estimate);
                                     taskDto.setClockDuration(Integer.valueOf(strings.trim()));
-                                    TaskApi.addTask(taskDto);
+                                    taskDto.setRemark(map.get("remark"));
+                                    if(map.get("rest") == null){
+                                        map.put("rest","5");
+                                    }
+                                    taskDto.setRestTime(Integer.valueOf(map.get("rest")));
+                                    taskDto.setAgain(1);
+                                    TaskVo taskVo = TaskApi.addTask(taskDto);
+                                    itemListByDay.add(taskVo);
+//                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
                                     todoItemAdapter.notifyDataSetChanged();
                                 } else if (setTimeGroupTwo.isChecked()) {
                                     String strings = setTimeGroupOne.getText().toString().split(" ")[0];
 
                                     ArrayList<Integer> estimate = new ArrayList<>();
-                                    estimate.add(Integer.valueOf(integerList.get(0)));
+                                    if(map.get("clockTimes")==null){
+                                        map.put("clockTimes","1");
+                                    }
+                                    estimate.add(Integer.valueOf(map.get("clockTimes")));
                                     TaskDto taskDto = new TaskDto();
                                     taskDto.setTaskName(itemName.getText().toString());
                                     taskDto.setEstimate(estimate);
                                     taskDto.setClockDuration(Integer.valueOf(strings.trim()));
-                                    TaskApi.addTask(taskDto);
-
-                                    todoItemAdapter.notifyDataSetChanged();
+                                    taskDto.setRemark(map.get("remark"));
+                                    if(map.get("rest") == null){
+                                        map.put("rest","5");
+                                    }
+                                    taskDto.setRestTime(Integer.valueOf(map.get("rest")));
+                                    taskDto.setAgain(1);
+                                    TaskVo taskVo = TaskApi.addTask(taskDto);
+                                    itemListByDay.add(taskVo);
+                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
+//                                    todoItemAdapter.notifyDataSetChanged();
                                 }else{
                                     String strings = setTimeGroupOne.getText().toString().split(" ")[0];
 
                                     ArrayList<Integer> estimate = new ArrayList<>();
-                                    estimate.add(Integer.valueOf(integerList.get(0)));
+                                    if(map.get("clockTimes")==null){
+                                        map.put("clockTimes","1");
+                                    }
+                                    estimate.add(Integer.valueOf(map.get("clockTimes")));
                                     TaskDto taskDto = new TaskDto();
                                     taskDto.setTaskName(itemName.getText().toString());
                                     taskDto.setEstimate(estimate);
                                     taskDto.setClockDuration(Integer.valueOf(strings.trim()));
-                                    TaskApi.addTask(taskDto);
-                                    todoItemAdapter.notifyDataSetChanged();
+                                    taskDto.setRemark(map.get("remark"));
+                                    if(map.get("rest") == null){
+                                        map.put("rest","5");
+                                    }
+                                    taskDto.setRestTime(Integer.valueOf(map.get("rest")));
+                                    taskDto.setAgain(1);
+                                    TaskVo taskVo = TaskApi.addTask(taskDto);
+                                    itemListByDay.add(taskVo);
+                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
+//                                    todoItemAdapter.notifyDataSetChanged();
                                 }
                             }
                             //正向计时：
@@ -426,7 +439,9 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
 
             @Override
             public void onCalendarSelect(Calendar calendar, boolean isClick) {
-                Toast.makeText(getContext(), "你选中了"+calendar.getDay(), Toast.LENGTH_SHORT).show();
+                List<TaskVo> byDay = TaskApi.findByDay(calendar.getTimeInMillis());
+                todoItemAdapter.setItemListByDay(byDay);
+                todoItemAdapter.notifyDataSetChanged();
 
             }
         });
@@ -437,6 +452,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         addYes = dialogView.findViewById(R.id.add_todo_item_yes);
         addNo = dialogView.findViewById(R.id.add_todo_item_no);
         itemNameAbout = dialogView.findViewById(R.id.todo_item_about);
+        relaChange = dialogView.findViewById(R.id.add_todo_item_change);
 
         itemName = dialogView.findViewById(R.id.todo_item_name);
 
@@ -457,12 +473,14 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         setTimeThreeTxt = dialogView.findViewById(R.id.set_time_three_txt);
 
         higherSet = dialogView.findViewById(R.id.todo_fragment_add_item_higher_setting);
+        popRela = dialogView.findViewById(R.id.todo_add_item_pop_background);
     }
 
     private void findView(View view) {
         calendarLayout = view.findViewById(R.id.cancel_button);
         calendarView = view.findViewById(R.id.calendarView);
-        recyclerView = view.findViewById(R.id.recyclerView);
+//        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.my_recyclerView);
         todoBtn = view.findViewById(R.id.todo_btn);
         todayTxt = view.findViewById(R.id.todo_fragment_today);
     }

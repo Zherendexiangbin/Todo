@@ -11,8 +11,9 @@
         android:orientation="vertical"
         android:paddingBottom="10dp">
         <RelativeLayout
+            android:id="@+id/todo_add_item_pop_background"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:padding="10dp"
             android:background="@color/lightgray"
             android:gravity="center_vertical">
@@ -29,18 +30,26 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/add_todo_item_change"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/ic_action_loop_new" />
+
                 <Button
                     android:id="@+id/add_todo_item_yes"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/done"/>
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/ic_action_right_new"/>
                 <Button
                     android:id="@+id/add_todo_item_no"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="15dp"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/close"/>
+                    android:background="@drawable/ic_action_wrong_new"/>
             </LinearLayout>
         </RelativeLayout>
         <LinearLayout
