@@ -36,6 +36,7 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 
 import net.onest.time.R;
+import net.onest.time.RecyclerViewEmptySupport;
 import net.onest.time.adapter.todo.TodoItemAdapter;
 import net.onest.time.api.TaskApi;
 import net.onest.time.api.dto.TaskDto;
@@ -57,7 +58,8 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         View.OnClickListener{
     private CalendarLayout calendarLayout;
     private CalendarView calendarView;
-    private RecyclerView recyclerView;//待办事项
+//    private RecyclerView recyclerView;//待办事项
+    private RecyclerViewEmptySupport recyclerView;
     private Button todoBtn;//添加按钮
     private TextView todayTxt;
 //    private List<Item> itemList = new ArrayList<>();//待办事项数据源
@@ -149,6 +151,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         calendarView.setSchemeDate(map);
 
 
+        recyclerView.setEmptyView(View.inflate(getContext(),R.layout.null_item_page,null));
         //绑定适配器:
         todoItemAdapter = new TodoItemAdapter(getContext(),itemListByDay);
         recyclerView.setAdapter(todoItemAdapter);
@@ -348,8 +351,8 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                                     taskDto.setAgain(1);
                                     TaskVo taskVo = TaskApi.addTask(taskDto);
                                     itemListByDay.add(taskVo);
-                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
-//                                    todoItemAdapter.notifyDataSetChanged();
+//                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
+                                    todoItemAdapter.notifyDataSetChanged();
                                 } else if (setTimeGroupTwo.isChecked()) {
                                     String strings = setTimeGroupOne.getText().toString().split(" ")[0];
 
@@ -476,7 +479,8 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
     private void findView(View view) {
         calendarLayout = view.findViewById(R.id.cancel_button);
         calendarView = view.findViewById(R.id.calendarView);
-        recyclerView = view.findViewById(R.id.recyclerView);
+//        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.my_recyclerView);
         todoBtn = view.findViewById(R.id.todo_btn);
         todayTxt = view.findViewById(R.id.todo_fragment_today);
     }
