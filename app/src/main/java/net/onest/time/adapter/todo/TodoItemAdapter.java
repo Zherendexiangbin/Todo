@@ -54,9 +54,8 @@ import java.util.List;
 
 public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyViewHolder>{
     private Context context;
-//    private List<Item> itemList = new ArrayList<>();
+    //    private List<Item> itemList = new ArrayList<>();
     private List<TaskVo> itemListByDay  = new ArrayList<>();
-    private int layout;
 
     private OnItemClickListener mItemClickListener;
     private Intent intent;
@@ -74,7 +73,6 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
     private RadioButton setTimeOne,setTimeTwo,setTimeThree;
     private RadioButton setTimeGroupOne,setTimeGroupTwo,setTimeGroupThree;
     private TextView setTimeOneTxt,setTimeTwoTxt,setTimeThreeTxt,higherSet;
-    private TodoItemAdapter todoItemAdapter;
     private RelativeLayout popRela;
 
     public List<TaskVo> getItemListByDay() {
@@ -90,25 +88,22 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
         this.itemListByDay = itemListByDay;
     }
 
-    public TodoItemAdapter(Context context, List<TaskVo> itemListByDay, int layout) {
-        this.context = context;
-        this.itemListByDay = itemListByDay;
-        this.layout = layout;
-    }
 
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-//        if(itemListByDay.size()==0 && itemListByDay.isEmpty()){
-//            view = View.inflate(context,layout,null);
+        View view;
+//        if(viewType==R.layout.null_item_page){
+//            view = View.inflate(context, R.layout.null_item_page, null);
 //        }else{
-//
+//            view = View.inflate(context, R.layout.re_item, null);
 //        }
-        View view = View.inflate(context, R.layout.re_item, null);
+        view = View.inflate(context, R.layout.re_item, null);
         MyViewHolder myViewHolder = new MyViewHolder(view);
         return myViewHolder;
     }
+
 
     @SuppressLint("RecyclerView")
     @Override
@@ -126,7 +121,6 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
                 holder.backGroundLin.setBackground(drawable);
             }
         });
-
 
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -538,6 +532,8 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
             backGroundLin = itemView.findViewById(R.id.re_item_background_lin);
         }
     }
+
+
 
     // 定义一个接口，用于传递点击事件
     public interface OnItemClickListener {

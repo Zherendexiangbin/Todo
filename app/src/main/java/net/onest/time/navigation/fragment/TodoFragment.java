@@ -107,7 +107,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         // 从今天起 往上推一个月
         LocalDateTime months = currentDateTime.minusMonths(1).plusDays(1);
 
-        long todayEpochMill = currentDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli() + 8*60*60*1000;
+        long todayEpochMill = currentDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
         long yesterdayEpochMilli = yesterdays.toInstant(ZoneOffset.of("+8")).toEpochMilli() + 8*60*60*1000;
         long weekEpochMilli = weeks.toInstant(ZoneOffset.of("+8")).toEpochMilli() + 8*60*60*1000;
         long monthEpochMilli = months.toInstant(ZoneOffset.of("+8")).toEpochMilli() + 8*60*60*1000;
@@ -119,7 +119,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
 //        long currentDayTimeMillis = currentTimeMillis - currentDayStartTimeMillis;
 
 
-
+        itemListByDay = TaskApi.findByDay(todayEpochMill);
 
         //《标记》日期:
         int year = calendarView.getCurYear();
@@ -149,7 +149,6 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         calendarView.setSchemeDate(map);
 
 
-        itemListByDay = TaskApi.findByDay(todayEpochMill);
         //绑定适配器:
         todoItemAdapter = new TodoItemAdapter(getContext(),itemListByDay);
         recyclerView.setAdapter(todoItemAdapter);
@@ -345,7 +344,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                                     if(map.get("rest") == null){
                                         map.put("rest","5");
                                     }
-                                    taskDto.setRestTime(Integer.valueOf(map.get("restTime")));
+                                    taskDto.setRestTime(Integer.valueOf(map.get("rest")));
                                     taskDto.setAgain(1);
                                     TaskVo taskVo = TaskApi.addTask(taskDto);
                                     itemListByDay.add(taskVo);
@@ -364,10 +363,10 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                                     taskDto.setEstimate(estimate);
                                     taskDto.setClockDuration(Integer.valueOf(strings.trim()));
                                     taskDto.setRemark(map.get("remark"));
-                                    if(map.get("restTime") == null){
-                                        map.put("restTime","5");
+                                    if(map.get("rest") == null){
+                                        map.put("rest","5");
                                     }
-                                    taskDto.setRestTime(Integer.valueOf(map.get("restTime")));
+                                    taskDto.setRestTime(Integer.valueOf(map.get("rest")));
                                     taskDto.setAgain(1);
                                     TaskVo taskVo = TaskApi.addTask(taskDto);
                                     itemListByDay.add(taskVo);
@@ -386,10 +385,10 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                                     taskDto.setEstimate(estimate);
                                     taskDto.setClockDuration(Integer.valueOf(strings.trim()));
                                     taskDto.setRemark(map.get("remark"));
-                                    if(map.get("restTime") == null){
-                                        map.put("restTime","5");
+                                    if(map.get("rest") == null){
+                                        map.put("rest","5");
                                     }
-                                    taskDto.setRestTime(Integer.valueOf(map.get("restTime")));
+                                    taskDto.setRestTime(Integer.valueOf(map.get("rest")));
                                     taskDto.setAgain(1);
                                     TaskVo taskVo = TaskApi.addTask(taskDto);
                                     itemListByDay.add(taskVo);
