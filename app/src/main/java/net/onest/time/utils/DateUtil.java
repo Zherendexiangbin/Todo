@@ -1,10 +1,27 @@
 package net.onest.time.utils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtil {
+
+    private LocalDateTime currentDateTime = LocalDateTime.now();
+    // 从今天起 往上推一天
+    private LocalDateTime yesterdays = currentDateTime.minusDays(1);
+
+    // 从今天起 往上推一周
+    private LocalDateTime weeks = currentDateTime.minusWeeks(1).plusDays(1);
+    // 从今天起 往上推一个月
+    private LocalDateTime months = currentDateTime.minusMonths(1).plusDays(1);
+
+    long todayEpochMill = currentDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli() + 8*60*60*1000;
+    long yesterdayEpochMilli = yesterdays.toInstant(ZoneOffset.of("+8")).toEpochMilli() + 8*60*60*1000;
+    long weekEpochMilli = weeks.toInstant(ZoneOffset.of("+8")).toEpochMilli() + 8*60*60*1000;
+    long monthEpochMilli = months.toInstant(ZoneOffset.of("+8")).toEpochMilli() + 8*60*60*1000;
+
 
     //获取当前日期
     public static String getCurDay() {
