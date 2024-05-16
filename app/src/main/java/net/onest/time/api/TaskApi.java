@@ -38,7 +38,7 @@ public class TaskApi {
     private final static String FIND_BY_CATEGORY = "/findByCategory";
 
     // 查询某个人所有类别的任务
-    private final static String FIND_BY_USER_ID = "/findByCategory";
+    private final static String ALL_BY_CATEGORY = "/allByCategory";
 
     // 查询某一天的任务
     private final static String FIND_BY_DAY = "/findByDay";
@@ -108,9 +108,9 @@ public class TaskApi {
                 .buildAndSend(new TypeToken<List<TaskVo>>(){});
     }
 
-    public static Map<String, List<TaskVo>> findByUserId() {
+    public static Map<String, List<TaskVo>> allByCategory() {
         return RequestUtil.builder()
-                .url(ServerConstant.HTTP_ADDRESS + PREFIX + FIND_BY_USER_ID)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + ALL_BY_CATEGORY)
                 .get()
                 .buildAndSend(new TypeToken<Map<String, List<TaskVo>>>(){});
     }

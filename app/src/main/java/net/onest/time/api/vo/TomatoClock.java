@@ -17,37 +17,6 @@ public class TomatoClock implements Serializable {
     private Date updatedAt;
     private Integer deleted;
 
-    public enum Status {
-        COMPLETE(0), DOING(1), UN_STARTED(2), TERMINATED(3);
-        private Integer status;
-
-        Status(Integer status) {
-            this.status = status;
-        }
-
-        public Integer getStatus() {
-            return status;
-        }
-
-        public void setStatus(Integer status) {
-            this.status = status;
-        }
-
-        public static Status of(Integer code) {
-            switch (code) {
-                case 0:
-                    return Status.COMPLETE;
-                case 1:
-                    return Status.DOING;
-                case 2:
-                    return Status.UN_STARTED;
-                case 3:
-                    return Status.TERMINATED;
-            }
-            return null;
-        }
-    }
-
     public Long getClockId() {
         return clockId;
     }
@@ -72,9 +41,7 @@ public class TomatoClock implements Serializable {
         this.sequence = sequence;
     }
 
-    public Status getClockStatus() {
-        return Status.of(clockStatus);
-    }
+
 
     public void setClockStatus(Integer clockStatus) {
         this.clockStatus = clockStatus;
