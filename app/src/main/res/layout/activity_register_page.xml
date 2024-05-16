@@ -7,18 +7,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/register_user"
+        android:id="@+id/register_nickName"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="120dp"
-        android:hint="手机号或邮箱"
+        android:hint="昵称"
         app:hintTextColor="@color/black"
         android:textColorHint="@color/black">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_register_user"
+            android:id="@+id/edt_register_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textNoSuggestions"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/register_user"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_nickName"
+        android:hint="邮箱"
+        app:hintTextColor="@color/black"
+        android:textColorHint="@color/black">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_register_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textNoSuggestions"/>

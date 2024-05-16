@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity{
                     Toast.makeText(this, "登录成功，欢迎来到时光！", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent();
                     intent.setClass(MainActivity.this, NavigationActivity.class);
-                    startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,btnLogin,"fab").toBundle());
+                    startActivity(intent);
                 }
             }
         });

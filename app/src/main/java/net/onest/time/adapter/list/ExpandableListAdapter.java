@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -375,6 +376,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         View view = LayoutInflater.from(context).inflate(childViewId,parent,false);
 
         LinearLayout backLin = view.findViewById(R.id.list_fragment_item_child_background_lin);
+        RelativeLayout statistics = view.findViewById(R.id.click_statistics);
         TextView childName = view.findViewById(R.id.list_fragment_item_child_txt_name);
         TextView childTime = view.findViewById(R.id.list_fragment_item_child_txt_time);
         Button startBtn = view.findViewById(R.id.list_fragment_item_child_ry_btn);
@@ -411,6 +413,21 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     intent.setClass(context, TimerActivity.class);
                     context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,startBtn,"fab").toBundle());
                 }
+            }
+        });
+
+        //点击查看数据
+        statistics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+                LayoutInflater inflater = LayoutInflater.from(context);
+                View dialogView = inflater.inflate(R.layout.item_pop, null);
+                setViews(dialogView, groupPosition, childPosition);
+                final Dialog dialog = builder.create();
+                dialog.show();
+                dialog.getWindow().setContentView(dialogView);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             }
         });
 
@@ -495,4 +512,23 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         goalLinear = dialogView.findViewById(R.id.todo_item_goal);
         habitLinear = dialogView.findViewById(R.id.todo_item_habit);
     }
+
+    private void setViews(View dialogView, int groupPosition, int childPosition) {
+        TextView title,learnFrequency, learnTime;
+        Button changeBackground, setItem, moveItem, deleteItem, timing;
+        LinearLayout learnHistory, learnStatistics;
+
+        title = dialogView.findViewById(R.id.txt_title);//待办标题txt
+        changeBackground = dialogView.findViewById(R.id.btn_changeBackground);//设置背景button
+        setItem = dialogView.findViewById(R.id.btn_set);//编辑待办button
+        moveItem = dialogView.findViewById(R.id.btn_move);//排序或移动待办button
+        deleteItem = dialogView.findViewById(R.id.btn_delete);//删除待办button
+        learnFrequency = dialogView.findViewById(R.id.txt_learn_frequency);//累计学习次数txt
+        learnTime = dialogView.findViewById(R.id.txt_learn_time);//累计学习时间txt单位分钟
+        learnHistory = dialogView.findViewById(R.id.learn_history);//历史记录(页面跳转)
+        learnStatistics = dialogView.findViewById(R.id.learn_statistics);//数据统计(页面跳转)
+
+        title.setText(parentItemList.get(groupPosition).getChildItemList().get(childPosition).getItemName());
+    }
+
 }

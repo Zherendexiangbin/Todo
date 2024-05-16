@@ -17,10 +17,11 @@
             android:layout_height="80dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
+            android:padding="5dp"
             android:text="待办标题tilte"
             android:textStyle="bold"
             android:textColor="@color/white"
-            android:textSize="30sp"
+            android:textSize="25sp"
             android:singleLine="false"
             android:ellipsize="end"
             android:maxLines="2"/>

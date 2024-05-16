@@ -54,7 +54,8 @@
                     <ImageView
                         android:id="@+id/edit_avatar"
                         android:layout_width="150dp"
-                        android:layout_height="150dp"/>
+                        android:layout_height="150dp"
+                        android:scaleType="centerCrop"/>
                 </androidx.cardview.widget.CardView>
                 <TextView
                     android:layout_width="match_parent"
@@ -116,16 +117,39 @@
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
-                        android:text="生日："
+                        android:text="UID："
                         android:textColor="@color/black" />
 
                     <TextView
-                        android:id="@+id/edit_birthday"
+                        android:id="@+id/user_UID"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:gravity="right|center"
-                        android:background="@android:color/transparent" />
+                        android:background="@android:color/transparent"/>
                 </LinearLayout>
+
+
+                <!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:orientation="horizontal">-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="50dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="20dp"-->
+<!--                        android:text="生日："-->
+<!--                        android:textColor="@color/black" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/edit_birthday"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:gravity="right|center"-->
+<!--                        android:background="@android:color/transparent" />-->
+<!--                </LinearLayout>-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -138,11 +162,11 @@
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
-                        android:text="简介："
+                        android:text="签名："
                         android:textColor="@color/black" />
 
                     <EditText
-                        android:id="@+id/edit_introduction"
+                        android:id="@+id/edit_signature"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:background="@android:color/transparent"
@@ -154,74 +178,74 @@
                         android:maxLines="1" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:orientation="horizontal">-->
 
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="性别："
-                        android:textColor="@color/black" />
+<!--                    <TextView-->
+<!--                        android:layout_width="50dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="20dp"-->
+<!--                        android:text="性别："-->
+<!--                        android:textColor="@color/black" />-->
 
-                    <TextView
-                        android:id="@+id/edit_sex"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:gravity="right|center"
-                        android:background="@android:color/transparent"
-                        android:textLocale="right" />
-                </LinearLayout>
+<!--                    <TextView-->
+<!--                        android:id="@+id/edit_sex"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:gravity="right|center"-->
+<!--                        android:background="@android:color/transparent"-->
+<!--                        android:textLocale="right" />-->
+<!--                </LinearLayout>-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:orientation="horizontal">-->
 
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="职业："
-                        android:textColor="@color/black" />
+<!--                    <TextView-->
+<!--                        android:layout_width="50dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="20dp"-->
+<!--                        android:text="职业："-->
+<!--                        android:textColor="@color/black" />-->
 
-                    <TextView
-                        android:id="@+id/edit_career"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:gravity="right|center"
-                        android:background="@android:color/transparent"
-                        android:textLocale="right" />
-                </LinearLayout>
+<!--                    <TextView-->
+<!--                        android:id="@+id/edit_career"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:gravity="right|center"-->
+<!--                        android:background="@android:color/transparent"-->
+<!--                        android:textLocale="right" />-->
+<!--                </LinearLayout>-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:orientation="horizontal">-->
 
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="地区："
-                        android:textColor="@color/black" />
+<!--                    <TextView-->
+<!--                        android:layout_width="50dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="20dp"-->
+<!--                        android:text="地区："-->
+<!--                        android:textColor="@color/black" />-->
 
-                    <TextView
-                        android:id="@+id/edit_area"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:gravity="right|center"
-                        android:background="@android:color/transparent"
-                        android:textLocale="right" />
-                </LinearLayout>
+<!--                    <TextView-->
+<!--                        android:id="@+id/edit_area"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:gravity="right|center"-->
+<!--                        android:background="@android:color/transparent"-->
+<!--                        android:textLocale="right" />-->
+<!--                </LinearLayout>-->
 
             </LinearLayout>
         </LinearLayout>

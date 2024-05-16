@@ -12,8 +12,19 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <!--        <item name="android:fitsSystemWindows">true</item>-->
+        <!--        <item name="android:windowFullscreen">true</item>-->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
+    <style name="Theme.Time.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.Time.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Time.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="MyEditTextStyle">
         <!--文本的颜色-->
