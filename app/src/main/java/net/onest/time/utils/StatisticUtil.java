@@ -2,6 +2,7 @@ package net.onest.time.utils;
 
 import net.onest.time.api.vo.TaskVo;
 import net.onest.time.api.vo.TomatoClock;
+import net.onest.time.api.vo.TomatoClockVo;
 import net.onest.time.api.vo.statistic.DayTomatoStatistic;
 import net.onest.time.api.vo.statistic.StatisticVo;
 
@@ -28,8 +29,8 @@ public class StatisticUtil {
 
         AtomicInteger tomatoTimes = new AtomicInteger(0);
         AtomicLong tomatoDuration = new AtomicLong(0);
-        HashMap<Long, List<TomatoClock>> dayTomatoTmp = taskVo.getTomatoClocks().stream()
-                .filter(tomatoClock -> tomatoClock.getClockStatus() == TomatoClock.Status.COMPLETE)
+        HashMap<Long, List<TomatoClockVo>> dayTomatoTmp = taskVo.getTomatoClocks().stream()
+                .filter(tomatoClockVo -> tomatoClockVo.getClockStatus() == TomatoClockVo.Status.COMPLETE)
                 .peek(tomatoClock -> {
                     tomatoTimes.addAndGet(1);
                     tomatoDuration.addAndGet(taskVo.getClockDuration());

@@ -17,7 +17,7 @@ public class TaskVo implements Serializable {
 
     private String category;
     private Integer tomatoClockTimes;
-    private List<TomatoClock> tomatoClocks;
+    private List<TomatoClockVo> tomatoClocks;
     private Integer stopTimes;
 
     private String background;
@@ -75,11 +75,11 @@ public class TaskVo implements Serializable {
         this.tomatoClockTimes = tomatoClockTimes;
     }
 
-    public List<TomatoClock> getTomatoClocks() {
+    public List<TomatoClockVo> getTomatoClocks() {
         return tomatoClocks;
     }
 
-    public void setTomatoClocks(List<TomatoClock> tomatoClocks) {
+    public void setTomatoClocks(List<TomatoClockVo> tomatoClocks) {
         this.tomatoClocks = tomatoClocks;
     }
 

@@ -38,8 +38,8 @@ public class TomatoClockVo implements Serializable {
         this.sequence = sequence;
     }
 
-    public Integer getClockStatus() {
-        return clockStatus;
+    public Status getClockStatus() {
+        return of(clockStatus);
     }
 
     public void setClockStatus(Integer clockStatus) {
@@ -99,5 +99,37 @@ public class TomatoClockVo implements Serializable {
                 ", startedAt=" + startedAt +
                 ", completedAt=" + completedAt +
                 '}';
+    }
+
+    public static TomatoClockVo.Status of(Integer code) {
+        switch (code) {
+            case 0:
+                return TomatoClockVo.Status.COMPLETE;
+            case 1:
+                return TomatoClockVo.Status.DOING;
+            case 2:
+                return TomatoClockVo.Status.UN_STARTED;
+            case 3:
+                return TomatoClockVo.Status.TERMINATED;
+        }
+        return null;
+    }
+
+    public enum Status {
+        COMPLETE(0), DOING(1), UN_STARTED(2), TERMINATED(3);
+        private Integer status;
+
+        Status(Integer status) {
+            this.status = status;
+        }
+
+        public Integer getStatus() {
+            return status;
+        }
+
+        public void setStatus(Integer status) {
+            this.status = status;
+        }
+
     }
 }
