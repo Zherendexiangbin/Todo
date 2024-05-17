@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     android:background="@drawable/shape_top_ivory">
@@ -12,13 +12,18 @@
         android:paddingTop="15dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp">
+        <View
+            android:id="@+id/barView"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            tools:ignore="MissingConstraints" />
         <RadioGroup
             android:id="@+id/room_chose"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/barView"
             android:orientation="horizontal">
             <RadioButton
                 android:id="@+id/create_room"

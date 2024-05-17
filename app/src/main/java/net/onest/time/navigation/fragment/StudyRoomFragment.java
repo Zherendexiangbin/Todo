@@ -4,9 +4,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -69,7 +67,7 @@ public class StudyRoomFragment extends Fragment {
             }else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage("确定退出自习室吗").setPositiveButton("确定", ((dialogInterface, i) -> {
-                            btnAdd.setBackgroundResource(R.mipmap.add2);
+                            btnAdd.setBackgroundResource(R.mipmap.add3);
                             btnAdd.setHint("add");
                             for (int a = avatarList.size()-1; a>0; a--){
                                 avatarList.remove(a);
@@ -78,6 +76,8 @@ public class StudyRoomFragment extends Fragment {
                             Log.e("YES", "确定");
                             Toast.makeText(getContext(), "退出成功！", Toast.LENGTH_SHORT).show();
                             roomName.setText("时光自习室");
+                            roomId.setText("roomId");
+                            btnMenu.setVisibility(View.GONE);
                         })).setNegativeButton("取消", (dialogInterface, i) -> Log.e("NO", "取消")).create()
                         .show();
             }
@@ -124,7 +124,7 @@ public class StudyRoomFragment extends Fragment {
         public RoomCodePopWindow(Context context) {
             //设置view
             LayoutInflater inflater = LayoutInflater.from(context);
-            View view1 = inflater.inflate((R.layout.activity_roomid_page), null);
+            View view1 = inflater.inflate((R.layout.activity_roomid_pop), null);
             setContentView(view1);
             initView(view1);//获取控件
             //activity的contentView的宽度
@@ -150,7 +150,7 @@ public class StudyRoomFragment extends Fragment {
             setName = view.findViewById(R.id.edit_roomName);
             idInputView = view.findViewById(R.id.id_input);
 
-            setName.setVisibility(View.INVISIBLE);
+            setName.setVisibility(View.GONE);
 
             createRoom.setOnClickListener(view1 -> {
                 joinRoom.setChecked(false);
@@ -162,10 +162,10 @@ public class StudyRoomFragment extends Fragment {
 
             joinRoom.setOnClickListener(view1 -> {
                 createRoom.setChecked(false);
-                setName.setVisibility(View.INVISIBLE);
+                setName.setVisibility(View.GONE);
                 createRoom.setBackgroundResource(R.drawable.button_white);
                 joinRoom.setBackgroundResource(R.drawable.button_wheat);
-                Toast.makeText(getContext(), "请输入要加入的自习室房间号", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "请输入要加入的自习室邀请码", Toast.LENGTH_SHORT).show();
             });
 
             idInputView.setOnInputListener(new VerificationCodeInputView.OnInputListener() {
