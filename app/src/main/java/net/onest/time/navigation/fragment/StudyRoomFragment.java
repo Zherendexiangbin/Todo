@@ -188,6 +188,7 @@ public class StudyRoomFragment extends Fragment {
                                         roomName.setText(setName.getText().toString().trim());
                                         roomId.setText("roomId: " + code);
                                         btnMenu.setVisibility(View.VISIBLE);
+                                        dismiss();
                                         Toast.makeText(getContext(), "创建成功", Toast.LENGTH_SHORT).show();
                                     }
                                 })
@@ -210,6 +211,7 @@ public class StudyRoomFragment extends Fragment {
                                             roomName.setText("****");
                                             roomId.setText("roomId: " + code);
                                         }
+                                        dismiss();
                                         Toast.makeText(getContext(), "加入成功！", Toast.LENGTH_SHORT).show();
                                     }
                                 })
