@@ -466,7 +466,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         View view = LayoutInflater.from(context).inflate(childViewId,parent,false);
 
         LinearLayout backLin = view.findViewById(R.id.list_fragment_item_child_background_lin);
-        RelativeLayout statistics = view.findViewById(R.id.click_statistics);
         TextView childName = view.findViewById(R.id.list_fragment_item_child_txt_name);
         TextView childTime = view.findViewById(R.id.list_fragment_item_child_txt_time);
         Button startBtn = view.findViewById(R.id.list_fragment_item_child_ry_btn);
@@ -877,20 +876,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        //点击查看数据
-        statistics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
-                LayoutInflater inflater = LayoutInflater.from(context);
-                View dialogView = inflater.inflate(R.layout.item_pop, null);
-                setViews(dialogView, groupPosition, childPosition);
-                final Dialog dialog = builder.create();
-                dialog.show();
-                dialog.getWindow().setContentView(dialogView);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            }
-        });
 
         return view;
     }
@@ -1002,7 +987,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         learnHistory = dialogView.findViewById(R.id.learn_history);//历史记录(页面跳转)
         learnStatistics = dialogView.findViewById(R.id.learn_statistics);//数据统计(页面跳转)
 
-        title.setText(parentItemList.get(groupPosition).getChildItemList().get(childPosition).getItemName());
     }
 
 }
