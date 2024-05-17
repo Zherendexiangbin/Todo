@@ -29,18 +29,24 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import net.onest.time.R;
 import net.onest.time.adapter.list.ExpandableListAdapter;
+import net.onest.time.api.TaskApi;
+import net.onest.time.api.vo.TaskVo;
 import net.onest.time.entity.Item;
 import net.onest.time.entity.list.ParentItem;
 import net.onest.time.utils.ColorUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 public class ListFragment extends Fragment {
     private ExpandableListView backLog;
     private Button addParentBtn,menuBtn;
     private List<ParentItem> parentItemList = new ArrayList<>();
+    private Map<String, List<TaskVo>> parentMap;
     private ExpandableListAdapter expandableListAdapter;
     @Nullable
     @Override
@@ -66,11 +72,18 @@ public class ListFragment extends Fragment {
         backLog.setIndicatorBounds(width-320,width-290);
 
         //默认展开第一项
-        backLog.expandGroup(0);
+//        backLog.expandGroup(0);
+
 
         backLog.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                boolean groupExpanded = backLog.isGroupExpanded(groupPosition);
+                if(groupExpanded){
+                    v.findViewById(R.id.list_fragment_parent_arrow).setBackgroundResource(R.drawable.arrow_right2);
+                }else{
+                    v.findViewById(R.id.list_fragment_parent_arrow).setBackgroundResource(R.drawable.arrow_down2);
+                }
                 return false;
             }
         });
@@ -78,7 +91,7 @@ public class ListFragment extends Fragment {
         backLog.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Toast.makeText(getContext(), "点击了"+parentItemList.get(groupPosition).getChildItemList().get(childPosition).getItemName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "点击了"+parentItemList.get(groupPosition).getChildItemList().get(childPosition).getTaskName(), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -179,7 +192,7 @@ public class ListFragment extends Fragment {
                         String parentName = edit.getText().toString().trim();
                         if(!"".equals(parentName)){
                             int parentColor = edit.getCurrentTextColor();
-                            List<Item> childItemList = new ArrayList<>();
+                            List<TaskVo> childItemList = new ArrayList<>();
                             ParentItem parentItem = new ParentItem(parentName,parentColor,childItemList);
                             parentItemList.add(parentItem);
                             expandableListAdapter.setParentItemList(parentItemList);
@@ -204,27 +217,34 @@ public class ListFragment extends Fragment {
     }
 
     private List<ParentItem> init() {
+        parentMap = TaskApi.allByCategory();
         parentItemList = new ArrayList<>();
+        parentMap.forEach((key,value)->{
+                ParentItem parentItem = new ParentItem(key,ColorUtil.getColorByRgb(null),value);
+                parentItemList.add(parentItem);
+        });
 
-        List<Item> itemList = new ArrayList<>();
-        List<Item> itemList1 = new ArrayList<>();
-        List<Item> itemList2 = new ArrayList<>();
-
-        Item item1 = new Item("英语阅读","25",ColorUtil.getColorByRgb(null));
-        Item item2 = new Item("数学题","25",ColorUtil.getColorByRgb(null));
-        Item item3 = new Item("政治-习近平新时代中国特色社会主义思想","25",ColorUtil.getColorByRgb(null));
-        itemList.add(item1);
-        itemList.add(item2);
-        itemList.add(item3);
-
-        ParentItem parentItem1 = new ParentItem("考研计划", ColorUtil.getColorByRgb(null),itemList);
-        ParentItem parentItem2 = new ParentItem("空计划", ColorUtil.getColorByRgb(null),itemList1);
-        ParentItem parentItem3 = new ParentItem("空计划2", ColorUtil.getColorByRgb(null),itemList2);
-
-        parentItemList.add(parentItem1);
-        parentItemList.add(parentItem2);
-        parentItemList.add(parentItem3);
         return parentItemList;
+
+//        List<Item> itemList = new ArrayList<>();
+//        List<Item> itemList1 = new ArrayList<>();
+//        List<Item> itemList2 = new ArrayList<>();
+//
+//        Item item1 = new Item("英语阅读","25",ColorUtil.getColorByRgb(null));
+//        Item item2 = new Item("数学题","25",ColorUtil.getColorByRgb(null));
+//        Item item3 = new Item("政治-习近平新时代中国特色社会主义思想","25",ColorUtil.getColorByRgb(null));
+//        itemList.add(item1);
+//        itemList.add(item2);
+//        itemList.add(item3);
+//
+//        ParentItem parentItem1 = new ParentItem("考研计划", ColorUtil.getColorByRgb(null),itemList);
+//        ParentItem parentItem2 = new ParentItem("空计划", ColorUtil.getColorByRgb(null),itemList1);
+//        ParentItem parentItem3 = new ParentItem("空计划2", ColorUtil.getColorByRgb(null),itemList2);
+//
+//        parentItemList.add(parentItem1);
+//        parentItemList.add(parentItem2);
+//        parentItemList.add(parentItem3);
+
     }
 
     private void findViews(View view) {

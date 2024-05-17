@@ -47,6 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"
+        android:groupIndicator="@null"
         android:descendantFocusability="beforeDescendants"
         android:listSelector="@android:color/transparent"/>
+<!--    android:groupIndicator="@drawable/list_fragment_expandbale_view_arrow"-->
 </LinearLayout>

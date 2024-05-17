@@ -389,7 +389,11 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
                                         }else{
                                             taskDto.setRestTime(itemListByDay.get(position).getRestTime());
                                         }
-                                        taskDto.setAgain(Integer.valueOf(map.get("again")));
+                                        if(map.size()!=0 && map.get("again")!=null){
+                                            taskDto.setRestTime(Integer.valueOf(map.get("again")));
+                                        }else{
+                                            taskDto.setAgain(itemListByDay.get(position).getAgain());
+                                        }
                                         TaskVo taskVo = TaskApi.updateTask(taskDto);
                                         for (TaskVo vo : itemListByDay) {
                                             if(vo.getTaskId()==taskVo.getTaskId()){
@@ -399,15 +403,35 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
                                         }
                                         notifyDataSetChanged();
                                     } else if (setTimeGroupTwo.isChecked()) {
-                                        String strings = setTimeGroupOne.getText().toString().split(" ")[0];
+                                        String strings = setTimeGroupTwo.getText().toString().split(" ")[0];
 
                                         ArrayList<Integer> estimate = new ArrayList<>();
-                                        estimate.add(Integer.valueOf(map.get("clockTimes")));
+                                        if(map.size()!=0 && map.get("clockTimes")!=null){
+                                            estimate.add(Integer.valueOf(map.get("clockTimes")));
+                                        }else{
+                                            estimate.addAll(itemListByDay.get(position).getEstimate());
+                                        }
                                         TaskDto taskDto = new TaskDto();
                                         taskDto.setTaskName(itemName.getText().toString());
                                         taskDto.setEstimate(estimate);
                                         taskDto.setClockDuration(Integer.valueOf(strings.trim()));
                                         taskDto.setTaskId(itemListByDay.get(position).getTaskId());
+                                        if(map.size()!=0 && map.get("remark")!=null){
+                                            taskDto.setRemark(map.get("remark"));
+                                        }else{
+                                            taskDto.setRemark(itemListByDay.get(position).getRemark());
+                                        }
+                                        if(map.size()!=0 && map.get("rest")!=null){
+                                            taskDto.setRestTime(Integer.valueOf(map.get("rest")));
+                                        }else{
+                                            taskDto.setRestTime(itemListByDay.get(position).getRestTime());
+                                        }
+                                        if(map.size()!=0 && map.get("again")!=null){
+                                            taskDto.setRestTime(Integer.valueOf(map.get("again")));
+                                        }else{
+                                            taskDto.setAgain(itemListByDay.get(position).getAgain());
+                                        }
+
                                         TaskVo taskVo = TaskApi.updateTask(taskDto);
                                         for (TaskVo vo : itemListByDay) {
                                             if(vo.getTaskId()==taskVo.getTaskId()){
@@ -417,15 +441,35 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.MyView
                                         }
                                         notifyDataSetChanged();
                                     }else{
-                                        String strings = setTimeGroupOne.getText().toString().split(" ")[0];
-                                        ArrayList<Integer> estimate = new ArrayList<>();
+                                        String strings = setTimeGroupThree.getText().toString().split(" ")[0];
 
-                                        estimate.add(Integer.valueOf(map.get("clockTimes")));
+                                        ArrayList<Integer> estimate = new ArrayList<>();
+                                        if(map.size()!=0 && map.get("clockTimes")!=null){
+                                            estimate.add(Integer.valueOf(map.get("clockTimes")));
+                                        }else{
+                                            estimate.addAll(itemListByDay.get(position).getEstimate());
+                                        }
                                         TaskDto taskDto = new TaskDto();
                                         taskDto.setTaskName(itemName.getText().toString());
                                         taskDto.setEstimate(estimate);
                                         taskDto.setClockDuration(Integer.valueOf(strings.trim()));
                                         taskDto.setTaskId(itemListByDay.get(position).getTaskId());
+                                        if(map.size()!=0 && map.get("remark")!=null){
+                                            taskDto.setRemark(map.get("remark"));
+                                        }else{
+                                            taskDto.setRemark(itemListByDay.get(position).getRemark());
+                                        }
+                                        if(map.size()!=0 && map.get("rest")!=null){
+                                            taskDto.setRestTime(Integer.valueOf(map.get("rest")));
+                                        }else{
+                                            taskDto.setRestTime(itemListByDay.get(position).getRestTime());
+                                        }
+                                        if(map.size()!=0 && map.get("again")!=null){
+                                            taskDto.setRestTime(Integer.valueOf(map.get("again")));
+                                        }else{
+                                            taskDto.setAgain(itemListByDay.get(position).getAgain());
+                                        }
+
                                         TaskVo taskVo = TaskApi.updateTask(taskDto);
                                         for (TaskVo vo : itemListByDay) {
                                             if(vo.getTaskId()==taskVo.getTaskId()){

@@ -1,5 +1,6 @@
 package net.onest.time.entity.list;
 
+import net.onest.time.api.vo.TaskVo;
 import net.onest.time.entity.Item;
 
 import java.util.List;
@@ -7,12 +8,12 @@ import java.util.List;
 public class ParentItem {
     private String parentItemName;
     private int parentItemColor;
-    private List<Item> childItemList;
+    private List<TaskVo> childItemList;
 
     public ParentItem() {
     }
 
-    public ParentItem(String parentItemName, int parentItemColor, List<Item> childItemList) {
+    public ParentItem(String parentItemName, int parentItemColor, List<TaskVo> childItemList) {
         this.parentItemName = parentItemName;
         this.parentItemColor = parentItemColor;
         this.childItemList = childItemList;
@@ -34,11 +35,11 @@ public class ParentItem {
         this.parentItemColor = parentItemColor;
     }
 
-    public List<Item> getChildItemList() {
+    public List<TaskVo> getChildItemList() {
         return childItemList;
     }
 
-    public void setChildItemList(List<Item> childItemList) {
+    public void setChildItemList(List<TaskVo> childItemList) {
         this.childItemList = childItemList;
     }
 }
