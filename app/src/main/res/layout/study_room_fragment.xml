@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,7 +10,8 @@
     <View
         android:id="@+id/barView"
         android:layout_width="match_parent"
-        android:layout_height="25dp"/>
+        android:layout_height="25dp"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/room_name"
@@ -59,8 +61,8 @@
 
     <Button
         android:id="@+id/btn_add"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="25dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,8 +72,8 @@
 
     <Button
         android:id="@+id/btn_room_menu"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@id/btn_add"

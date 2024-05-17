@@ -12,19 +12,18 @@
     <com.scwang.wave.MultiWaveHeader
         android:id="@+id/waveHeader"
         android:layout_width="match_parent"
-        android:layout_height="290dp"
+        android:layout_height="300dp"
         app:mwhCloseColor="@color/wheat"
         tools:ignore="MissingConstraints" />
 
-    <View
+    <ImageView
         android:id="@+id/login_logo"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:background="@mipmap/logo2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="50sp"
+        android:layout_marginTop="70sp"
         tools:ignore="MissingConstraints" />
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/login_user"
@@ -33,7 +32,7 @@
         app:layout_constraintTop_toBottomOf="@+id/login_logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="60dp"
         android:hint="手机号或邮箱"
         app:hintTextColor="@color/black"
         android:textColorHint="@color/black">

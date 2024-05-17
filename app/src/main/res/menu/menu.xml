@@ -7,7 +7,7 @@
         />
     <item
         android:id="@+id/list_fragment"
-        android:icon="@drawable/activity1"
+        android:icon="@drawable/list"
         android:title="清单" />
     <item
         android:id="@+id/record_fragment"

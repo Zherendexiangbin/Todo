@@ -11,11 +11,12 @@
         android:layout_height="match_parent"
         android:paddingTop="15dp"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:paddingRight="20dp"
+        android:paddingBottom="15dp">
         <View
             android:id="@+id/barView"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="25dp"
             tools:ignore="MissingConstraints" />
         <RadioGroup
             android:id="@+id/room_chose"
@@ -62,20 +63,12 @@
             android:textColor="@color/black"
             android:gravity="center"
             android:backgroundTint="@color/grey"/>
-        <!--    <View-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="1sp"-->
-        <!--        app:layout_constraintTop_toBottomOf="@id/ll_room_chose"-->
-        <!--        android:layout_marginTop="5dp"-->
-        <!--        android:layout_marginLeft="10dp"-->
-        <!--        android:layout_marginRight="10dp"-->
-        <!--        android:background="@color/grey"/>-->
         <com.wynsbin.vciv.VerificationCodeInputView
             android:id="@+id/id_input"
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:padding="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="horizontal"
             app:vciv_et_background="@android:color/transparent"

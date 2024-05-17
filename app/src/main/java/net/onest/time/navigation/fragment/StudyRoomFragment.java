@@ -24,6 +24,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.wynsbin.vciv.VerificationCodeInputView;
 
 import net.onest.time.R;
@@ -65,20 +67,23 @@ public class StudyRoomFragment extends Fragment {
                 RoomCodePopWindow chatMenu = new RoomCodePopWindow(getContext());
                 chatMenu.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.TOP, 0, 0);
             }else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage("确定退出自习室吗").setPositiveButton("确定", ((dialogInterface, i) -> {
-                            btnAdd.setBackgroundResource(R.mipmap.add3);
-                            btnAdd.setHint("add");
-                            for (int a = avatarList.size()-1; a>0; a--){
-                                avatarList.remove(a);
+                new XPopup.Builder(getContext()).asConfirm("", "确定退出自习室吗？",
+                        new OnConfirmListener() {
+                            @Override
+                            public void onConfirm() {
+                                btnAdd.setBackgroundResource(R.mipmap.add3);
+                                btnAdd.setHint("add");
+                                for (int a=avatarList.size()-1; a>0; a--){
+                                    avatarList.remove(a);
+                                }
+                                itemAdapter.updateData(avatarList);
+
+                                roomName.setText("时光自习室");
+                                roomId.setText("roomId");
+                                btnMenu.setVisibility(View.GONE);
+                                Toast.makeText(getContext(), "退出成功！", Toast.LENGTH_SHORT).show();
                             }
-                            itemAdapter.updateData(avatarList);
-                            Log.e("YES", "确定");
-                            Toast.makeText(getContext(), "退出成功！", Toast.LENGTH_SHORT).show();
-                            roomName.setText("时光自习室");
-                            roomId.setText("roomId");
-                            btnMenu.setVisibility(View.GONE);
-                        })).setNegativeButton("取消", (dialogInterface, i) -> Log.e("NO", "取消")).create()
+                        })
                         .show();
             }
         });
@@ -172,33 +177,42 @@ public class StudyRoomFragment extends Fragment {
                 @Override
                 public void onComplete(String code) {
                     if (createRoom.isChecked()){
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setMessage("确定房间名称："+ setName.getText().toString().trim() + "\n" + "房间号：" + code).setPositiveButton("确定", ((dialogInterface, i) -> {
-                            btnAdd.setBackgroundResource(R.mipmap.quit);
-                            btnAdd.setHint("quit");
-                            Log.e("YES", "确定");
-                            Toast.makeText(getContext(), "创建成功", Toast.LENGTH_SHORT).show();
-                            roomName.setText(setName.getText().toString().trim());
-                            roomId.setText("id: " + code);
-                            btnMenu.setVisibility(View.VISIBLE);//出现菜单按钮
-                            dismiss();
-                        })).setNegativeButton("取消", (dialogInterface, i) -> Log.e("NO", "取消")).create()
+                        new XPopup.Builder(getContext()).asConfirm(
+                                "确认创建",
+                                "房间名称：" + setName.getText().toString().trim() + "\n" + "房间号" + code,
+                                new OnConfirmListener() {
+                                    @Override
+                                    public void onConfirm() {
+                                        btnAdd.setBackgroundResource(R.mipmap.quit);
+                                        btnAdd.setHint("quit");
+                                        roomName.setText(setName.getText().toString().trim());
+                                        roomId.setText("roomId: " + code);
+                                        btnMenu.setVisibility(View.VISIBLE);
+                                        Toast.makeText(getContext(), "创建成功", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
                                 .show();
                     }else if (joinRoom.isChecked()){
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setMessage("确定加入房间号为："+ code + "的自习室吗？").setPositiveButton("确定", ((dialogInterface, i) -> {
-                            btnAdd.setBackgroundResource(R.mipmap.quit);
-                            btnAdd.setHint("quit");
-                            avatarList.add("user");
-                            itemAdapter.updateData(avatarList);
-                            //发送申请
-                            if (recyclerView.getAdapter().getItemCount()>1){
-                                roomName.setText("房间号："+code);
-                                Toast.makeText(getContext(), "加入成功", Toast.LENGTH_SHORT).show();
-                            }
-                            Log.e("YES", "确定");
-                            dismiss();
-                        })).setNegativeButton("取消", (dialogInterface, i) -> Log.e("NO", "取消")).create()
+                        new XPopup.Builder(getContext()).asConfirm(
+                                "确认加入",
+                                "是否提交自习室加入申请？",
+                                new OnConfirmListener() {
+                                    @Override
+                                    public void onConfirm() {
+                                        //向自习室管理员/创建者提交加入申请
+                                        //Todo
+                                        //如果同意
+                                        btnAdd.setBackgroundResource(R.mipmap.quit);
+                                        btnAdd.setHint("quit");
+                                        avatarList.add("user");
+                                        itemAdapter.updateData(avatarList);
+                                        if(recyclerView.getAdapter().getItemCount()>1){
+                                            roomName.setText("****");
+                                            roomId.setText("roomId: " + code);
+                                        }
+                                        Toast.makeText(getContext(), "加入成功！", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
                                 .show();
                     }else {
                         Toast.makeText(getContext(), "请先选择创建或加入自习室！", Toast.LENGTH_SHORT).show();

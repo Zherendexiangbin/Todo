@@ -7,10 +7,14 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.material.textfield.TextInputEditText;
 
 import net.onest.time.api.UserApi;
@@ -21,6 +25,7 @@ import net.onest.time.navigation.activity.ResetPasswordActivity;
 
 public class MainActivity extends AppCompatActivity{
     private SharedPreferences userInfo;
+    private ImageView logo;
     private TextInputEditText loginUser, loginPassword;
     private Button forgetPassword, btnLogin, btnRegister;
     @Override
@@ -29,6 +34,10 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         findViews();
+        Glide.with(MainActivity.this)
+                        .load(R.mipmap.logo2)
+                        .transition(DrawableTransitionOptions.withCrossFade(2000))
+                        .into(logo);
         loginUser.setText("2808021998@qq.com");
         loginPassword.setText("admin");
 
@@ -81,6 +90,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void findViews() {
+        logo = findViewById(R.id.login_logo);
         loginUser = findViewById(R.id.edt_login_user);
         loginPassword = findViewById(R.id.edt_login_password);
         forgetPassword = findViewById(R.id.btn_forgetPassword);
