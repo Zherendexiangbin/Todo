@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:transitionName="fab"
+    android:fitsSystemWindows="false"
     android:id="@+id/timer_entirely"
     tools:context=".TimerActivity">
     <Button

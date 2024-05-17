@@ -2,10 +2,14 @@ package net.onest.time.navigation.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,7 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+
 import net.onest.time.R;
+import net.onest.time.api.ServerConstant;
+import net.onest.time.api.UserApi;
+import net.onest.time.api.vo.UserVo;
 import net.onest.time.navigation.activity.PersonEditActivity;
 
 import java.time.LocalDate;
@@ -48,12 +57,17 @@ public class PersonFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void initData() {
+        //获取用户信息
+        UserVo userVo = UserApi.getUserInfo();
 
+        //用户头像
+        Glide.with(getContext())
+                .load(userVo.getAvatar())
+                        .into(userAvatar);
         //用户昵称
-        userName.setText("时光1");
-
+        userName.setText(userVo.getUserName());
         //用户Id
-        userId.setText("UID：" + "20240424");
+        userId.setText("UID：" + userVo.getUserId());
 
         //用户创建时间及应用使用时间
         userCreateAt.setText("2020年4月24日");

@@ -26,16 +26,22 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.bumptech.glide.Glide;
+
 import net.onest.time.R;
+import net.onest.time.api.UserApi;
+import net.onest.time.api.dto.UserDto;
+import net.onest.time.api.vo.UserVo;
 
 import java.util.Calendar;
 
 import cn.qqtheme.framework.picker.OptionPicker;
 
 public class PersonEditActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
-    private ImageView userHeader;
+    private ImageView userAvatar;
     private Button btnBack, btnSave;
-    private EditText nickName, introduction;
+    private EditText nickName, signature;
+    private TextView userUID;
     private TextView sex, birthday, career, area;
     private String avatarUrl;
 
@@ -51,32 +57,38 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_edit_page);
         getView();
+        renderUserInfo();
         initListener();
-        fetchUserInfo();
     }
 
     /**
      * 渲染用户信息
      */
     private void renderUserInfo() {
-    }
-
-    /**
-     * 获取用户信息
-     */
-    private void fetchUserInfo() {
+        UserVo userVo = UserApi.getUserInfo();
+        //用户头像
+        Glide.with(PersonEditActivity.this)
+                .load(userVo.getAvatar())
+                .into(userAvatar);
+        //用户呢称
+        nickName.setText(userVo.getUserName());
+        //用户UID
+        userUID.setText(" " + userVo.getUserId());
+        //用户签名
+        signature.setText(userVo.getSignature());
     }
 
     private void getView() {
         btnBack = findViewById(R.id.btn_back);
         btnSave = findViewById(R.id.btn_save);
-        userHeader = findViewById(R.id.edit_avatar);//头像
+        userAvatar = findViewById(R.id.edit_avatar);//头像
         nickName = findViewById(R.id.edit_nickname);//昵称
-        sex = findViewById(R.id.edit_sex);//性别
-        introduction = findViewById(R.id.edit_introduction);//简介
-        birthday = findViewById(R.id.edit_birthday);//生日
-        career = findViewById(R.id.edit_career);//职业
-        area = findViewById(R.id.edit_area);//所在地区
+        userUID = findViewById(R.id.user_UID);
+//        sex = findViewById(R.id.edit_sex);//性别
+        signature = findViewById(R.id.edit_signature);//签名
+//        birthday = findViewById(R.id.edit_birthday);//生日
+//        career = findViewById(R.id.edit_career);//职业
+//        area = findViewById(R.id.edit_area);//所在地区
     }
 
     private void initListener() {
@@ -84,13 +96,13 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
         OnCustomClickListener listener = new OnCustomClickListener();
         btnBack.setOnClickListener(listener);
         btnSave.setOnClickListener(listener);
-        userHeader.setOnClickListener(listener);
-        sex.setOnClickListener(listener);
+        userAvatar.setOnClickListener(listener);
+//        sex.setOnClickListener(listener);
         nickName.setOnClickListener(listener);
-        introduction.setOnClickListener(listener);
-        birthday.setOnClickListener(listener);
-        career.setOnClickListener(listener);
-        area.setOnClickListener(listener);
+        signature.setOnClickListener(listener);
+//        birthday.setOnClickListener(listener);
+//        career.setOnClickListener(listener);
+//        area.setOnClickListener(listener);
     }
 
 
@@ -106,7 +118,7 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
                 case R.id.btn_save:
                     //保存按钮点击事件
                     updateUserInfo();
-                    finish();
+                    Toast.makeText(PersonEditActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.edit_avatar:
                     checkPermission();
@@ -116,34 +128,37 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
                         startActivityForResult(intent, 1);
                     }
                     break;
-                case R.id.edit_birthday:
-                    //生日选择点击事件
-                    Calendar calendar = Calendar.getInstance();//获取Calendar实例
-                    //创建日期选择器
-                    DatePickerDialog dialog = new DatePickerDialog(PersonEditActivity.this, PersonEditActivity.this,
-                            calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MARCH),
-                            calendar.get(Calendar.DAY_OF_MONTH));
-                    dialog.show();//窗口弹出
-                    break;
-                case R.id.edit_sex:
-                    //性别选择点击事件
-                    selectSex();
-                    break;
-                case R.id.edit_career:
-                    //职业选择点击事件
-                    selectCareer();
-                    break;
-                case R.id.edit_area:
-                    //地区选择点击事件
-                    selectArea();
-                    break;
+//                case R.id.edit_birthday:
+//                    //生日选择点击事件
+//                    Calendar calendar = Calendar.getInstance();//获取Calendar实例
+//                    //创建日期选择器
+//                    DatePickerDialog dialog = new DatePickerDialog(PersonEditActivity.this, PersonEditActivity.this,
+//                            calendar.get(Calendar.YEAR),
+//                            calendar.get(Calendar.MARCH),
+//                            calendar.get(Calendar.DAY_OF_MONTH));
+//                    dialog.show();//窗口弹出
+//                    break;
+//                case R.id.edit_sex:
+//                    //性别选择点击事件
+//                    selectSex();
+//                    break;
+//                case R.id.edit_career:
+//                    //职业选择点击事件
+//                    selectCareer();
+//                    break;
+//                case R.id.edit_area:
+//                    //地区选择点击事件
+//                    selectArea();
+//                    break;
             }
         }
     }
 
-    // 获取用户的信息
+    // 更新用户的信息
     private void updateUserInfo() {
+        UserApi.modifyAvatar(avatarUrl);//用户头像
+        UserApi.modifyUserName(nickName.getText().toString().trim());//用户名
+        UserApi.modifySignature(signature.getText().toString().trim());//用户个性签名
     }
 
     //生日、年龄选择
@@ -161,18 +176,15 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
-            uploadAvatar(selectedImageUri);
             try {
-                userHeader.setImageURI(selectedImageUri);
+                avatarUrl = selectedImageUri + "";
+                userAvatar.setImageURI(selectedImageUri);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    //获取用户头像
-    private void uploadAvatar(Uri avatarUri) {
-    }
 
     //获取图片路径
     private Pair<String, String> getImagePath(Uri avatarUri) {

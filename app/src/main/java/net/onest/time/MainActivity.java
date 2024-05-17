@@ -6,12 +6,7 @@ import android.animation.ObjectAnimator;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.transition.Slide;
-import android.transition.Transition;
-import android.view.Gravity;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -67,7 +62,6 @@ public class MainActivity extends AppCompatActivity{
                     Toast.makeText(this, "登录成功，欢迎来到时光！", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent();
                     intent.setClass(MainActivity.this, NavigationActivity.class);
-//                    startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,btnLogin,"fab").toBundle());
                     startActivity(intent);
                 }
             }

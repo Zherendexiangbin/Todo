@@ -12,7 +12,7 @@
     <com.scwang.wave.MultiWaveHeader
         android:id="@+id/waveHeader"
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="290dp"
         app:mwhCloseColor="@color/wheat"
         tools:ignore="MissingConstraints" />
 
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/login_logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:hint="手机号或邮箱"
         app:hintTextColor="@color/black"
         android:textColorHint="@color/black">

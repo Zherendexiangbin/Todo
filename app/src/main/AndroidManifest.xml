@@ -39,6 +39,7 @@
         android:theme="@style/Theme.Time"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
+        android:windowTranslucentStatus="true"
         tools:targetApi="31">
         <activity
             android:name=".TimerActivity"

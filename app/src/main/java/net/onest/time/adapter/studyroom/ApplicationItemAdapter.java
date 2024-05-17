@@ -4,8 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,41 +15,45 @@ import net.onest.time.R;
 
 import java.util.List;
 
-public class StudyRoomItemAdapter extends RecyclerView.Adapter<StudyRoomItemAdapter.ViewHolder> {
+public class ApplicationItemAdapter extends RecyclerView.Adapter<ApplicationItemAdapter.ViewHolder> {
     private List<String> avatarList;
     private Context context;
 
-    public StudyRoomItemAdapter(Context context, List<String> avatarList) {
+    public ApplicationItemAdapter(Context context, List<String> avatarList){
         this.context = context;
         this.avatarList = avatarList;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
-        String data = avatarList.get(position);
+        String info = avatarList.get(position);
 
+        //渲染数据
         holder.avatar.setBackgroundResource(R.mipmap.head);
-        holder.avatar.setOnClickListener(view -> {
-            if(avatarList.size()>1){
-                Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
-                avatarList.remove(position);
-                notifyDataSetChanged();
-            }
+        holder.userName.setText(info);
+
+        holder.agree.setOnClickListener(view -> {
+            avatarList.remove(position);
+            notifyDataSetChanged();
         });
 
+        holder.refuse.setOnClickListener(view -> {
+            avatarList.remove(position);
+            notifyDataSetChanged();
+        });
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemCount(){
         if (avatarList.size()==0){
             return 0;
-        }else {
+        }else{
             return avatarList.size();
         }
     }
 
     @Override
-    public int getItemViewType(int position) {
+    public  int getItemViewType(int position){
         return position;
     }
 
@@ -56,16 +61,21 @@ public class StudyRoomItemAdapter extends RecyclerView.Adapter<StudyRoomItemAdap
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         context = parent.getContext();
-        View view  = LayoutInflater.from(context).inflate(R.layout.studyroom_user_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.studyroom_application_item, parent, false);
         return new ViewHolder(view);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public ImageView avatar;
+        public TextView userName;
+        public Button refuse, agree;
 
         public ViewHolder(View itemView){
             super(itemView);
-            avatar = itemView.findViewById(R.id.user_avatar);
+            avatar = itemView.findViewById(R.id.application_avatar);
+            userName = itemView.findViewById(R.id.application_name);
+            refuse = itemView.findViewById(R.id.btn_application_refuse);
+            agree = itemView.findViewById(R.id.btn_application_agree);
         }
     }
 
@@ -73,5 +83,4 @@ public class StudyRoomItemAdapter extends RecyclerView.Adapter<StudyRoomItemAdap
         this.avatarList = newData;
         notifyDataSetChanged(); // 通知适配器数据集已更改，刷新列表
     }
-
 }
