@@ -5,7 +5,7 @@
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         android:gravity="center">
         <View
@@ -18,7 +18,7 @@
             android:id="@+id/list_fragment_parent_item_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="1"
             android:text="待办集合"
             android:textStyle="bold"
             android:textSize="15dp"
@@ -30,12 +30,19 @@
             android:orientation="horizontal"
             android:layout_weight="1"
             android:gravity="right">
-
+            <Button
+                android:id="@+id/list_fragment_parent_arrow"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:focusable="false"
+                android:background="@drawable/arrow_right2"
+                />
             <Button
                 android:id="@+id/list_fragment_parent_data"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:focusable="false"
+                android:layout_marginLeft="15dp"
                 android:background="@drawable/statistic2"/>
             <Button
                 android:id="@+id/list_fragment_parent_add"

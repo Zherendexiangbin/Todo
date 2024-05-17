@@ -38,6 +38,7 @@ import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 import net.onest.time.R;
 import net.onest.time.RecyclerViewEmptySupport;
 import net.onest.time.adapter.todo.TodoItemAdapter;
+import net.onest.time.adapter.todo.TodoItemAdapterNew;
 import net.onest.time.api.TaskApi;
 import net.onest.time.api.dto.TaskDto;
 import net.onest.time.api.vo.TaskVo;
@@ -75,6 +76,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
     private RadioButton setTimeGroupOne,setTimeGroupTwo,setTimeGroupThree;
     private TextView setTimeOneTxt,setTimeTwoTxt,setTimeThreeTxt,higherSet;
     private TodoItemAdapter todoItemAdapter;
+    private TodoItemAdapterNew todoItemAdapterNew;
     private RelativeLayout popRela;
 
     private CardView cardView;
@@ -158,6 +160,13 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         todoItemAdapter.setOnItemClickListener(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
+
+//        //绑定新的适配器:
+//        todoItemAdapterNew = new TodoItemAdapterNew(R.layout.re_item,itemListByDay);
+//        todoItemAdapterNew.setEmptyView(R.layout.null_item_page);
+//        recyclerView.setAdapter(todoItemAdapterNew);
+//        recyclerView.setLayoutManager(layoutManager);
+
     }
 
     private Calendar getSchemeCalendar(int year, int month, int day, int color, String text) {
@@ -354,7 +363,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
 //                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
                                     todoItemAdapter.notifyDataSetChanged();
                                 } else if (setTimeGroupTwo.isChecked()) {
-                                    String strings = setTimeGroupOne.getText().toString().split(" ")[0];
+                                    String strings = setTimeGroupTwo.getText().toString().split(" ")[0];
 
                                     ArrayList<Integer> estimate = new ArrayList<>();
                                     if(map.get("clockTimes")==null){
@@ -376,7 +385,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
 //                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
                                     todoItemAdapter.notifyDataSetChanged();
                                 }else{
-                                    String strings = setTimeGroupOne.getText().toString().split(" ")[0];
+                                    String strings = setTimeGroupThree.getText().toString().split(" ")[0];
 
                                     ArrayList<Integer> estimate = new ArrayList<>();
                                     if(map.get("clockTimes")==null){
@@ -442,6 +451,8 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
                 itemListByDay = TaskApi.findByDay(calendar.getTimeInMillis());
                 todoItemAdapter.setItemListByDay(itemListByDay);
                 todoItemAdapter.notifyDataSetChanged();
+//                todoItemAdapterNew.setDiffNewData(itemListByDay);
+//                todoItemAdapterNew.notifyDataSetChanged();
 
             }
         });
