@@ -4,12 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true">
-
-    <View
-        android:id="@+id/barView"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:background="@color/wheat"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -179,7 +179,7 @@ public class StudyRoomFragment extends Fragment {
                     if (createRoom.isChecked()){
                         new XPopup.Builder(getContext()).asConfirm(
                                 "确认创建",
-                                "房间名称：" + setName.getText().toString().trim() + "\n" + "房间号" + code,
+                                "房间名称：" + setName.getText().toString().trim() + "\n" + "房间号:" + code,
                                 new OnConfirmListener() {
                                     @Override
                                     public void onConfirm() {

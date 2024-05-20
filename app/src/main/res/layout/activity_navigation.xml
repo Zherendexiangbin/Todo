@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@drawable/gradual_color_change_background2"
     tools:context=".navigation.activity.NavigationActivity">
 
     <!--NavHost-->

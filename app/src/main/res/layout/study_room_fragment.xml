@@ -4,24 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/ivory"
     android:fitsSystemWindows="true">
-
-    <View
-        android:id="@+id/barView"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        tools:ignore="MissingConstraints" />
-
     <TextView
         android:id="@+id/room_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/barView"
         android:layout_margin="10dp"
         android:text="时光自习室"
         android:textColor="@color/black"
-        android:textSize="25sp"/>
+        android:textSize="25sp"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/room_id"
@@ -32,7 +24,7 @@
         android:layout_marginRight="10dp"
         android:text="RoomId:"
         android:textSize="15sp"
-        android:textColor="@color/grey"/>
+        android:textColor="@color/black"/>
 
     <View
         android:id="@+id/line"
