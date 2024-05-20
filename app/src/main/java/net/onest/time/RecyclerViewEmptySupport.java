@@ -71,5 +71,6 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         //当setAdapter的时候也调一次（实际上，经我粗略验证，不添加貌似也可以。不行就给添上呗，多大事嘛）
         emptyObserver.onChanged();
     }
+
 }
 
