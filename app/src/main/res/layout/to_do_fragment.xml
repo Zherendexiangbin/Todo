@@ -26,7 +26,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Today待办"
-                android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="20dp"/>
             <TextView
@@ -78,24 +77,49 @@
             app:month_view_show_mode="mode_only_current"
             app:week_text_color="@color/black"
             app:week_text_size="20dp"
-            app:week_bar_view=""/>
+            app:week_bar_view="" />
+
         <LinearLayout
             android:id="@+id/ll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/white">
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:background="@color/transparent"
+                android:layout_height="30dp"
                 android:src="@drawable/down_arrow"/>
-            <net.onest.time.RecyclerViewEmptySupport
+<!--            <net.onest.time.RecyclerViewEmptySupport-->
+<!--                android:id="@+id/my_recyclerView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@color/white"/>-->
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/my_recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"/>
+                android:layout_height="wrap_content"/>
+
+<!--            <include layout="@layout/null_item_page"/>-->
+<!--            <LinearLayout-->
+<!--                android:id="@+id/null_item_page"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:layout_marginTop="50dp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:gravity="center">-->
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:src="@drawable/logo_grey"/>-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textSize="20dp"-->
+<!--                    android:text="点击右上角➕进行创建"/>-->
+<!--            </LinearLayout>-->
         </LinearLayout>
-        <include layout="@layout/null_item_page"/>
+
     </com.haibin.calendarview.CalendarLayout>
 
 </LinearLayout>

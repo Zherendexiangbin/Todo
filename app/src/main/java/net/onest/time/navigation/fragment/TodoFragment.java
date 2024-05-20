@@ -59,12 +59,14 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         View.OnClickListener{
     private CalendarLayout calendarLayout;
     private CalendarView calendarView;
-//    private RecyclerView recyclerView;//待办事项
-    private RecyclerViewEmptySupport recyclerView;
+    private RecyclerView recyclerView;//待办事项
+//    private RecyclerViewEmptySupport recyclerView;
     private Button todoBtn;//添加按钮
     private TextView todayTxt;
 //    private List<Item> itemList = new ArrayList<>();//待办事项数据源
     private List<TaskVo> itemListByDay  = new ArrayList<>();//待办事项数据源
+
+    private LinearLayout nullPage;
 
 
     //以下是弹框布局控件：
@@ -153,7 +155,14 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         calendarView.setSchemeDate(map);
 
 
-        recyclerView.setEmptyView(View.inflate(getContext(),R.layout.null_item_page,null));
+//        recyclerView.setEmptyView(View.inflate(getContext(),R.layout.null_item_page,null));
+//        if(itemListByDay.isEmpty()){
+//            recyclerView.setVisibility(View.GONE);
+//            nullPage.setVisibility(View.VISIBLE);
+//        }else{
+//            recyclerView.setVisibility(View.VISIBLE);
+//            nullPage.setVisibility(View.GONE);
+//        }
         //绑定适配器:
         todoItemAdapter = new TodoItemAdapter(getContext(),itemListByDay);
         recyclerView.setAdapter(todoItemAdapter);
@@ -449,6 +458,13 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
             @Override
             public void onCalendarSelect(Calendar calendar, boolean isClick) {
                 itemListByDay = TaskApi.findByDay(calendar.getTimeInMillis());
+//                if(itemListByDay.isEmpty()){
+//                    recyclerView.setVisibility(View.GONE);
+//                    nullPage.setVisibility(View.VISIBLE);
+//                }else{
+//                    recyclerView.setVisibility(View.VISIBLE);
+//                    nullPage.setVisibility(View.GONE);
+//                }
                 todoItemAdapter.setItemListByDay(itemListByDay);
                 todoItemAdapter.notifyDataSetChanged();
 //                todoItemAdapterNew.setDiffNewData(itemListByDay);
@@ -494,6 +510,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         recyclerView = view.findViewById(R.id.my_recyclerView);
         todoBtn = view.findViewById(R.id.todo_btn);
         todayTxt = view.findViewById(R.id.todo_fragment_today);
+        nullPage = view.findViewById(R.id.null_item_page);
     }
 
 
