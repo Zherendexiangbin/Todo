@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/shape_transparent"
+    android:background="@drawable/shape_grey"
     android:orientation="horizontal"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
@@ -30,19 +30,19 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
         android:orientation="vertical">
         <TextView
             android:id="@+id/application_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:gravity="top"
             android:text="用户名"
             android:textSize="15sp"
             android:textColor="@color/black"/>
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="想要加入自习室..."
@@ -53,8 +53,8 @@
         android:layout_height="match_parent">
         <Button
             android:id="@+id/btn_application_refuse"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center|right"
             android:background="@mipmap/refuse"
             app:layout_constraintTop_toTopOf="parent"
@@ -64,8 +64,8 @@
             android:layout_marginRight="10dp"/>
         <Button
             android:id="@+id/btn_application_agree"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="right|center"
             android:background="@mipmap/agree"
             app:layout_constraintTop_toTopOf="parent"

@@ -1,22 +1,16 @@
 package net.onest.time;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.animation.ObjectAnimator;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -47,13 +41,14 @@ public class MainActivity extends AppCompatActivity {
 
         findViews();
         Glide.with(MainActivity.this)
-                .load(R.mipmap.logo2)
-                .transition(DrawableTransitionOptions.withCrossFade(2000))
-                .into(logo);
+                        .load(R.mipmap.logo2)
+                        .transition(DrawableTransitionOptions.withCrossFade(2000))
+                        .into(logo);
 
-        autoLogin();
-        loginUser.setText("2808021998@qq.com");
-        loginPassword.setText("admin");
+//        loginUser.setText("2808021998@qq.com");
+//        loginPassword.setText("admin");
+        loginUser.setText("212296944@qq.com");
+        loginPassword.setText("123456");
 
         setListeners();
         setAnimator();
@@ -83,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             String account = loginUser.getText().toString().trim();
             String password = loginPassword.getText().toString().trim();
 
-            if (account.length() == 0 || password.length() == 0) {
+            if (account.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "不可留空，请重新输入！", Toast.LENGTH_SHORT).show();
             } else {
                 UserDto userDto = new UserDto();
