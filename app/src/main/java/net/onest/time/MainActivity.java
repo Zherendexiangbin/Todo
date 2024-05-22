@@ -4,9 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ObjectAnimator;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -20,15 +24,21 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import net.onest.time.api.UserApi;
 import net.onest.time.api.dto.UserDto;
+import net.onest.time.api.utils.RequestUtil;
+import net.onest.time.api.vo.UserVo;
+import net.onest.time.constant.SharedPreferencesConstant;
+import net.onest.time.constant.UserInfoConstant;
 import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.navigation.activity.RegisterActivity;
 import net.onest.time.navigation.activity.ResetPasswordActivity;
+import net.onest.time.utils.StringUtil;
 
-public class MainActivity extends AppCompatActivity{
-    private SharedPreferences userInfo;
+public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     private ImageView logo;
     private TextInputEditText loginUser, loginPassword;
     private Button forgetPassword, btnLogin, btnRegister;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,14 +47,33 @@ public class MainActivity extends AppCompatActivity{
 
         findViews();
         Glide.with(MainActivity.this)
-                        .load(R.mipmap.logo2)
-                        .transition(DrawableTransitionOptions.withCrossFade(2000))
-                        .into(logo);
+                .load(R.mipmap.logo2)
+                .transition(DrawableTransitionOptions.withCrossFade(2000))
+                .into(logo);
+
+        autoLogin();
         loginUser.setText("2808021998@qq.com");
         loginPassword.setText("admin");
 
         setListeners();
         setAnimator();
+    }
+
+    /**
+     * 通过token自动登录
+     */
+    private void autoLogin() {
+        UserVo userInfo = UserApi.getUserInfo();
+        if (userInfo != null) {
+            getApplication()
+                    .getApplicationContext()
+                    .getSharedPreferences(SharedPreferencesConstant.USER_INFO, Context.MODE_PRIVATE)
+                    .edit()
+                    .putString(UserInfoConstant.USER_INFO, RequestUtil.getGson().toJson(userInfo))
+                    .apply();
+
+            loginSuccess();
+        }
     }
 
     private void setListeners() {
@@ -53,27 +82,23 @@ public class MainActivity extends AppCompatActivity{
 
             String account = loginUser.getText().toString().trim();
             String password = loginPassword.getText().toString().trim();
-            if (account.length() == 0 || password.length() == 0){
+
+            if (account.length() == 0 || password.length() == 0) {
                 Toast.makeText(this, "不可留空，请重新输入！", Toast.LENGTH_SHORT).show();
             } else {
                 UserDto userDto = new UserDto();
                 userDto.setEmail(account);
                 userDto.setPassword(password);
-                String token=null;
+                String token = null;
                 try {
                     token = UserApi.login(userDto);
-                }catch (Exception e){
-                    Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    System.out.println(e.getMessage());
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
                 }
-                if(token.isEmpty()){
+                if (token == null || token.isEmpty()) {
                     Toast.makeText(this, "账号密码不正确", Toast.LENGTH_SHORT).show();
-                }else{
-
-                    Toast.makeText(this, "登录成功，欢迎来到时光！", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent();
-                    intent.setClass(MainActivity.this, NavigationActivity.class);
-                    startActivity(intent);
+                } else {
+                    loginSuccess();
                 }
             }
         });
@@ -88,6 +113,31 @@ public class MainActivity extends AppCompatActivity{
         btnRegister.setOnClickListener(view -> {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
+        });
+
+
+        // 前端校验手机号邮箱
+        loginUser.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String principal = loginUser.getText().toString();
+                if (principal.isEmpty() || (!StringUtil.isEmail(principal) && !StringUtil.isPhone(principal))) {
+                    loginUser.setError("请输入正确的手机号或邮箱！");
+                } else {
+                    loginUser.setError(null);
+                }
+            }
+        });
+
+        // 前端校验密码为空
+        loginPassword.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String credential = loginPassword.getText().toString();
+                if (credential.isEmpty()) {
+                    loginPassword.setError("请输入密码！");
+                } else {
+                    loginPassword.setError(null);
+                }
+            }
         });
     }
 
@@ -114,4 +164,11 @@ public class MainActivity extends AppCompatActivity{
         alphaAnimator3.start();
     }
 
+    private void loginSuccess() {
+//        Toast.makeText(this, "登录成功，欢迎来到时光！", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent();
+        intent.setClass(MainActivity.this, NavigationActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

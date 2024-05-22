@@ -9,12 +9,12 @@
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <com.scwang.wave.MultiWaveHeader
-        android:id="@+id/waveHeader"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:mwhCloseColor="@color/wheat"
-        tools:ignore="MissingConstraints" />
+<!--    <com.scwang.wave.MultiWaveHeader-->
+<!--        android:id="@+id/waveHeader"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="300dp"-->
+<!--        app:mwhCloseColor="@color/wheat"-->
+<!--        tools:ignore="MissingConstraints" />-->
 
     <ImageView
         android:id="@+id/login_logo"
@@ -35,12 +35,13 @@
         android:layout_marginTop="60dp"
         android:hint="手机号或邮箱"
         app:hintTextColor="@color/black"
-        android:textColorHint="@color/black">
+        android:textColorHint="@color/black"
+        app:errorEnabled="true">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_login_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textNoSuggestions"/>
+            android:inputType="text"/>
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/login_password"
@@ -52,7 +53,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:hint="密码"
         app:hintTextColor="@color/black"
-        android:textColorHint="@color/black">
+        android:textColorHint="@color/black"
+        app:errorEnabled="true">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_login_password"
             android:layout_width="match_parent"
