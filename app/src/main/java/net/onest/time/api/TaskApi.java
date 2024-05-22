@@ -44,8 +44,14 @@ public class TaskApi {
     private final static String FIND_BY_DAY = "/findByDay";
 
 
-
-    // 添加一项任务
+    /*
+     * 添加一项任务
+     * TaskDto
+     * 必传参数 String taskName 任务名称  /  Integer type 计时类型 0代表番茄钟计时 1代表正向计时 2代表不计时
+     * 可选参数 List<Integer> estimate / 预估番茄钟数 Integer clockDuration 预估番茄钟时长 / Integer restTime 休息时间
+     * / Integer again 是否重复  0代表明天继续 1不继续
+     * 其他后端有默认值
+     */
     public static TaskVo addTask(TaskDto taskDto){
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + ADD_TASK)
