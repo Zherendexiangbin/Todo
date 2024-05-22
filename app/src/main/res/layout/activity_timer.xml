@@ -8,6 +8,7 @@
     android:fitsSystemWindows="false"
     android:id="@+id/timer_entirely"
     tools:context=".TimerActivity">
+
     <Button
         android:id="@+id/alter_btn"
         android:layout_width="40dp"

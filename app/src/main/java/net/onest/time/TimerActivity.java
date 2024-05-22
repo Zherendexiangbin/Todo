@@ -2,6 +2,8 @@ package net.onest.time;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -18,6 +20,7 @@ import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,6 +47,7 @@ import com.google.gson.Gson;
 import com.mut_jaeryo.circletimer.CircleTimer;
 
 
+import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.utils.DrawableUtil;
 
 import java.io.IOException;
@@ -127,7 +131,6 @@ public class TimerActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_MOVE:
                         mCurPosX = event.getX();
                         mCurPosY = event.getY();
-
                         break;
                     case MotionEvent.ACTION_UP:
                         if (mCurPosY - mPosY > 60
@@ -266,10 +269,10 @@ public class TimerActivity extends AppCompatActivity {
 
         intent = getIntent();
         taskName.setText(intent.getStringExtra("name"));
-
+        String timeStr = intent.getStringExtra("time");
         if("countDown".equals(intent.getStringExtra("method"))){
             timeTxt.setVisibility(View.GONE);
-            String timeStr = intent.getStringExtra("time");
+            
 //        circleTimer.setInitPosition(60);
             int time = Integer.parseInt(timeStr);
             circleTimer.setMaximumTime(time*60);
@@ -296,7 +299,8 @@ public class TimerActivity extends AppCompatActivity {
             restartBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    circleTimer.reset();
+                    Toast.makeText(TimerActivity.this, "现在的时间是"+circleTimer.getValue(), Toast.LENGTH_SHORT).show();
+//                    circleTimer.reset();
                 }
             });
 
@@ -310,63 +314,77 @@ public class TimerActivity extends AppCompatActivity {
             stopInnerBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(TimerActivity.this,R.style.CustomDialogStyle);
-                    LayoutInflater inflater = LayoutInflater.from(TimerActivity.this);
-                    View dialogView = inflater.inflate(R.layout.timer_activity_stop,null);
-                    final Dialog dialog = builder.create();
-                    dialog.show();
-                    dialog.getWindow().setContentView(dialogView);
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    int time = Integer.parseInt(timeStr);
+                    if(time*60 - circleTimer.getValue()<5){
+                        Toast toast = Toast.makeText(TimerActivity.this, "不记录5秒以下的专注记录!", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP,0,0);
+                        toast.show();
+                        Intent intent2 = new Intent();
+                        intent2.setClass(TimerActivity.this, NavigationActivity.class);
+                        intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
+                        startActivity(intent2);
+                        overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
+//                        finish();
+//                        NavController navController = Navigation.findNavController(TimerActivity.this, R.id.nav_host_fragments);
+//                        navController.navigate(R.id.action_todo_fragment_to_list_fragment);
+                    }else{
+                        AlertDialog.Builder builder = new AlertDialog.Builder(TimerActivity.this,R.style.CustomDialogStyle);
+                        LayoutInflater inflater = LayoutInflater.from(TimerActivity.this);
+                        View dialogView = inflater.inflate(R.layout.timer_activity_stop,null);
+                        final Dialog dialog = builder.create();
+                        dialog.show();
+                        dialog.getWindow().setContentView(dialogView);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView abandon = dialogView.findViewById(R.id.abandon_btn);
-                    TextView advance = dialogView.findViewById(R.id.advance_btn);
-                    TextView cancel = dialogView.findViewById(R.id.cancel_btn);
+                        TextView abandon = dialogView.findViewById(R.id.abandon_btn);
+                        TextView advance = dialogView.findViewById(R.id.advance_btn);
+                        TextView cancel = dialogView.findViewById(R.id.cancel_btn);
 
-                    //放弃当前计时
-                    abandon.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                            AlertDialog.Builder builder = new AlertDialog.Builder(TimerActivity.this,R.style.CustomDialogStyle);
-                            LayoutInflater inflater = LayoutInflater.from(TimerActivity.this);
-                            View dialogViewAban = inflater.inflate(R.layout.timer_activity_abandon,null);
-                            final Dialog dialogAban = builder.create();
-                            dialogAban.show();
-                            dialogAban.getWindow().setContentView(dialogViewAban);
-                            dialogAban.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        //放弃当前计时
+                        abandon.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(TimerActivity.this,R.style.CustomDialogStyle);
+                                LayoutInflater inflater = LayoutInflater.from(TimerActivity.this);
+                                View dialogViewAban = inflater.inflate(R.layout.timer_activity_abandon,null);
+                                final Dialog dialogAban = builder.create();
+                                dialogAban.show();
+                                dialogAban.getWindow().setContentView(dialogViewAban);
+                                dialogAban.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                            TextView abandonYes = dialogViewAban.findViewById(R.id.timer_activity_abandon_yes);
-                            Button abandonNo = dialogViewAban.findViewById(R.id.timer_activity_abandon_no);
-                            TextInputEditText abandonReason = dialogViewAban.findViewById(R.id.abandon_reason);
-                            PieChart abandonReasonChart = dialogAban.findViewById(R.id.abandon_reason_pie_chart);
+                                TextView abandonYes = dialogViewAban.findViewById(R.id.timer_activity_abandon_yes);
+                                Button abandonNo = dialogViewAban.findViewById(R.id.timer_activity_abandon_no);
+                                TextInputEditText abandonReason = dialogViewAban.findViewById(R.id.abandon_reason);
+                                PieChart abandonReasonChart = dialogAban.findViewById(R.id.abandon_reason_pie_chart);
 
 
-                            String descriptionStr = "本月打断原因分析";
-                            Description description = new Description();
-                            description.setText(descriptionStr);
-                            description.setTextColor(Color.BLACK);
-                            description.setTextSize(15f);
-                            abandonReasonChart.setDescription(description);
+                                String descriptionStr = "本月打断原因分析";
+                                Description description = new Description();
+                                description.setText(descriptionStr);
+                                description.setTextColor(Color.BLACK);
+                                description.setTextSize(15f);
+                                abandonReasonChart.setDescription(description);
 
-                            // 获取屏幕中间x 轴的像素坐标
-                            WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-                            DisplayMetrics dm = new DisplayMetrics();
-                            wm.getDefaultDisplay().getMetrics(dm);
-                            float x = dm.widthPixels / 2;
-                            // y轴像素坐标，获取文本高度（dp）+上方间隔12dp 转换为像素
-                            Paint paint = new Paint();
-                            paint.setTextSize(18f);
-                            Rect rect = new Rect();
-                            paint.getTextBounds(descriptionStr, 0, descriptionStr.length(), rect);
-                            float y = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                                    rect.height() + 10, getResources().getDisplayMetrics());
-                            // 设置饼状图的位置
-                            description.setPosition(x, y);
-                            description.setTextAlign(Paint.Align.LEFT);
+                                // 获取屏幕中间x 轴的像素坐标
+                                WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+                                DisplayMetrics dm = new DisplayMetrics();
+                                wm.getDefaultDisplay().getMetrics(dm);
+                                float x = dm.widthPixels / 2;
+                                // y轴像素坐标，获取文本高度（dp）+上方间隔12dp 转换为像素
+                                Paint paint = new Paint();
+                                paint.setTextSize(18f);
+                                Rect rect = new Rect();
+                                paint.getTextBounds(descriptionStr, 0, descriptionStr.length(), rect);
+                                float y = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                                        rect.height() + 10, getResources().getDisplayMetrics());
+                                // 设置饼状图的位置
+                                description.setPosition(x, y);
+                                description.setTextAlign(Paint.Align.LEFT);
 
-                            //设置图例:
-                            Legend legend = abandonReasonChart.getLegend();
-                            legend.setEnabled(false);
+                                //设置图例:
+                                Legend legend = abandonReasonChart.getLegend();
+                                legend.setEnabled(false);
 //                            legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
 //                            legend.setFormSize(12f);
 //                            legend.setFormToTextSpace(10f);//设置图形与文本之间的间隔
@@ -374,59 +392,61 @@ public class TimerActivity extends AppCompatActivity {
 //                            legend.setMaxSizePercent(100);
 
 
-                            //设置数据源
-                            List<PieEntry> yVals = new ArrayList<>();
-                            List<Integer> colors = new ArrayList<>();
-                            //设置饼状图数据：
-                            yVals.add(new PieEntry(28.6f, "陆地"));
-                            yVals.add(new PieEntry(60.3f, "海洋"));
-                            yVals.add(new PieEntry(100f-28.6f-60.3f, "天空"));
+                                //设置数据源
+                                List<PieEntry> yVals = new ArrayList<>();
+                                List<Integer> colors = new ArrayList<>();
+                                //设置饼状图数据：
+                                yVals.add(new PieEntry(28.6f, "陆地"));
+                                yVals.add(new PieEntry(60.3f, "海洋"));
+                                yVals.add(new PieEntry(100f-28.6f-60.3f, "天空"));
 
-                            colors.add(Color.parseColor("#4A92FC"));
-                            colors.add(Color.parseColor("#ee6e55"));
-                            colors.add(Color.parseColor("#adff2f"));
-                            setPieChartData(abandonReasonChart,yVals,colors);
+                                colors.add(Color.parseColor("#4A92FC"));
+                                colors.add(Color.parseColor("#ee6e55"));
+                                colors.add(Color.parseColor("#adff2f"));
+                                setPieChartData(abandonReasonChart,yVals,colors);
 
-                            //获取放弃原因!
-                            String reason = abandonReason.getText().toString().trim();
+                                //获取放弃原因!
+                                String reason = abandonReason.getText().toString().trim();
 
-                            abandonYes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if(abandonReason.getText().toString().isEmpty()){
-                                        Toast.makeText(TimerActivity.this, "请输入打断的原因", Toast.LENGTH_SHORT).show();
+                                abandonYes.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if(abandonReason.getText().toString().isEmpty()){
+                                            Toast.makeText(TimerActivity.this, "请输入打断的原因", Toast.LENGTH_SHORT).show();
 
-                                    }else{
+                                        }else{
+                                            dialogAban.dismiss();
+                                        }
+                                    }
+                                });
+
+                                abandonNo.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
                                         dialogAban.dismiss();
                                     }
-                                }
-                            });
-
-                            abandonNo.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialogAban.dismiss();
-                                }
-                            });
+                                });
 
 
-                        }
-                    });
+                            }
+                        });
 
-                    //提前完成计时
-                    advance.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                        //提前完成计时
+                        advance.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                        }
-                    });
-                    //取消
-                    cancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
+                            }
+                        });
+                        //取消
+                        cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+
 
                 }
             });
