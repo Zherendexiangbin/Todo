@@ -2,17 +2,15 @@ package net.onest.time.navigation.fragment;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -38,7 +36,8 @@ import java.util.List;
 
 public class StudyRoomFragment extends Fragment {
     private View view;
-    private TextView roomName, roomId;
+    private TextView roomName;
+    private String roomId;
     private StudyRoomItemAdapter itemAdapter;
     private List<String> avatarList;
     private RecyclerView recyclerView;
@@ -80,7 +79,6 @@ public class StudyRoomFragment extends Fragment {
                                 itemAdapter.updateData(avatarList);
 
                                 roomName.setText("时光自习室");
-                                roomId.setText("roomId");
                                 btnMenu.setVisibility(View.GONE);
                                 Toast.makeText(getContext(), "退出成功！", Toast.LENGTH_SHORT).show();
                             }
@@ -105,7 +103,6 @@ public class StudyRoomFragment extends Fragment {
 
     private void findViewById(View view) {
         roomName = view.findViewById(R.id.room_name);
-        roomId = view.findViewById(R.id.room_id);
         recyclerView = view.findViewById(R.id.user_list);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 5, RecyclerView.VERTICAL, false);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
@@ -126,11 +123,12 @@ public class StudyRoomFragment extends Fragment {
         private RadioButton createRoom, joinRoom;
         private EditText setName;
         private VerificationCodeInputView idInputView;
+        private LinearLayout llRoomAvatar, llRoomCode;
 
         public RoomCodePopWindow(Context context) {
             //设置view
             LayoutInflater inflater = LayoutInflater.from(context);
-            View view1 = inflater.inflate((R.layout.activity_roomid_pop), null);
+            View view1 = inflater.inflate((R.layout.activity_create_room_pop), null);
             setContentView(view1);
             initView(view1);//获取控件
             //activity的contentView的宽度
@@ -155,12 +153,22 @@ public class StudyRoomFragment extends Fragment {
             joinRoom = view.findViewById(R.id.join_room);
             setName = view.findViewById(R.id.edit_roomName);
             idInputView = view.findViewById(R.id.id_input);
+            llRoomAvatar = view.findViewById(R.id.room_avatar_set);
+            llRoomCode = view.findViewById(R.id.ll_room_code);
 
-            setName.setVisibility(View.GONE);
+            joinRoom.setChecked(false);
+            llRoomCode.setVisibility(View.GONE);
+            setName.setVisibility(View.VISIBLE);
+            llRoomAvatar.setVisibility(View.VISIBLE);
+            createRoom.setBackgroundResource(R.drawable.button_wheat);
+            joinRoom.setBackgroundResource(R.drawable.button_white);
+            Toast.makeText(getContext(), "请设置自习室房间名称和房间号", Toast.LENGTH_SHORT).show();
 
             createRoom.setOnClickListener(view1 -> {
                 joinRoom.setChecked(false);
+                llRoomCode.setVisibility(View.GONE);
                 setName.setVisibility(View.VISIBLE);
+                llRoomAvatar.setVisibility(View.VISIBLE);
                 createRoom.setBackgroundResource(R.drawable.button_wheat);
                 joinRoom.setBackgroundResource(R.drawable.button_white);
                 Toast.makeText(getContext(), "请设置自习室房间名称和房间号", Toast.LENGTH_SHORT).show();
@@ -169,6 +177,8 @@ public class StudyRoomFragment extends Fragment {
             joinRoom.setOnClickListener(view1 -> {
                 createRoom.setChecked(false);
                 setName.setVisibility(View.GONE);
+                llRoomAvatar.setVisibility(View.GONE);
+                llRoomCode.setVisibility(View.VISIBLE);
                 createRoom.setBackgroundResource(R.drawable.button_white);
                 joinRoom.setBackgroundResource(R.drawable.button_wheat);
                 Toast.makeText(getContext(), "请输入要加入的自习室邀请码", Toast.LENGTH_SHORT).show();
@@ -177,55 +187,27 @@ public class StudyRoomFragment extends Fragment {
             idInputView.setOnInputListener(new VerificationCodeInputView.OnInputListener() {
                 @Override
                 public void onComplete(String code) {
-                    if (createRoom.isChecked()){
-                        new XPopup.Builder(getContext())
-                                .dismissOnTouchOutside(false)
-                                .asConfirm(
-                                "确认创建",
-                                "房间名称：" + setName.getText().toString().trim() + "\n" + "房间号:" + code,
+                    new XPopup.Builder(getContext())
+                            .dismissOnTouchOutside(false)
+                            .asConfirm("确认加入", "是否提交自习室加入申请？",
                                 new OnConfirmListener() {
-                                    @Override
-                                    public void onConfirm() {
-                                        btnAdd.setBackgroundResource(R.mipmap.quit);
-                                        btnAdd.setHint("quit");
-                                        roomName.setText(setName.getText().toString().trim());
-                                        roomId.setText("roomId: " + code);
-                                        btnMenu.setVisibility(View.VISIBLE);
-                                        dismiss();
-                                        Toast.makeText(getContext(), "创建成功", Toast.LENGTH_SHORT).show();
+                                @Override
+                                public void onConfirm() {
+                                    //向自习室管理员/创建者提交加入申请
+                                    //Todo
+                                    //如果同意
+                                    btnAdd.setBackgroundResource(R.mipmap.quit);
+                                    btnAdd.setHint("quit");
+                                    avatarList.add("user");
+                                    itemAdapter.updateData(avatarList);
+                                    if(recyclerView.getAdapter().getItemCount()>1){
+                                        roomName.setText("****");
                                     }
-                                })
-                                .show();
-                    }else if (joinRoom.isChecked()){
-                        new XPopup.Builder(getContext())
-                                .dismissOnTouchOutside(false)
-                                .asConfirm(
-                                "确认加入",
-                                "是否提交自习室加入申请？",
-                                new OnConfirmListener() {
-                                    @Override
-                                    public void onConfirm() {
-                                        //向自习室管理员/创建者提交加入申请
-                                        //Todo
-                                        //如果同意
-                                        btnAdd.setBackgroundResource(R.mipmap.quit);
-                                        btnAdd.setHint("quit");
-                                        avatarList.add("user");
-                                        itemAdapter.updateData(avatarList);
-                                        if(recyclerView.getAdapter().getItemCount()>1){
-                                            roomName.setText("****");
-                                            roomId.setText("roomId: " + code);
-                                        }
-                                        dismiss();
-                                        Toast.makeText(getContext(), "加入成功！", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .show();
-                    }else {
-                        Toast.makeText(getContext(), "请先选择创建或加入自习室！", Toast.LENGTH_SHORT).show();
-                        //清除验证码
-                        idInputView.clearCode();
-                    }
+                                    dismiss();
+                                    Toast.makeText(getContext(), "加入成功！", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .show();
                 }
 
                 @Override
