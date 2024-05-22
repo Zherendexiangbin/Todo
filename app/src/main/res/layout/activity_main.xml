@@ -27,12 +27,14 @@
         tools:ignore="MissingConstraints" />
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/login_user"
-        android:layout_width="320dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/login_logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="60dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
         android:hint="手机号或邮箱"
         app:hintTextColor="@color/black"
         android:textColorHint="@color/black">
@@ -44,10 +46,12 @@
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/login_password"
-        android:layout_width="320dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/login_user"
         android:layout_marginTop="15dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:hint="密码"
@@ -69,12 +73,14 @@
         android:text="忘记密码?"/>
     <Button
         android:id="@+id/btn_login"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/login_password"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="100dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
         android:background="@drawable/button_wheat"
         android:alpha="0.8"
         android:text="登     录"
@@ -82,12 +88,14 @@
         android:textStyle="bold"/>
     <Button
         android:id="@+id/btn_register"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/btn_login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
         android:background="@drawable/button_ivory"
         android:text="注     册"
         android:textSize="20sp"

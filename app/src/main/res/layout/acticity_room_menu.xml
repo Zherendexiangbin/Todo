@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center|left"
-            android:paddingLeft="20dp"
+            android:paddingLeft="15dp"
             android:drawableLeft="@mipmap/room_code"
             android:drawablePadding="10dp"
             android:text="邀请码"
@@ -43,7 +43,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:gravity="center|left"
-        android:paddingLeft="20dp"
+        android:paddingLeft="15dp"
         android:drawableLeft="@mipmap/room_application"
         android:drawablePadding="10dp"
         android:text="房间加入申请"
@@ -52,8 +52,8 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scrollbars="none"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/application_list"
             android:layout_width="match_parent"

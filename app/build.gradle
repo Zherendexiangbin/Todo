@@ -65,6 +65,8 @@ dependencies {
     implementation 'cn.qqtheme.framework:AndroidPicker:latest.integration'
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+//    implementation 'com.github.AAChartModel:AAChartCore:-SNAPSHOT'
+    implementation 'com.github.AAChartModel:AAChartCore:cad1a66ee3'
 
     implementation 'com.github.jaeryo2357:circleTimer:1.1.7'
     implementation 'com.github.li-xiaojun:XPopup:2.9.19'

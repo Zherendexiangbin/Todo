@@ -73,7 +73,7 @@
             app:scheme_theme_color="#333"
             app:selected_text_color="@color/black"
             app:week_start_with="mon"
-            app:week_background="@color/transparent"
+            app:week_background="@color/wheat"
             app:month_view_show_mode="mode_only_current"
             app:week_text_color="@color/black"
             app:week_text_size="20dp"
@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@color/white">
+            android:background="@color/transparent">
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
@@ -97,7 +97,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/my_recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"
+                android:background="@color/transparent"/>
 
 <!--            <include layout="@layout/null_item_page"/>-->
 <!--            <LinearLayout-->

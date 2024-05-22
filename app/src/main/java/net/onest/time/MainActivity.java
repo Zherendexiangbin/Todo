@@ -40,8 +40,10 @@ public class MainActivity extends AppCompatActivity{
                         .load(R.mipmap.logo2)
                         .transition(DrawableTransitionOptions.withCrossFade(2000))
                         .into(logo);
-        loginUser.setText("2808021998@qq.com");
-        loginPassword.setText("admin");
+//        loginUser.setText("2808021998@qq.com");
+//        loginPassword.setText("admin");
+        loginUser.setText("212296944@qq.com");
+        loginPassword.setText("123456");
 
         setListeners();
         setAnimator();
