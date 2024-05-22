@@ -1,20 +1,12 @@
 package net.onest.time;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import net.onest.time.api.UserApi;
 import net.onest.time.api.dto.UserDto;
 import net.onest.time.api.vo.UserVo;
-import net.onest.time.application.TimeApplication;
-import net.onest.time.constant.SharedPreferencesConstant;
-
 import org.junit.Test;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 
 public class UserApiTest {
