@@ -197,7 +197,7 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
     }
 
     private void btnClickIncidents() {
-        //添加待办：
+        //添加待办:
         todoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

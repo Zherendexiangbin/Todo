@@ -33,6 +33,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartModel;
+import com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView;
+import com.github.AAChartModel.AAChartCore.AAChartCreator.AASeriesElement;
+import com.github.AAChartModel.AAChartCore.AAChartEnum.AAChartType;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -68,6 +72,8 @@ public class RecordFragment extends Fragment {
     private RadioButton radioDayButton,radioWeekButton,radioMonthButton;
 
     private TextView todayFocus,dataDateTxt,appDateTxt;
+
+    private AAChartView aaChartView;
 
     //水平柱状图:
     private HorizontalBarChart barHor;
@@ -280,6 +286,45 @@ public class RecordFragment extends Fragment {
 //                return (int) value + "%";
 //            }
 //        });
+
+
+
+//        AAChartModel aaChartModel = new AAChartModel()
+//                .chartType(AAChartType.Area)
+//                .title("THE HEAT OF PROGRAMMING LANGUAGE")
+//                .subtitle("Virtual Data")
+//                .backgroundColor("#4b2b7f")
+//                .categories(new String[]{"Java", "Swift", "Python", "Ruby", "PHP", "Go", "C", "C#", "C++"})
+//                .dataLabelsEnabled(false)
+//                .yAxisGridLineWidth(0f)
+//                .series(new AASeriesElement[]{
+//                        new AASeriesElement()
+//                                .name("Tokyo")
+//                                .data(new Object[]{7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6}),
+//                        new AASeriesElement()
+//                                .name("NewYork")
+//                                .data(new Object[]{0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5}),
+//                        new AASeriesElement()
+//                                .name("London")
+//                                .data(new Object[]{0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0}),
+//                        new AASeriesElement()
+//                                .name("Berlin")
+//                                .data(new Object[]{3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8})
+//                });
+        AAChartModel aaChartModel = new AAChartModel()
+                .chartType(AAChartType.Pie)
+                .title("本月中断原因分析")
+                .backgroundColor("#778899")
+
+                .series(new AASeriesElement[]{
+                        new AASeriesElement()
+                                .innerSize(90f)
+                                .borderWidth(2f)
+                                .name("饼图开发")
+                                .data(new Object[]{15, 15, 35, 20, 15})
+
+                });
+        aaChartView.aa_drawChartWithChartModel(aaChartModel);
     }
 
     private List<BarEntry> getAppTimeAndHead() {
@@ -307,7 +352,7 @@ public class RecordFragment extends Fragment {
                             Toast.makeText(getContext(), "获取部分权限成功，但部分权限未正常授予", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        Toast.makeText(getContext(), "获取权限成功", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(), "获取权限成功", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -445,6 +490,7 @@ public class RecordFragment extends Fragment {
         todayFocus = view.findViewById(R.id.record_fragment_today_focus);
         dataDateTxt = view.findViewById(R.id.record_fragment_time_data_date);
         appDateTxt = view.findViewById(R.id.record_fragment_app_use_time_txt);
+
 
     }
 }

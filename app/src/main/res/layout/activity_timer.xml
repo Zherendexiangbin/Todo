@@ -16,6 +16,9 @@
         android:layout_marginRight="20dp"
         android:background="@drawable/test_icon_33"/>
 
+    <net.onest.time.MyTimer
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <LinearLayout
         android:id="@+id/timer_background_lin"
         android:layout_width="match_parent"
@@ -29,6 +32,8 @@
             android:layout_height="280dp"
             app:show_text="true"
             app:outline_color="#FFFFFFFF"
+            app:pointer_size="500dp"
+
             app:isOutline="true"
             app:wheel_active_color="#FFFFFFFF"
             app:wheel_background_color="#0000"
@@ -53,6 +58,7 @@
             android:textSize="25dp"
             android:textStyle="bold"
             android:textColor="#FFFFFFFF"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,11 +88,12 @@
                 android:layout_marginLeft="50dp"
                 android:background="@drawable/square"/>
         </LinearLayout>
+
     </LinearLayout>
     <TextView
         android:id="@+id/timer_text"
         android:layout_marginTop="15dp"
-        android:layout_width="280dp"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:layout_alignParentRight="true"
