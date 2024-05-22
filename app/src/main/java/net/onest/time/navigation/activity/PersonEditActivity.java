@@ -3,9 +3,11 @@ package net.onest.time.navigation.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -13,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -32,7 +35,9 @@ import net.onest.time.R;
 import net.onest.time.api.UserApi;
 import net.onest.time.api.dto.UserDto;
 import net.onest.time.api.vo.UserVo;
+import net.onest.time.navigation.fragment.PersonFragment;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 
 import cn.qqtheme.framework.picker.OptionPicker;
@@ -43,8 +48,8 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
     private EditText nickName, signature;
     private TextView userUID;
     private TextView sex, birthday, career, area;
-    private String avatarUrl;
-
+    private String avatarString;
+    private static final int PICK_IMAGE = 1;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static final String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -52,6 +57,7 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
     };
 
     private boolean havePermission = false;
+    private static final int INTENT_CODE = 1;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,13 +126,17 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
                     //保存按钮点击事件
                     updateUserInfo();
                     Toast.makeText(PersonEditActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("result", "complete");
+                    setResult(INTENT_CODE, resultIntent);
+                    finish();
                     break;
                 case R.id.edit_avatar:
                     checkPermission();
                     if (havePermission) {
                         //点击修改头像
                         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(intent, 1);
+                        startActivityForResult(intent, PICK_IMAGE);
                     }
                     break;
 //                case R.id.edit_birthday:
@@ -157,7 +167,7 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
 
     // 更新用户的信息
     private void updateUserInfo() {
-        UserApi.modifyAvatar(avatarUrl);//用户头像
+        UserApi.modifyAvatar(avatarString);//用户头像
         UserApi.modifyUserName(nickName.getText().toString().trim());//用户名
         UserApi.modifySignature(signature.getText().toString().trim());//用户个性签名
     }
@@ -175,11 +185,11 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
             try {
-                avatarUrl = selectedImageUri + "";
                 userAvatar.setImageURI(selectedImageUri);
+                avatarString = UserApi.uploadAvatar(getPathFromUri(this, selectedImageUri));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -194,6 +204,20 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
         assert cursor != null;
         cursor.moveToFirst();
         return new Pair<>(cursor.getString(0), cursor.getString(1));
+    }
+    //图片URI转String
+    public String getPathFromUri(Context context, Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String path = cursor.getString(columnIndex);
+            cursor.close();
+            return path;
+        } else {
+            return null;
+        }
     }
 
     //职业选择

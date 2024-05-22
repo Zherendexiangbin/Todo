@@ -36,11 +36,11 @@ public class PersonFragment extends Fragment {
     private LinearLayout userEdit;
     private TextView userName, userId, userCreateAt, userTotalDay;
     private TextView userTodayComplete, userTotalComplete;
+    private static final int INTENT_CODE = 1;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.person_fragment, container, false);
-
         findViewById(view);
         initData();
         setListeners();
@@ -51,8 +51,17 @@ public class PersonFragment extends Fragment {
         //点击进入用户信息编辑页面
         userEdit.setOnClickListener(view -> {
             Intent intent = new Intent(getContext(), PersonEditActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, INTENT_CODE);
         });
+    }
+
+    //处理页面跳转返回结果
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data.getStringExtra("result").equals("complete")){
+            initData();
+        }
     }
 
     @SuppressLint("SetTextI18n")
