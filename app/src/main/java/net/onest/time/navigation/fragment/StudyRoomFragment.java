@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
@@ -47,7 +48,6 @@ public class StudyRoomFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view =  inflater.inflate(R.layout.study_room_fragment, container, false);
-
         loadData();
         findViewById(view);
         setListeners();
@@ -66,7 +66,9 @@ public class StudyRoomFragment extends Fragment {
                 RoomCodePopWindow chatMenu = new RoomCodePopWindow(getContext());
                 chatMenu.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.TOP, 0, 0);
             }else {
-                new XPopup.Builder(getContext()).asConfirm("", "确定退出自习室吗？",
+                new XPopup.Builder(getContext())
+                        .dismissOnTouchOutside(false)
+                        .asConfirm("", "确定退出自习室吗？",
                         new OnConfirmListener() {
                             @Override
                             public void onConfirm() {
@@ -176,7 +178,9 @@ public class StudyRoomFragment extends Fragment {
                 @Override
                 public void onComplete(String code) {
                     if (createRoom.isChecked()){
-                        new XPopup.Builder(getContext()).asConfirm(
+                        new XPopup.Builder(getContext())
+                                .dismissOnTouchOutside(false)
+                                .asConfirm(
                                 "确认创建",
                                 "房间名称：" + setName.getText().toString().trim() + "\n" + "房间号:" + code,
                                 new OnConfirmListener() {
@@ -193,7 +197,9 @@ public class StudyRoomFragment extends Fragment {
                                 })
                                 .show();
                     }else if (joinRoom.isChecked()){
-                        new XPopup.Builder(getContext()).asConfirm(
+                        new XPopup.Builder(getContext())
+                                .dismissOnTouchOutside(false)
+                                .asConfirm(
                                 "确认加入",
                                 "是否提交自习室加入申请？",
                                 new OnConfirmListener() {

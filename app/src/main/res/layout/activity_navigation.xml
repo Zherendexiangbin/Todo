@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true"
-        android:background="#FFF"
+        android:background="@drawable/shape_bottom_ivory"
         app:itemIconTint="@drawable/menu_item_selected"
         app:itemTextColor="@drawable/menu_item_selected"
         app:labelVisibilityMode="labeled"
