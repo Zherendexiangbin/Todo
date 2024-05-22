@@ -9,7 +9,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -245,118 +244,15 @@ public class UpdateTaskDialog extends AlertDialog {
                     if (setTimeOne.isChecked()) {
                         if (setTimeGroupOne.isChecked()) {
                             String strings = setTimeGroupOne.getText().toString().split(" ")[0];
+                            updateTask(strings);
 
-                            ArrayList<Integer> estimate = new ArrayList<>();
-                            if (map.size() != 0 && map.get("clockTimes") != null) {
-                                estimate.add(Integer.valueOf(map.get("clockTimes")));
-                            } else {
-                                estimate.addAll(task.getEstimate());
-                            }
-                            TaskDto taskDto = new TaskDto();
-                            taskDto.setTaskName(itemName.getText().toString());
-                            taskDto.setEstimate(estimate);
-                            taskDto.setClockDuration(Integer.valueOf(strings.trim()));
-                            taskDto.setTaskId(task.getTaskId());
-                            if (map.size() != 0 && map.get("remark") != null) {
-                                taskDto.setRemark(map.get("remark"));
-                            } else {
-                                taskDto.setRemark(task.getRemark());
-                            }
-                            if (map.size() != 0 && map.get("rest") != null) {
-                                taskDto.setRestTime(Integer.valueOf(map.get("rest")));
-                            } else {
-                                taskDto.setRestTime(task.getRestTime());
-                            }
-                            if (map.size() != 0 && map.get("again") != null) {
-                                taskDto.setRestTime(Integer.valueOf(map.get("again")));
-                            } else {
-                                taskDto.setAgain(task.getAgain());
-                            }
-
-                            TaskVo taskVo = TaskApi.updateTask(taskDto);
-                            for (TaskVo vo : tasks) {
-                                if (vo.getTaskId() == taskVo.getTaskId()) {
-                                    tasks.remove(vo);
-                                    tasks.add(taskVo);
-                                }
-                            }
-                            adapter.notifyDataSetChanged();
                         } else if (setTimeGroupTwo.isChecked()) {
                             String strings = setTimeGroupTwo.getText().toString().split(" ")[0];
+                            updateTask(strings);
 
-                            ArrayList<Integer> estimate = new ArrayList<>();
-                            if (map.size() != 0 && map.get("clockTimes") != null) {
-                                estimate.add(Integer.valueOf(map.get("clockTimes")));
-                            } else {
-                                estimate.addAll(task.getEstimate());
-                            }
-                            TaskDto taskDto = new TaskDto();
-                            taskDto.setTaskName(itemName.getText().toString());
-                            taskDto.setEstimate(estimate);
-                            taskDto.setClockDuration(Integer.valueOf(strings.trim()));
-                            taskDto.setTaskId(task.getTaskId());
-                            if (map.size() != 0 && map.get("remark") != null) {
-                                taskDto.setRemark(map.get("remark"));
-                            } else {
-                                taskDto.setRemark(task.getRemark());
-                            }
-                            if (map.size() != 0 && map.get("rest") != null) {
-                                taskDto.setRestTime(Integer.valueOf(map.get("rest")));
-                            } else {
-                                taskDto.setRestTime(task.getRestTime());
-                            }
-                            if (map.size() != 0 && map.get("again") != null) {
-                                taskDto.setRestTime(Integer.valueOf(map.get("again")));
-                            } else {
-                                taskDto.setAgain(task.getAgain());
-                            }
-
-                            TaskVo taskVo = TaskApi.updateTask(taskDto);
-                            for (TaskVo vo : tasks) {
-                                if (vo.getTaskId() == taskVo.getTaskId()) {
-                                    tasks.remove(vo);
-                                    tasks.add(taskVo);
-                                }
-                            }
-                            adapter.notifyDataSetChanged();
                         } else {
                             String strings = setTimeGroupThree.getText().toString().split(" ")[0];
-
-                            ArrayList<Integer> estimate = new ArrayList<>();
-                            if (map.size() != 0 && map.get("clockTimes") != null) {
-                                estimate.add(Integer.valueOf(map.get("clockTimes")));
-                            } else {
-                                estimate.addAll(task.getEstimate());
-                            }
-                            TaskDto taskDto = new TaskDto();
-                            taskDto.setTaskName(itemName.getText().toString());
-                            taskDto.setEstimate(estimate);
-                            taskDto.setClockDuration(Integer.valueOf(strings.trim()));
-                            taskDto.setTaskId(task.getTaskId());
-                            if (map.size() != 0 && map.get("remark") != null) {
-                                taskDto.setRemark(map.get("remark"));
-                            } else {
-                                taskDto.setRemark(task.getRemark());
-                            }
-                            if (map.size() != 0 && map.get("rest") != null) {
-                                taskDto.setRestTime(Integer.valueOf(map.get("rest")));
-                            } else {
-                                taskDto.setRestTime(task.getRestTime());
-                            }
-                            if (map.size() != 0 && map.get("again") != null) {
-                                taskDto.setRestTime(Integer.valueOf(map.get("again")));
-                            } else {
-                                taskDto.setAgain(task.getAgain());
-                            }
-
-                            TaskVo taskVo = TaskApi.updateTask(taskDto);
-                            for (TaskVo vo : tasks) {
-                                if (vo.getTaskId() == taskVo.getTaskId()) {
-                                    tasks.remove(vo);
-                                    tasks.add(taskVo);
-                                }
-                            }
-                            adapter.notifyDataSetChanged();
+                            updateTask(strings);
                         }
                     }
                     //正向计时：
@@ -391,6 +287,44 @@ public class UpdateTaskDialog extends AlertDialog {
 //                dialog.dismiss();
             }
         });
+    }
+
+    private void updateTask(String strings) {
+        ArrayList<Integer> estimate = new ArrayList<>();
+        if (map.size() != 0 && map.get("clockTimes") != null) {
+            estimate.add(Integer.valueOf(map.get("clockTimes")));
+        } else {
+            estimate.addAll(task.getEstimate());
+        }
+        TaskDto taskDto = new TaskDto();
+        taskDto.setTaskName(itemName.getText().toString());
+        taskDto.setEstimate(estimate);
+        taskDto.setClockDuration(Integer.valueOf(strings.trim()));
+        taskDto.setTaskId(task.getTaskId());
+        if (map.size() != 0 && map.get("remark") != null) {
+            taskDto.setRemark(map.get("remark"));
+        } else {
+            taskDto.setRemark(task.getRemark());
+        }
+        if (map.size() != 0 && map.get("rest") != null) {
+            taskDto.setRestTime(Integer.valueOf(map.get("rest")));
+        } else {
+            taskDto.setRestTime(task.getRestTime());
+        }
+        if (map.size() != 0 && map.get("again") != null) {
+            taskDto.setRestTime(Integer.valueOf(map.get("again")));
+        } else {
+            taskDto.setAgain(task.getAgain());
+        }
+
+        TaskVo taskVo = TaskApi.updateTask(taskDto);
+        for (TaskVo vo : tasks) {
+            if (vo.getTaskId() == taskVo.getTaskId()) {
+                tasks.remove(vo);
+                tasks.add(taskVo);
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 
     private void getViews(View dialogView) {

@@ -92,16 +92,16 @@ public class AddTaskMoreDialog extends AlertDialog {
                 LayoutInflater inflater = LayoutInflater.from(context);
                 View dialogView = inflater.inflate(R.layout.todo_fragment_add_higher_setting, null);
                 final Dialog dialog = builder.create();
-                show();
-                getWindow().setContentView(dialogView);
-                getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+                dialog.getWindow().setContentView(dialogView);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                EditText remark = dialogView.findViewById(R.id.todo_fragment_add_higher_remark);
-                EditText clockTimes = dialogView.findViewById(R.id.todo_fragment_add_clock_times);
-                EditText rest = dialogView.findViewById(R.id.todo_fragment_add_rest_time);
-                Button clockAbout = dialogView.findViewById(R.id.todo_clock_times_about);
-                Button btnYes = dialogView.findViewById(R.id.add_todo_higher_setting_item_yes);
-                Button btnNo = dialogView.findViewById(R.id.add_todo_higher_setting_item_no);
+                EditText remark = dialog.findViewById(R.id.todo_fragment_add_higher_remark);
+                EditText clockTimes = dialog.findViewById(R.id.todo_fragment_add_clock_times);
+                EditText rest = dialog.findViewById(R.id.todo_fragment_add_rest_time);
+                Button clockAbout = dialog.findViewById(R.id.todo_clock_times_about);
+                Button btnYes = dialog.findViewById(R.id.add_todo_higher_setting_item_yes);
+                Button btnNo = dialog.findViewById(R.id.add_todo_higher_setting_item_no);
 
                 clockAbout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -126,14 +126,14 @@ public class AddTaskMoreDialog extends AlertDialog {
                 btnYes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dismiss();
+                        dialog.dismiss();
                     }
                 });
 
                 btnNo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dismiss();
+                        dialog.dismiss();
                     }
                 });
             }

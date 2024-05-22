@@ -103,7 +103,7 @@ public class ListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 new AddTaskCollectionDialog(
-                        ListFragment.this.getContext(),
+                        getContext(),
                         expandableListAdapter,
                         parentItemList
                 );
@@ -121,25 +121,6 @@ public class ListFragment extends Fragment {
         });
 
         return parentItemList;
-
-//        List<Item> itemList = new ArrayList<>();
-//        List<Item> itemList1 = new ArrayList<>();
-//        List<Item> itemList2 = new ArrayList<>();
-//
-//        Item item1 = new Item("英语阅读","25",ColorUtil.getColorByRgb(null));
-//        Item item2 = new Item("数学题","25",ColorUtil.getColorByRgb(null));
-//        Item item3 = new Item("政治-习近平新时代中国特色社会主义思想","25",ColorUtil.getColorByRgb(null));
-//        itemList.add(item1);
-//        itemList.add(item2);
-//        itemList.add(item3);
-//
-//        ParentItem parentItem1 = new ParentItem("考研计划", ColorUtil.getColorByRgb(null),itemList);
-//        ParentItem parentItem2 = new ParentItem("空计划", ColorUtil.getColorByRgb(null),itemList1);
-//        ParentItem parentItem3 = new ParentItem("空计划2", ColorUtil.getColorByRgb(null),itemList2);
-//
-//        parentItemList.add(parentItem1);
-//        parentItemList.add(parentItem2);
-//        parentItemList.add(parentItem3);
 
     }
 
