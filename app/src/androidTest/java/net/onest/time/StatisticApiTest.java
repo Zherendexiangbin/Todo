@@ -20,6 +20,13 @@ public class StatisticApiTest {
     }
 
     @Test
+    public void statisticByTask() {
+        Long taskId = 122L;
+        StatisticVo statistic = StatisticApi.statisticByTask(taskId);
+        System.out.println(statistic);
+    }
+
+    @Test
     public void StatisticUtilTest() {
         List<TaskVo> list = TaskApi.findAll();
         list.forEach(taskVo ->

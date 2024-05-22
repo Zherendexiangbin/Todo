@@ -2,11 +2,13 @@ package net.onest.time.api.vo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 public class TomatoClock implements Serializable {
     private Long clockId;
     private Long taskId;
     private Integer sequence;
+    private Integer clockDuration;
     private Integer clockStatus;
     private String stopReason;
     private Integer innerInterrupt;
@@ -111,24 +113,43 @@ public class TomatoClock implements Serializable {
         this.deleted = deleted;
     }
 
+    public Integer getClockDuration() {
+        return clockDuration;
+    }
+
+    public void setClockDuration(Integer clockDuration) {
+        this.clockDuration = clockDuration;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TomatoClock that = (TomatoClock) o;
+        return Objects.equals(clockId, that.clockId) && Objects.equals(taskId, that.taskId) && Objects.equals(sequence, that.sequence) && Objects.equals(clockDuration, that.clockDuration) && Objects.equals(clockStatus, that.clockStatus) && Objects.equals(stopReason, that.stopReason) && Objects.equals(innerInterrupt, that.innerInterrupt) && Objects.equals(outerInterrupt, that.outerInterrupt) && Objects.equals(startedAt, that.startedAt) && Objects.equals(completedAt, that.completedAt) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt) && Objects.equals(deleted, that.deleted);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clockId, taskId, sequence, clockDuration, clockStatus, stopReason, innerInterrupt, outerInterrupt, startedAt, completedAt, createdAt, updatedAt, deleted);
+    }
+
+    @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", clockId=").append(clockId);
-        sb.append(", taskId=").append(taskId);
-        sb.append(", sequence=").append(sequence);
-        sb.append(", clockStatus=").append(clockStatus);
-        sb.append(", stopReason=").append(stopReason);
-        sb.append(", innerInterrupt=").append(innerInterrupt);
-        sb.append(", outerInterrupt=").append(outerInterrupt);
-        sb.append(", startedAt=").append(startedAt);
-        sb.append(", completedAt=").append(completedAt);
-        sb.append(", createdAt=").append(createdAt);
-        sb.append(", updatedAt=").append(updatedAt);
-        sb.append(", deleted=").append(deleted);
-        sb.append("]");
-        return sb.toString();
+        return "TomatoClock{" +
+                "clockId=" + clockId +
+                ", taskId=" + taskId +
+                ", sequence=" + sequence +
+                ", clockDuration=" + clockDuration +
+                ", clockStatus=" + clockStatus +
+                ", stopReason='" + stopReason + '\'' +
+                ", innerInterrupt=" + innerInterrupt +
+                ", outerInterrupt=" + outerInterrupt +
+                ", startedAt=" + startedAt +
+                ", completedAt=" + completedAt +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", deleted=" + deleted +
+                '}';
     }
 }

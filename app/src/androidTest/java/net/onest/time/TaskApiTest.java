@@ -50,13 +50,13 @@ public class TaskApiTest {
     @Test
     public void updateTask() {
         TaskDto taskDto = new TaskDto();
-        taskDto.setTaskId(28L);//必传参数
-        taskDto.setClockDuration(45);
+        taskDto.setTaskId(122L);//必传参数
+        taskDto.setClockDuration(0);
 
         ArrayList<Integer> estimate = new ArrayList<>();
-        estimate.add(3);
+        estimate.add(1);
         taskDto.setEstimate(estimate);
-        taskDto.setTaskName("无风不起浪");
+//        taskDto.setTaskName("无风不起浪");
         TaskApi.updateTask(taskDto);
     }
 
@@ -85,7 +85,7 @@ public class TaskApiTest {
 
     @Test
     public void complete() {
-        Long taskId = 28L;
+        Long taskId = 122L;
         TaskApi.complete(taskId);
     }
 

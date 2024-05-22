@@ -2,17 +2,27 @@ package net.onest.time.api.vo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 public class TomatoClockVo implements Serializable {
     private Long clockId;
     private Long taskId;
     private Integer sequence;
+    private Integer clockDuration;
     private Integer clockStatus;
     private String stopReason;
     private Integer innerInterrupt;
     private Integer outerInterrupt;
     private Date startedAt;
     private Date completedAt;
+
+    public Integer getClockDuration() {
+        return clockDuration;
+    }
+
+    public void setClockDuration(Integer clockDuration) {
+        this.clockDuration = clockDuration;
+    }
 
     public Long getClockId() {
         return clockId;
@@ -86,12 +96,27 @@ public class TomatoClockVo implements Serializable {
         this.completedAt = completedAt;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TomatoClockVo that = (TomatoClockVo) o;
+        return Objects.equals(clockId, that.clockId) && Objects.equals(taskId, that.taskId) && Objects.equals(sequence, that.sequence) && Objects.equals(clockDuration, that.clockDuration) && Objects.equals(clockStatus, that.clockStatus) && Objects.equals(stopReason, that.stopReason) && Objects.equals(innerInterrupt, that.innerInterrupt) && Objects.equals(outerInterrupt, that.outerInterrupt) && Objects.equals(startedAt, that.startedAt) && Objects.equals(completedAt, that.completedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clockId, taskId, sequence, clockDuration, clockStatus, stopReason, innerInterrupt, outerInterrupt, startedAt, completedAt);
+    }
+
     @Override
     public String toString() {
         return "TomatoClockVo{" +
                 "clockId=" + clockId +
                 ", taskId=" + taskId +
                 ", sequence=" + sequence +
+                ", clockDuration=" + clockDuration +
                 ", clockStatus=" + clockStatus +
                 ", stopReason='" + stopReason + '\'' +
                 ", innerInterrupt=" + innerInterrupt +

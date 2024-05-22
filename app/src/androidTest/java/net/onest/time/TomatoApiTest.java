@@ -11,13 +11,13 @@ import java.util.List;
 public class TomatoApiTest {
     @Test
     public void addTomatoClock() {
-        List<TomatoClockVo> tomatoClockVos = TomatoClockApi.addTomatoClock(28L, 3);
+        List<TomatoClockVo> tomatoClockVos = TomatoClockApi.addTomatoClock(122L);
         Assert.assertNotNull(tomatoClockVos);
     }
 
     @Test
     public void completeTomatoClock() {
-        Long clockId = 59L;
+        Long clockId = 1235L;
         TomatoClockApi.completeTomatoClock(clockId);
     }
 
@@ -35,7 +35,7 @@ public class TomatoApiTest {
 
     @Test
     public void startTomatoClock() {
-        Long clockId = 60L;
+        Long clockId = 1235L;
         TomatoClockApi.startTomatoClock(clockId);
     }
 
