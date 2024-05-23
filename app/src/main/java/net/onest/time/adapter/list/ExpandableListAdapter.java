@@ -12,6 +12,7 @@ import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -38,10 +39,13 @@ import net.onest.time.entity.list.ParentItem;
 
 import java.util.List;
 
+/**
+ * 待办集的Adapter
+ */
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
-    private Context context;
-    private int itemViewId;
-    private int childViewId;
+    private final Context context;
+    private final int itemViewId;
+    private final int childViewId;
     private List<ParentItem> parentItemList;
     private List<TaskVo> childItemList;
     private Intent intent;
@@ -121,31 +125,26 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         View backView = view.findViewById(R.id.list_fragment_parent_item_color);
         TextView textView = view.findViewById(R.id.list_fragment_parent_item_name);
+        Button expandBtn = view.findViewById(R.id.list_fragment_parent_arrow);
         Button dataBtn = view.findViewById(R.id.list_fragment_parent_data);
         Button addBtn = view.findViewById(R.id.list_fragment_parent_add);
-        Button expandBtn = view.findViewById(R.id.list_fragment_parent_arrow);
 
         ParentItem parentItem = parentItemList.get(groupPosition);
         List<TaskVo> tasks = parentItem.getChildItemList();
         String category = parentItem.getParentItemName();
 
+        // 设置为不可点击，将事件传递给父组件
+        expandBtn.setClickable(false);
+
         // 展示数据统计的按钮
-        dataBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast toast = Toast.makeText(context, "该功能尚未完善😙", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP, 0, 0);
-                toast.show();
-            }
+        dataBtn.setOnClickListener(v -> {
+            Toast toast = Toast.makeText(context, "该功能尚未完善😙", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP, 0, 0);
+            toast.show();
         });
 
         // 添加任务按钮
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AddTaskMoreDialog(context, category, tasks, new AdapterHolder(ExpandableListAdapter.this));
-            }
-        });
+        addBtn.setOnClickListener(v -> new AddTaskMoreDialog(context, category, tasks, new AdapterHolder(ExpandableListAdapter.this)));
 
         backView.setBackgroundColor(parentItemList.get(groupPosition).getParentItemColor());
         textView.setText(parentItemList.get(groupPosition).getParentItemName());
