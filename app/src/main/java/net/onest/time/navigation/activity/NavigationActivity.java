@@ -27,6 +27,6 @@ public class NavigationActivity extends AppCompatActivity {
         //获取navController
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         //通过setupWithNavController将底部导航和导航控制器进行绑定
-        NavigationUI.setupWithNavController(bottomNavigation,navController);
+        NavigationUI.setupWithNavController(bottomNavigation, navController);
     }
 }

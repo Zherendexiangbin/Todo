@@ -10,6 +10,7 @@ public class TaskDto {
     private Long userId;
 
     private String taskName;
+    private Integer type;
     private Integer clockDuration;
 
     private String remark;
@@ -159,12 +160,21 @@ public class TaskDto {
         return restTime;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "TaskDto{" +
                 "taskId=" + taskId +
                 ", userId=" + userId +
                 ", taskName='" + taskName + '\'' +
+                ", type=" + type +
                 ", clockDuration=" + clockDuration +
                 ", remark='" + remark + '\'' +
                 ", estimate=" + estimate +
