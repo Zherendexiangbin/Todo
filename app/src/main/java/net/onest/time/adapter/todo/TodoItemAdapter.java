@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private Context context;
+    private final Context context;
     //    private List<Item> itemList = new ArrayList<>();
     private List<TaskVo> itemListByDay  = new ArrayList<>();
 
@@ -74,7 +74,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        if(itemListByDay.size()==0){
+        if(itemListByDay.isEmpty()){
             return VIEW_TYPE_EMPTY;//返回空布局
         }
         return VIEW_TYPE_ITEM;//返回正常布局
@@ -120,6 +120,8 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //                    TextView textView = findViewById(R.id.textView);
 //                    textView.setText(spannableString);
                     }else{
+                        //添加番茄钟:
+//                        TomatoClockApi.addTomatoClock(itemListByDay.get(position).getTaskId());
                         //倒计时：
                         intent = new Intent();
                         String[] parts = holders.time.getText().toString().split(" ");
@@ -128,6 +130,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         intent.putExtra("time", num);
                         intent.putExtra("method", "countDown");
                         intent.putExtra("name", itemListByDay.get(position).getTaskName());
+                        intent.putExtra("taskId",itemListByDay.get(position).getTaskId());
                         intent.setClass(context, TimerActivity.class);
                         context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,holders.btn,"fab").toBundle());
                     }
@@ -144,7 +147,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        if(itemListByDay.size()==0){
+        if(itemListByDay.isEmpty()){
             return 1;
         }
         return itemListByDay.size();

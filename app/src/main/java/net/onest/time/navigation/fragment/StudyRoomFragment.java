@@ -57,7 +57,6 @@ public class StudyRoomFragment extends Fragment {
 
     private void setListeners() {
         btnAdd.setOnClickListener(view -> {
-
 //            avatarList.add("avatar-");
 //            itemAdapter.updateData(avatarList);
 //            if (recyclerView.getAdapter().getItemCount()>1){

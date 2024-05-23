@@ -38,9 +38,9 @@ public class TomatoClockApi {
     private final static String DELETE_TOMATO_CLOCK = "/deleteTomatoClock";
 
     // 添加番茄钟  --------点击 开始按钮 发送该请求
-    public static List<TomatoClockVo> addTomatoClock(Long taskId, Integer estimate){
+    public static List<TomatoClockVo> addTomatoClock(Long taskId){
         return RequestUtil.builder()
-                .url(ServerConstant.HTTP_ADDRESS + PREFIX + ADD_TOMATO_CLOCK + "/" + taskId + "/" + estimate)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + ADD_TOMATO_CLOCK + "/" + taskId)
                 .post()
                 .buildAndSend(new TypeToken<List<TomatoClockVo>>(){});
     }
