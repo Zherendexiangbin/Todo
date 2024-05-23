@@ -9,17 +9,14 @@
     android:id="@+id/timer_entirely"
     tools:context=".TimerActivity">
 
-    <Button
-        android:id="@+id/alter_btn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/test_icon_33"/>
+<!--    <Button-->
+<!--        android:id="@+id/alter_btn"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_marginRight="20dp"-->
+<!--        android:background="@drawable/test_icon_33"/>-->
 
-    <net.onest.time.MyTimer
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
     <LinearLayout
         android:id="@+id/timer_background_lin"
         android:layout_width="match_parent"
@@ -34,12 +31,20 @@
             app:show_text="true"
             app:outline_color="#FFFFFFFF"
             app:pointer_size="500dp"
-
             app:isOutline="true"
             app:wheel_active_color="#FFFFFFFF"
             app:wheel_background_color="#0000"
             app:text_color="#FFFFFFFF"
             app:text_size="100dp" />
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="开始"-->
+<!--            android:textSize="30dp"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textStyle="bold"-->
+<!--            android:layout_centerInParent="true"/>-->
+
         <TextView
             android:id="@+id/timer_forward"
             android:layout_width="match_parent"
@@ -65,11 +70,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:gravity="center">
-            <Button
-                android:id="@+id/timer_start"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/start" />
+<!--            <Button-->
+<!--                android:id="@+id/timer_start"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:background="@drawable/start" />-->
             <Button
                 android:id="@+id/timer_outer_stop"
                 android:layout_width="50dp"
@@ -94,10 +99,11 @@
     <TextView
         android:id="@+id/timer_text"
         android:layout_marginTop="15dp"
-        android:layout_width="180dp"
+        android:layout_marginRight="8dp"
+        android:layout_width="210dp"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/alter_btn" />
+        android:textSize="17dp"
+        android:layout_alignParentRight="true" />
 
 </RelativeLayout>

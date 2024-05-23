@@ -168,6 +168,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         intent.putExtra("method", "countDown");
                         intent.putExtra("name", itemListByDay.get(position).getTaskName());
                         intent.putExtra("taskId",itemListByDay.get(position).getTaskId());
+                        intent.putExtra("start","go");
                         intent.setClass(context, TimerActivity.class);
                         context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,holders.btn,"fab").toBundle());
                     }

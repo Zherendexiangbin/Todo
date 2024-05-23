@@ -2,14 +2,11 @@ package net.onest.time;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -32,10 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartModel;
-import com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView;
-import com.github.AAChartModel.AAChartCore.AAChartCreator.AASeriesElement;
-import com.github.AAChartModel.AAChartCore.AAChartEnum.AAChartType;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -51,6 +44,8 @@ import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.utils.DrawableUtil;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -69,7 +64,7 @@ public class TimerActivity extends AppCompatActivity {
     private CountDownTimer mCountDownTimer;
     private long mTimeLeftInMillis = 0; // 初始计时时间为0秒
 
-    private Button startBtn,stopOuterBtn,restartBtn,alterBtn,stopInnerBtn;
+    private Button stopOuterBtn,restartBtn,alterBtn,stopInnerBtn;
     private LinearLayout draLin;
     private Intent intent;
     private TextView text,taskName;
@@ -107,16 +102,17 @@ public class TimerActivity extends AppCompatActivity {
 //        getOneWord();
         getOneWordTwo();
 //        btn.setVisibility(View.GONE);
-        alterBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(getRequestedOrientation()==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                }else{
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                }
-            }
-        });
+        //调转屏幕
+//        alterBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(getRequestedOrientation()==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+//                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//                }else{
+//                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//                }
+//            }
+//        });
 
         timerEntire.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -145,7 +141,7 @@ public class TimerActivity extends AppCompatActivity {
                                 && (Math.abs(mCurPosX - mPosX) > 60)) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(TimerActivity.this,R.style.CustomDialogStyle);
                             LayoutInflater inflater = LayoutInflater.from(TimerActivity.this);
-                            View dialogView = inflater.inflate(R.layout.timer_activity_stop,null);
+                            View dialogView = inflater.inflate(R.layout.timer_activity_stop_pop,null);
                             final Dialog dialog = builder.create();
                             dialog.show();
                             dialog.getWindow().setContentView(dialogView);
@@ -270,29 +266,77 @@ public class TimerActivity extends AppCompatActivity {
         intent = getIntent();
         taskName.setText(intent.getStringExtra("name"));
         String timeStr = intent.getStringExtra("time");
+        String str = intent.getStringExtra("start");
+
         if("countDown".equals(intent.getStringExtra("method"))){
             timeTxt.setVisibility(View.GONE);
             
 //        circleTimer.setInitPosition(60);
             int time = Integer.parseInt(timeStr);
-            circleTimer.setMaximumTime(time*60);
-            circleTimer.setInitPosition(time*60);
-            startBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    circleTimer.start();
-//                    long taskId = intent.getLongExtra("taskId",0L);
-//                    if(taskId!=0L){
-//                        TomatoClockApi.startTomatoClock(taskId);
-//                    }
+            circleTimer.setMaximumTime(time*60+1);
+            circleTimer.setInitPosition(time*60+1);
 
-                }
-            });
+            if("go".equals(str)){
+                circleTimer.start();
+            }
+
+//            startBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    circleTimer.start();
+////                    long taskId = intent.getLongExtra("taskId",0L);
+////                    if(taskId!=0L){
+////                        TomatoClockApi.startTomatoClock(taskId);
+////                    }
+//
+//                }
+//            });
 
             stopOuterBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     circleTimer.stop();
+                    //设置弹窗
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(TimerActivity.this);
+                    LayoutInflater inflater = LayoutInflater.from(TimerActivity.this);
+                    View dialogView = inflater.inflate(R.layout.timer_activity_pause_pop, null);
+                    final Dialog dialog = builder.create();
+                    dialog.show();
+                    dialog.getWindow().setContentView(dialogView);
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+                    TextView pausedTime = dialogView.findViewById(R.id.pause_time);
+                    Button conBtn = dialogView.findViewById(R.id.continue_btn);
+
+                    CountDownTimer countDownTimer = new CountDownTimer(180000, 1000) {
+                        public void onTick(long millisUntilFinished) {
+                            long day = millisUntilFinished / (1000 * 24 * 60 * 60); //单位天
+                            long hour = (millisUntilFinished - day * (1000 * 24 * 60 * 60)) / (1000 * 60 * 60); //单位时
+                            long minute = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60)) / (1000 * 60); //单位分
+                            long second = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60) - minute * (1000 * 60)) / 1000;//单位秒
+
+                            NumberFormat f = new DecimalFormat("00");
+                            pausedTime.setText(minute + ":" + f.format(second));
+                        }
+
+                        public void onFinish() {
+//                            pausedTime.setText("done!");
+                            dialog.dismiss();
+                            circleTimer.start();
+                        }
+                    };
+                    countDownTimer.start();
+
+                    conBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            circleTimer.start();
+                            dialog.dismiss();
+                            countDownTimer.cancel();
+                        }
+                    });
+
                 }
             });
 
@@ -330,7 +374,7 @@ public class TimerActivity extends AppCompatActivity {
                     }else{
                         AlertDialog.Builder builder = new AlertDialog.Builder(TimerActivity.this,R.style.CustomDialogStyle);
                         LayoutInflater inflater = LayoutInflater.from(TimerActivity.this);
-                        View dialogView = inflater.inflate(R.layout.timer_activity_stop,null);
+                        View dialogView = inflater.inflate(R.layout.timer_activity_stop_pop,null);
                         final Dialog dialog = builder.create();
                         dialog.show();
                         dialog.getWindow().setContentView(dialogView);
@@ -478,7 +522,7 @@ public class TimerActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(TimerActivity.this,R.style.CustomDialogStyle);
                     LayoutInflater inflater = LayoutInflater.from(TimerActivity.this);
-                    View dialogView = inflater.inflate(R.layout.timer_activity_stop,null);
+                    View dialogView = inflater.inflate(R.layout.timer_activity_stop_pop,null);
                     final Dialog dialog = builder.create();
                     dialog.show();
                     dialog.getWindow().setContentView(dialogView);
@@ -683,14 +727,14 @@ public class TimerActivity extends AppCompatActivity {
     private void findViews() {
         //计时器：
         circleTimer = findViewById(R.id.circle_timer);
-        startBtn = findViewById(R.id.timer_start);
+//        startBtn = findViewById(R.id.timer_start);
         stopOuterBtn = findViewById(R.id.timer_outer_stop);
         stopInnerBtn = findViewById(R.id.timer_inner_btn);
         restartBtn = findViewById(R.id.timer_reset);
         draLin = findViewById(R.id.timer_background_lin);
         timeTxt = findViewById(R.id.timer_forward);
 
-        alterBtn = findViewById(R.id.alter_btn);
+//        alterBtn = findViewById(R.id.alter_btn);
         text = findViewById(R.id.timer_text);
         taskName = findViewById(R.id.timer_name);
 
