@@ -12,6 +12,8 @@
         app:destination="@id/list_fragment"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim" />
+
+
     <!--to_do_fragment-->
     <fragment
         android:id="@+id/todo_fragment"

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public class StatisticUtil {
     public static StatisticVo from(TaskVo taskVo) {
-        Integer tomatoDays;
+        int tomatoDays;
         if (taskVo.getTaskStatus() == 2) {
             // 已完成
             tomatoDays = (int) ((taskVo.getCompletedAt().getTime() - taskVo.getStartedAt().getTime()) / 60 / 60 / 24);
