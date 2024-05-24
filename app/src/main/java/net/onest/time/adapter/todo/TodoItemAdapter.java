@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,19 +28,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.lxj.xpopup.XPopup;
 
 import net.onest.time.R;
 import net.onest.time.TimerActivity;
+import net.onest.time.api.TaskApi;
 import net.onest.time.api.vo.TaskVo;
 import net.onest.time.components.TaskInfoDialog;
 import net.onest.time.components.holder.AdapterHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final Context context;
-    //    private List<Item> itemList = new ArrayList<>();
     private List<TaskVo> itemListByDay  = new ArrayList<>();
 
     private OnItemClickListener mItemClickListener;
@@ -50,6 +53,10 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void setItemListByDay(List<TaskVo> itemListByDay) {
         this.itemListByDay = itemListByDay;
+    }
+
+    public List<TaskVo> getItemListByDay() {
+        return itemListByDay;
     }
 
     public TodoItemAdapter(Context context, List<TaskVo> itemListByDay) {
@@ -86,12 +93,19 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if(holder instanceof MyViewHolder){
             MyViewHolder holders = (MyViewHolder) holder;
             TaskVo task = itemListByDay.get(position);
-
+            if(Objects.equals(task.getType(),0)){
+                holders.time.setText(task.getClockDuration()+" 分钟");
+            }else if(Objects.equals(task.getType(),1)){
+                holders.time.setText("正向计时");
+            }else{
+                holders.time.setText("普通待办");
+            }
             holders.name.setText(task.getTaskName());
             if(itemListByDay.get(position).getTaskStatus()==2){
                 holders.name.setPaintFlags(holders.name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//                SpannableString spannableString = new SpannableString(itemListByDay.get(position).getTaskName());
+//                spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-            holders.time.setText(task.getClockDuration()+" 分钟");
             Glide.with(context).asBitmap().load(task.getBackground()).into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
@@ -103,20 +117,25 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holders.btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if("正向计时".equals(itemListByDay.get(position).getClockDuration()+" 分钟")){
+                    if("正向计时".equals(holders.time.getText().toString())){
                         //正向计时：
                         intent = new Intent();
                         intent.setClass(context, TimerActivity.class);
                         intent.putExtra("method", "forWard");
                         intent.putExtra("name", itemListByDay.get(position).getTaskName());
                         context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context,holders.btn,"fab").toBundle());
-                    } else if ("普通待办".equals(itemListByDay.get(position).getClockDuration()+" 分钟")) {
+                    } else if ("普通待办".equals(holders.time.getText().toString())) {
                         //不计时：
 //                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                        SpannableString spannableString = new SpannableString(itemListByDay.get(position).getTaskName());
-                        spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                        itemListByDay.get(position).setTaskName(spannableString.toString());
+                        new XPopup
+                                .Builder(context)
+                                .asConfirm("","该待办为不计时待办，点击确认完成即可完成一次。\n \n确定要完成一次吗？",
+                                        () -> {
+                                            TaskApi.removeTask(task.getTaskId());
+                                            notifyDataSetChanged();
+                                        })
+                                .show();
 //                    TextView textView = findViewById(R.id.textView);
 //                    textView.setText(spannableString);
                     }else{
@@ -138,12 +157,11 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
 
-            //点击查看数据
+            //编辑数据
             holders.statistics.setOnClickListener(view -> {
                 new TaskInfoDialog(context, task, itemListByDay, new AdapterHolder(TodoItemAdapter.this));
             });
         }
-
     }
 
     @Override

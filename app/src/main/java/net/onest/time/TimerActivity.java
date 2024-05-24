@@ -37,9 +37,11 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
+import com.lxj.xpopup.XPopup;
 import com.mut_jaeryo.circletimer.CircleTimer;
 
 
+import net.onest.time.api.TaskApi;
 import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.utils.DrawableUtil;
 
@@ -220,15 +222,12 @@ public class TimerActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
-
                                     abandonNo.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             dialogAban.dismiss();
                                         }
                                     });
-
-
                                 }
                             });
 
@@ -236,7 +235,6 @@ public class TimerActivity extends AppCompatActivity {
                             advance.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-
                                 }
                             });
                             //取消
@@ -246,16 +244,11 @@ public class TimerActivity extends AppCompatActivity {
                                     dialog.dismiss();
                                 }
                             });
-
-
                             Toast.makeText(TimerActivity.this, "向右滑动😊", Toast.LENGTH_SHORT).show();
-
-
                         }else if (mCurPosX - mPosX < -60
                                 && (Math.abs(mCurPosX - mPosX) > 60)) {
                             Toast.makeText(TimerActivity.this, "向左滑动😊", Toast.LENGTH_SHORT).show();
                         }
-
                         break;
                 }
                 return true;
@@ -270,7 +263,7 @@ public class TimerActivity extends AppCompatActivity {
 
         if("countDown".equals(intent.getStringExtra("method"))){
             timeTxt.setVisibility(View.GONE);
-            
+
 //        circleTimer.setInitPosition(60);
             int time = Integer.parseInt(timeStr);
             circleTimer.setMaximumTime(time*60+1);
@@ -288,7 +281,6 @@ public class TimerActivity extends AppCompatActivity {
 ////                    if(taskId!=0L){
 ////                        TomatoClockApi.startTomatoClock(taskId);
 ////                    }
-//
 //                }
 //            });
 
@@ -494,7 +486,7 @@ public class TimerActivity extends AppCompatActivity {
 
                 }
             });
-        }else {
+        }else if("forWard".equals(intent.getStringExtra("method"))){
             //正向计时：
             circleTimer.setVisibility(View.GONE);
             timeTxt.setText("开始");
@@ -594,9 +586,6 @@ public class TimerActivity extends AppCompatActivity {
                     restartTimer();
                 }
             });
-
-
-
         }
     }
 

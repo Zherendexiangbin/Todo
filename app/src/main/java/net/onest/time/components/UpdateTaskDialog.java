@@ -31,6 +31,7 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 
 import net.onest.time.R;
+import net.onest.time.adapter.todo.TodoItemAdapter;
 import net.onest.time.api.TaskApi;
 import net.onest.time.api.dto.TaskDto;
 import net.onest.time.api.vo.TaskVo;
@@ -40,6 +41,7 @@ import net.onest.time.utils.DrawableUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 public class UpdateTaskDialog extends AlertDialog {
     private final List<TaskVo> tasks;
@@ -87,7 +89,7 @@ public class UpdateTaskDialog extends AlertDialog {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         itemName.setText(task.getTaskName());
-        textRemark.setText(task.getRemark());
+//        textRemark.setText(Optional.of(task.getRemark()).orElseGet(() -> ""));
         setTimeTwoTxt.setVisibility(View.GONE);
         setTimeThreeTxt.setVisibility(View.GONE);
 
@@ -182,15 +184,15 @@ public class UpdateTaskDialog extends AlertDialog {
             @Override
             public void onClick(View v) {
                 new XPopup.Builder(context)
-                        .asConfirm("什么是番茄钟", "1.番茄钟是全身心工作25分钟，休息5分钟的工作方法。\n" +
-                                        "2.输入事项名称，点击√按钮即可添加一个标准的番茄钟待办。\n3.点击代办卡片上的开始按钮就可以开始一个番茄钟啦",
-                                "关闭", "番茄钟牛逼",
+                        .asConfirm("什么是番茄钟", "1.番茄钟是全身心工作25分钟，休息5分钟的工作方法。\n\n" +
+                                        "2.输入事项名称，点击√按钮即可添加一个标准的番茄钟待办。\n\n3.点击代办卡片上的开始按钮就可以开始一个番茄钟啦",
+                                "", "确定",
                                 new OnConfirmListener() {
                                     @Override
                                     public void onConfirm() {
                                         Toast.makeText(context, "click", Toast.LENGTH_SHORT);
                                     }
-                                }, null, false, R.layout.my_confim_popup)//绑定已有布局
+                                }, null, true, R.layout.my_confim_popup)//绑定已有布局
                         .show();
             }
         });
@@ -257,25 +259,72 @@ public class UpdateTaskDialog extends AlertDialog {
                     }
                     //正向计时：
                     if (setTimeTwo.isChecked()) {
-//                                    int forwardTimer = 1;
-//                                Item item = new Item();
-//                                item.setItemName(itemName.getText().toString());
-//                                item.setTime("正向计时");
-//                                itemListByDay.add(item);
-//                                todoItemAdapter.notifyDataSetChanged();
+                        //取消了单次循环次数
+                        TaskDto taskDto = new TaskDto();
+                        taskDto.setTaskName(itemName.getText().toString().trim());
+                        taskDto.setType(1);
+                        if (map.size() != 0 && map.get("remark") != null) {
+                            taskDto.setRemark(map.get("remark"));
+                        } else {
+                            taskDto.setRemark(task.getRemark());
+                        }
+//                        taskDto.setRemark(map.get("remark"));
+                        if (map.size() != 0 && map.get("rest") != null) {
+                            taskDto.setRestTime(Integer.valueOf(map.get("rest")));
+                        } else {
+                            taskDto.setRestTime(task.getRestTime());
+                        }
+//                        taskDto.setRestTime(Integer.valueOf(map.get("rest")));
+                        if (map.size() != 0 && map.get("again") != null) {
+                            taskDto.setRestTime(Integer.valueOf(map.get("again")));
+                        } else {
+                            taskDto.setAgain(task.getAgain());
+                        }
+//                        taskDto.setAgain(Integer.valueOf(map.get("again")));
+                        taskDto.setType(1);
+                        taskDto.setTaskId(task.getTaskId());
+                        TaskVo taskVo = TaskApi.updateTask(taskDto);
+//                        for (TaskVo vo : tasks) {
+//                            if (vo.getTaskId().longValue() == taskVo.getTaskId()) {
+//                                tasks.remove(vo);
+//                                tasks.add(taskVo);
+//                            }
+//                        }
 
+                        adapter.notifyItemChanged(tasks.indexOf(task),taskVo);
+
+//                        adapter.notifyDataSetChanged();
                     }
                     //不计时：
                     if (setTimeThree.isChecked()) {
-//                                    int noTimer = 2;
-//                                Item item = new Item();
-//                                item.setItemName(itemName.getText().toString());
-//                                item.setTime("普通待办");
-//                                itemListByDay.add(item);
-//                                todoItemAdapter.notifyDataSetChanged();
+                        TaskDto taskDto = new TaskDto();
+                        taskDto.setTaskName(itemName.getText().toString().trim());
+                        taskDto.setType(2);
+                        if (map.size() != 0 && map.get("remark") != null) {
+                            taskDto.setRemark(map.get("remark"));
+                        } else {
+                            taskDto.setRemark(task.getRemark());
+                        }
+//                        taskDto.setRemark(map.get("remark"));
+                        if (map.size() != 0 && map.get("again") != null) {
+                            taskDto.setRestTime(Integer.valueOf(map.get("again")));
+                        } else {
+                            taskDto.setAgain(task.getAgain());
+                        }
+//                        taskDto.setAgain(Integer.valueOf(map.get("again")));
+                        taskDto.setType(2);
+                        taskDto.setTaskId(task.getTaskId());
+                        TaskVo taskVo = TaskApi.updateTask(taskDto);
+//                        for (TaskVo vo : tasks) {
+//                            if (vo.getTaskId().longValue() == taskVo.getTaskId()) {
+//                                tasks.remove(vo);
+//                                tasks.add(taskVo);
+//                            }
+//                        }
+                        adapter.notifyItemChanged(tasks.indexOf(task),taskVo);
+//                        adapter.notifyDataSetChanged();
                     }
-                    // TODO: 2024/5/22  
-//                    dialog.dismiss();
+                    dialog.dismiss();
                 }
             }
         });
@@ -283,8 +332,7 @@ public class UpdateTaskDialog extends AlertDialog {
         addNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 2024/5/22  
-//                dialog.dismiss();
+                dialog.dismiss();
             }
         });
     }
@@ -296,11 +344,13 @@ public class UpdateTaskDialog extends AlertDialog {
         } else {
             estimate.addAll(task.getEstimate());
         }
+
         TaskDto taskDto = new TaskDto();
         taskDto.setTaskName(itemName.getText().toString());
         taskDto.setEstimate(estimate);
         taskDto.setClockDuration(Integer.valueOf(strings.trim()));
         taskDto.setTaskId(task.getTaskId());
+
         if (map.size() != 0 && map.get("remark") != null) {
             taskDto.setRemark(map.get("remark"));
         } else {
@@ -317,14 +367,17 @@ public class UpdateTaskDialog extends AlertDialog {
             taskDto.setAgain(task.getAgain());
         }
 
+        taskDto.setType(0);
+
         TaskVo taskVo = TaskApi.updateTask(taskDto);
-        for (TaskVo vo : tasks) {
-            if (vo.getTaskId() == taskVo.getTaskId()) {
-                tasks.remove(vo);
-                tasks.add(taskVo);
-            }
-        }
-        adapter.notifyDataSetChanged();
+//        for (TaskVo vo : tasks) {
+//            if (vo.getTaskId() == taskVo.getTaskId()) {
+//                tasks.remove(vo);
+//                tasks.add(taskVo);
+//            }
+//        }
+        adapter.notifyItemChanged(tasks.indexOf(task),taskVo);
+//        adapter.notifyDataSetChanged();
     }
 
     private void getViews(View dialogView) {

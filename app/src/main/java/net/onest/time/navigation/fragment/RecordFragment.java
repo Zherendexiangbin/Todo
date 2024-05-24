@@ -490,7 +490,5 @@ public class RecordFragment extends Fragment {
         todayFocus = view.findViewById(R.id.record_fragment_today_focus);
         dataDateTxt = view.findViewById(R.id.record_fragment_time_data_date);
         appDateTxt = view.findViewById(R.id.record_fragment_app_use_time_txt);
-
-
     }
 }

@@ -93,42 +93,111 @@ public class AddTaskDialog extends AlertDialog {
                 Button btnYes = dialog.findViewById(R.id.add_todo_higher_setting_item_yes);
                 Button btnNo = dialog.findViewById(R.id.add_todo_higher_setting_item_no);
 
-
-                clockAbout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new XPopup.Builder(getContext())
-                                .asConfirm("什么是单次循环次数", "举例:\n" +
-                                                "小明每次学习想学75分钟，但是75分钟太长学的太累，那么可以设定一个番茄钟的时间为25分钟，单次预期循环次数为3次。\n" +
-                                                "这样的番茄钟就会按照:\n" +
-                                                "学习25分钟-休息-学习25分钟-休息-学习25分钟-休息(共循环三次)\n" +
-                                                "来执行",
-                                        "关闭", "确认",
-                                        new OnConfirmListener() {
-                                            @Override
-                                            public void onConfirm() {
-                                                Toast.makeText(getContext(), "click", Toast.LENGTH_SHORT);
-                                            }
-                                        }, null, false, R.layout.my_confim_popup)//绑定已有布局
-                                .show();
-                    }
-                });
-
-                btnYes.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                                integerList.add(clockTimes.getText().toString().trim());
-                        map.put("remark", remark.getText().toString().trim());
-                        map.put("clockTimes", clockTimes.getText().toString().trim());
-                        map.put("rest", rest.getText().toString().trim());
-                        if (checkBox.isChecked()) {
-                            map.put("again", "1");
-                        } else {
-                            map.put("again", "0");
+                //倒计时：全部显示
+                if(setTimeOne.isChecked()){
+                    clockAbout.setVisibility(View.VISIBLE);//问号备注
+                    clockTimes.setVisibility(View.VISIBLE);//单次循环次数
+                    rest.setVisibility(View.VISIBLE);
+                    clockAbout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new XPopup.Builder(getContext())
+                                    .asConfirm("什么是单次循环次数", "举例:\n" +
+                                                    "小明每次学习想学75分钟，但是75分钟太长学的太累，那么可以设定一个番茄钟的时间为25分钟，单次预期循环次数为3次。\n" +
+                                                    "这样的番茄钟就会按照:\n" +
+                                                    "学习25分钟-休息-学习25分钟-休息-学习25分钟-休息(共循环三次)\n" +
+                                                    "来执行",
+                                            "关闭", "确认",
+                                            new OnConfirmListener() {
+                                                @Override
+                                                public void onConfirm() {
+                                                    Toast.makeText(getContext(), "click", Toast.LENGTH_SHORT);
+                                                }
+                                            }, null, false, R.layout.my_confim_popup)//绑定已有布局
+                                    .show();
                         }
-                        dialog.dismiss();
-                    }
-                });
+                    });
+
+                    btnYes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+//                                integerList.add(clockTimes.getText().toString().trim());
+                            if("".equals(remark.getText().toString().trim())){
+                                map.put("remark", "无");
+                            }else{
+                                map.put("remark", remark.getText().toString().trim());
+                            }
+
+                            if( "".equals(clockTimes.getText().toString().trim())){
+                                map.put("clockTimes", "1");
+                            }else{
+                                map.put("clockTimes", clockTimes.getText().toString().trim());
+                            }
+                            if("".equals(map.put("rest", rest.getText().toString().trim()))){
+                                map.put("rest", "5");
+                            }else{
+                                map.put("rest", rest.getText().toString().trim());
+                            }
+                            if (checkBox.isChecked()) {
+                                map.put("again", "1");
+                            } else {
+                                map.put("again", "0");
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+                }else if(setTimeTwo.isChecked()){
+                    //正向计时：取消显示单次循环次数及其问好备注
+                    clockAbout.setVisibility(View.GONE);//问号备注
+                    clockTimes.setVisibility(View.GONE);//单次循环次数
+
+                    btnYes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if("".equals(remark.getText().toString().trim())){
+                                map.put("remark", "无");
+                            }else{
+                                map.put("remark", remark.getText().toString().trim());
+                            }
+
+                            if("".equals(map.put("rest", rest.getText().toString().trim()))){
+                                map.put("rest", "5");
+                            }else{
+                                map.put("rest", rest.getText().toString().trim());
+                            }
+
+                            if (checkBox.isChecked()) {
+                                map.put("again", "1");
+                            } else {
+                                map.put("again", "0");
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+                }else{
+                    //不计时:仅显示任务备注。
+                    clockAbout.setVisibility(View.GONE);//问号备注
+                    clockTimes.setVisibility(View.GONE);//单次循环次数
+                    rest.setVisibility(View.GONE);
+                    btnYes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if("".equals(remark.getText().toString().trim())){
+                                map.put("remark", "无");
+                            }else{
+                                map.put("remark", remark.getText().toString().trim());
+                            }
+
+                            if (checkBox.isChecked()) {
+                                map.put("again", "1");
+                            } else {
+                                map.put("again", "0");
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+                }
+
 
                 btnNo.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -222,7 +291,11 @@ public class AddTaskDialog extends AlertDialog {
                                 map.put("rest", "5");
                             }
                             taskDto.setRestTime(Integer.valueOf(map.get("rest")));
-                            taskDto.setAgain(1);
+                            if (map.get("again") == null) {
+                                map.put("again", "1");
+                            }
+                            taskDto.setAgain(Integer.valueOf(map.get("again")));
+                            taskDto.setType(0);
                             TaskVo taskVo = TaskApi.addTask(taskDto);
                             tasks.add(taskVo);
 //                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
@@ -244,7 +317,11 @@ public class AddTaskDialog extends AlertDialog {
                                 map.put("rest", "5");
                             }
                             taskDto.setRestTime(Integer.valueOf(map.get("rest")));
-                            taskDto.setAgain(1);
+                            if (map.get("again") == null) {
+                                map.put("again", "1");
+                            }
+                            taskDto.setAgain(Integer.valueOf(map.get("again")));
+                            taskDto.setType(0);
                             TaskVo taskVo = TaskApi.addTask(taskDto);
                             tasks.add(taskVo);
 //                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
@@ -266,7 +343,11 @@ public class AddTaskDialog extends AlertDialog {
                                 map.put("rest", "5");
                             }
                             taskDto.setRestTime(Integer.valueOf(map.get("rest")));
-                            taskDto.setAgain(1);
+                            if (map.get("again") == null) {
+                                map.put("again", "1");
+                            }
+                            taskDto.setAgain(Integer.valueOf(map.get("again")));
+                            taskDto.setType(0);
                             TaskVo taskVo = TaskApi.addTask(taskDto);
                             tasks.add(taskVo);
 //                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
@@ -275,22 +356,38 @@ public class AddTaskDialog extends AlertDialog {
                     }
                     //正向计时：
                     if (setTimeTwo.isChecked()) {
-//                                    int forwardTimer = 1;
-//                                Item item = new Item();
-//                                item.setItemName(itemName.getText().toString());
-//                                item.setTime("正向计时");
-//                                itemListByDay.add(item);
-//                                todoItemAdapter.notifyDataSetChanged();
+                        //取消了单次循环次数
+                        TaskDto taskDto = new TaskDto();
+                        taskDto.setTaskName(itemName.getText().toString().trim());
+                        taskDto.setType(1);
+                        taskDto.setRemark(map.get("remark"));
+                        if (map.get("rest") == null) {
+                            map.put("rest", "5");
+                        }
+                        taskDto.setRestTime(Integer.valueOf(map.get("rest")));
+                        if (map.get("again") == null) {
+                            map.put("again", "1");
+                        }
+                        taskDto.setAgain(Integer.valueOf(map.get("again")));
 
+                        TaskVo taskVo = TaskApi.addTask(taskDto);
+                        tasks.add(taskVo);
+                        adapter.notifyDataSetChanged();
                     }
                     //不计时：
                     if (setTimeThree.isChecked()) {
-//                                    int noTimer = 2;
-//                                Item item = new Item();
-//                                item.setItemName(itemName.getText().toString());
-//                                item.setTime("普通待办");
-//                                itemListByDay.add(item);
-//                                todoItemAdapter.notifyDataSetChanged();
+                        TaskDto taskDto = new TaskDto();
+                        taskDto.setTaskName(itemName.getText().toString().trim());
+                        taskDto.setType(2);
+                        taskDto.setRemark(map.get("remark"));
+                        if (map.get("again") == null) {
+                            map.put("again", "1");
+                        }
+                        taskDto.setAgain(Integer.valueOf(map.get("again")));
+
+                        TaskVo taskVo = TaskApi.addTask(taskDto);
+                        tasks.add(taskVo);
+                        adapter.notifyDataSetChanged();
                     }
                     dismiss();
                 }
