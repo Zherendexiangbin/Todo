@@ -1,16 +1,15 @@
-package net.onest.time.utils;
+package net.onest.time.utils
 
-public class StringUtil {
+import okhttp3.internal.notify
 
-    public static boolean isEmail(String email) {
-        return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+object StringUtil {
+    @JvmStatic
+    fun isEmail(email: String): Boolean {
+        return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$".toRegex())
     }
 
-    public static boolean isPhone(String phone) {
-        return phone.matches("^1[3-9]\\d{9}$");
-    }
-
-    public static boolean hasText(String str) {
-        return str != null && !str.trim().isEmpty();
+    @JvmStatic
+    fun isPhone(phone: String): Boolean {
+        return phone.matches("^1[3-9]\\d{9}$".toRegex())
     }
 }

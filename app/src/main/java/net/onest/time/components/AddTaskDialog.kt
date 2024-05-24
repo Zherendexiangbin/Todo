@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.AlphaAnimation
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -21,7 +22,6 @@ import net.onest.time.api.TaskApi
 import net.onest.time.api.dto.TaskDto
 import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.holder.AdapterHolder
-import net.onest.time.utils.StringUtil
 import net.onest.time.utils.showToast
 import net.onest.time.utils.withCustomAlphaAnimation
 
@@ -112,7 +112,8 @@ class AddTaskDialog(
 
             btnYes.setOnClickListener { v: View? ->
                 task.remark = remark.text.toString().trim()
-                task.tomatoClockTimes = clockTimes.text.toString().trim().toInt()
+                task.estimate!!.clear()
+                task.estimate!!.add(clockTimes.text.toString().trim().toInt())
                 task.restTime = rest.text.toString().trim().toInt()
                 task.again = if (checkBox.isChecked) 1 else 0
                 dialog.dismiss()
@@ -176,113 +177,46 @@ class AddTaskDialog(
         addYes!!.setOnClickListener {
             val taskName = itemName!!.text.toString()
 
-            if (!StringUtil.hasText(taskName)) {
+            if (taskName.isBlank()) {
                 "请输入任务名称".showToast()
                 return@setOnClickListener
             }
 
             task.taskName = taskName
 
-            // 倒计时
-            if (setTimeOne!!.isChecked) {
-                // 番茄钟时长
-                var tomatoDuration = 0
-                when (setTimeGroup!!.checkedRadioButtonId) {
-                    R.id.set_time_one_group_one -> tomatoDuration = 25
-                    R.id.set_time_one_group_two -> tomatoDuration = 35
-                    R.id.set_time_one_group_three -> tomatoDuration =
-                        setTimeGroupThree!!.text.toString().split(" ".toRegex())[0].toInt()
+            when (todoSetTime!!.checkedRadioButtonId) {
+                // 倒计时
+                R.id.set_time_one -> {
+                    // 番茄钟时长
+                    var tomatoDuration = 0
+                    when (setTimeGroup!!.checkedRadioButtonId) {
+                        R.id.set_time_one_group_one -> tomatoDuration = 25
+                        R.id.set_time_one_group_two -> tomatoDuration = 35
+                        R.id.set_time_one_group_three -> tomatoDuration =
+                            setTimeGroupThree!!.text.toString().split(" ".toRegex())[0].toInt()
+                    }
+                    task.type = 0
+                    task.clockDuration = tomatoDuration
                 }
-                task.clockDuration = tomatoDuration
-                task.estimate!!.add(1)
 
-                val taskVo = TaskApi.addTask(task)
+                // 正向计时
+                R.id.set_time_two -> {
+                    // 取消了单次循环次数
+                    task.taskName = itemName!!.getText().toString().trim()
+                    task.type = 1
+                }
 
-                tasks.add(taskVo)
-                adapter.notifyDataSetChanged()
+                // 不计时
+                R.id.set_time_three -> {
+                    task.taskName = itemName!!.getText().toString().trim()
+                    task.type = 2
+                }
             }
 
-            //            if (setTimeOne.isChecked()) {
-//                if (setTimeGroupOne.isChecked()) {
-//                    String strings = setTimeGroupOne.getText().toString().split(" ")[0];
-//
-//                    ArrayList<Integer> estimate = new ArrayList<>();
-//
-//                    TaskDto taskDto = new TaskDto();
-//                    taskDto.setTaskName(itemName.getText().toString());
-//                    taskDto.setEstimate(estimate);
-//                    taskDto.setClockDuration(Integer.valueOf(strings.trim()));
-//
-//                    taskDto.setAgain(1);
-//                    TaskVo taskVo = TaskApi.addTask(taskDto);
-//
-//                    tasks.add(taskVo);
-//                    adapter.notifyDataSetChanged();
-//                } else if (setTimeGroupTwo.isChecked()) {
-//                    String strings = setTimeGroupTwo.getText().toString().split(" ")[0];
-//
-//                    ArrayList<Integer> estimate = new ArrayList<>();
-//                    if (map.get("clockTimes") == null) {
-//                        map.put("clockTimes", "1");
-//                    }
-//                    estimate.add(Integer.valueOf(map.get("clockTimes")));
-//                    TaskDto taskDto = new TaskDto();
-//                    taskDto.setTaskName(itemName.getText().toString());
-//                    taskDto.setEstimate(estimate);
-//                    taskDto.setClockDuration(Integer.valueOf(strings.trim()));
-//                    taskDto.setRemark(map.get("remark"));
-//                    if (map.get("rest") == null) {
-//                        map.put("rest", "5");
-//                    }
-//                    taskDto.setRestTime(Integer.valueOf(map.get("rest")));
-//                    taskDto.setAgain(1);
-//                    TaskVo taskVo = TaskApi.addTask(taskDto);
-//                    tasks.add(taskVo);
-////                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
-//                    adapter.notifyDataSetChanged();
-//                } else {
-//                    String strings = setTimeGroupThree.getText().toString().split(" ")[0];
-//
-//                    ArrayList<Integer> estimate = new ArrayList<>();
-//                    if (map.get("clockTimes") == null) {
-//                        map.put("clockTimes", "1");
-//                    }
-//                    estimate.add(Integer.valueOf(map.get("clockTimes")));
-//                    TaskDto taskDto = new TaskDto();
-//                    taskDto.setTaskName(itemName.getText().toString());
-//                    taskDto.setEstimate(estimate);
-//                    taskDto.setClockDuration(Integer.valueOf(strings.trim()));
-//                    taskDto.setRemark(map.get("remark"));
-//                    if (map.get("rest") == null) {
-//                        map.put("rest", "5");
-//                    }
-//                    taskDto.setRestTime(Integer.valueOf(map.get("rest")));
-//                    taskDto.setAgain(1);
-//                    TaskVo taskVo = TaskApi.addTask(taskDto);
-//                    tasks.add(taskVo);
-////                                    todoItemAdapter.notifyItemChanged(itemListByDay.size()-1);
-//                    adapter.notifyDataSetChanged();
-//                }
-//            }
-//            //正向计时：
-//            if (setTimeTwo.isChecked()) {
-////                                    int forwardTimer = 1;
-////                                Item item = new Item();
-////                                item.setItemName(itemName.getText().toString());
-////                                item.setTime("正向计时");
-////                                itemListByDay.add(item);
-////                                todoItemAdapter.notifyDataSetChanged();
-//
-//            }
-//            //不计时：
-//            if (setTimeThree.isChecked()) {
-////                                    int noTimer = 2;
-////                                Item item = new Item();
-////                                item.setItemName(itemName.getText().toString());
-////                                item.setTime("普通待办");
-////                                itemListByDay.add(item);
-////                                todoItemAdapter.notifyDataSetChanged();
-//            }
+            val taskVo = TaskApi.addTask(task)
+            tasks.add(taskVo)
+            adapter.notifyItemChanged(tasks.indexOf(taskVo))
+
             dismiss()
         }
 

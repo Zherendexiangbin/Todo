@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -93,7 +94,11 @@ public class TodoFragment extends Fragment {
 //        long currentDayTimeMillis = currentTimeMillis - currentDayStartTimeMillis;
 
 
-        itemListByDay = TaskApi.findByDay(todayEpochMill);
+        try {
+            itemListByDay = TaskApi.findByDay(todayEpochMill);
+        } catch (RuntimeException e) {
+            Toast.makeText(getContext(), "网络错误", Toast.LENGTH_SHORT).show();
+        }
 
         //《标记》日期:
         int year = calendarView.getCurYear();

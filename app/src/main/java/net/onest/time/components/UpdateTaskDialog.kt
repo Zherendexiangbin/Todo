@@ -1,424 +1,302 @@
-package net.onest.time.components;
+package net.onest.time.components
 
-import android.app.Dialog;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.app.Dialog
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
+import com.google.android.material.textfield.TextInputEditText
+import com.lxj.xpopup.XPopup
+import net.onest.time.R
+import net.onest.time.api.TaskApi
+import net.onest.time.api.dto.TaskDto
+import net.onest.time.api.vo.TaskVo
+import net.onest.time.components.holder.AdapterHolder
+import net.onest.time.utils.DrawableUtil
+import net.onest.time.utils.showToast
+import net.onest.time.utils.withCustomAlphaAnimation
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
+class UpdateTaskDialog (
+    private val context: Context,
+    private val task: TaskVo,
+    private val tasks: List<TaskVo>,
+    private val adapter: AdapterHolder,
+    private val dialog: Dialog
+) : AlertDialog(
+    context
+) {
+    private var addYes: Button? = null
+    private var addNo: Button? = null
+    private var itemNameAbout: Button? = null
+    private var relaChange: Button? = null
+    private var itemName: TextInputEditText? = null
+    private var todoSetTime: RadioGroup? = null
+    private var setTimeGroup: RadioGroup? = null
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.google.android.material.textfield.TextInputEditText;
-import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
-import com.lxj.xpopup.interfaces.OnInputConfirmListener;
+    private var setTimeOne: RadioButton? = null
+    private var setTimeTwo: RadioButton? = null
+    private var setTimeThree: RadioButton? = null
+    private var setTimeGroupOne: RadioButton? = null
+    private var setTimeGroupTwo: RadioButton? = null
+    private var setTimeGroupThree: RadioButton? = null
+    private var setTimeOneTxt: TextView? = null
+    private var setTimeTwoTxt: TextView? = null
+    private var setTimeThreeTxt: TextView? = null
+    private var higherSet: TextView? = null
+    private var popRela: RelativeLayout? = null
 
-import net.onest.time.R;
-import net.onest.time.adapter.todo.TodoItemAdapter;
-import net.onest.time.api.TaskApi;
-import net.onest.time.api.dto.TaskDto;
-import net.onest.time.api.vo.TaskVo;
-import net.onest.time.components.holder.AdapterHolder;
-import net.onest.time.utils.DrawableUtil;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-
-public class UpdateTaskDialog extends AlertDialog {
-    private final List<TaskVo> tasks;
-    private final AdapterHolder adapter;
-
-    //弹窗：
-    private TextView title,learnFrequency, learnTime, textRemark;
-    private Button changeBackground, setItem, moveItem, deleteItem, timing;
-    private LinearLayout learnHistory, learnStatistics;
-
-    //弹中弹
-    private Button addYes, addNo, itemNameAbout, relaChange;
-    private TextInputEditText itemName;
-    private RadioGroup todoSetTime, setTimeGroup;
-
-    private RadioButton setTimeOne, setTimeTwo, setTimeThree;
-    private RadioButton setTimeGroupOne, setTimeGroupTwo, setTimeGroupThree;
-    private TextView setTimeOneTxt, setTimeTwoTxt, setTimeThreeTxt, higherSet;
-    private RelativeLayout popRela;
-
-    //获取”更高设置“中的信息
-    private final HashMap<String, String> map = new HashMap<>();
-    private final Context context;
-    private final TaskVo task;
-    private final Dialog dialog;
-
-    protected UpdateTaskDialog(@NonNull Context context, TaskVo task, List<TaskVo> tasks, AdapterHolder adapter, Dialog dialog) {
-        super(context);
-        this.tasks = tasks;
-        this.adapter = adapter;
-        this.context = context;
-        this.task = task;
-        this.dialog = dialog;
-
-        Toast.makeText(context, "你点击了" + task.getTaskName(), Toast.LENGTH_SHORT).show();
+    init {
+        Toast.makeText(context, "你点击了" + task.taskName, Toast.LENGTH_SHORT).show()
 
         //设置弹窗：
-        View dialogView = LayoutInflater.from(context)
-                .inflate(R.layout.todo_fragment_add_item_pop_window, null);
+        val dialogView = LayoutInflater.from(context)
+            .inflate(R.layout.todo_fragment_add_item_pop_window, null)
+            .withCustomAlphaAnimation()
 
-        getViews(dialogView);//获取控件
+        getViews(dialogView) //获取控件
 
-        dialog.show();
-        dialog.getWindow().setContentView(dialogView);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show()
 
-        itemName.setText(task.getTaskName());
-//        textRemark.setText(Optional.of(task.getRemark()).orElseGet(() -> ""));
-        setTimeTwoTxt.setVisibility(View.GONE);
-        setTimeThreeTxt.setVisibility(View.GONE);
+        dialog.window!!.setContentView(dialogView)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        itemName!!.setText(task.taskName)
+        when (task.type) {
+            // 倒计时
+            0 -> {
+                todoSetTime?.check(R.id.set_time_one)
+                when (task.clockDuration) {
+                    25 -> {
+                        setTimeGroup?.check(R.id.set_time_one_group_one)
+                    }
+                    35 -> {
+                        setTimeGroup?.check(R.id.set_time_one_group_two)
+                    }
+                    else -> {
+                        setTimeGroup?.check(R.id.set_time_one_group_three)
+                        setTimeGroupThree?.text = "${task.clockDuration} 分钟"
+                    }
+                }
+            }
+
+            // 正向计时
+            1 -> {
+                todoSetTime?.check(R.id.set_time_two)
+
+            }
+
+            // 不计时
+            2 -> {
+                todoSetTime?.check(R.id.set_time_three)
+
+            }
+        }
+
+        setTimeTwoTxt!!.visibility = View.GONE
+        setTimeThreeTxt!!.visibility = View.GONE
 
         Glide.with(context)
-                .asBitmap()
-                .load(R.drawable.new_card_bg_1)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        Drawable drawable = new BitmapDrawable(resource);
-                        popRela.setBackground(drawable);
-                    }
-                });
-        setListeners();
+            .asBitmap()
+            .load(R.drawable.new_card_bg_1)
+            .into(object : SimpleTarget<Bitmap?>() {
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap?>?
+                ) {
+                    val drawable: Drawable = BitmapDrawable(resource)
+                    popRela!!.background = drawable
+                }
+            })
+        setListeners()
     }
 
-    private void setListeners() {
+    private fun setListeners() {
         //改变背景：
-        relaChange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popRela.setBackground(DrawableUtil.getRandomImage(context));
+        relaChange!!.setOnClickListener {
+            popRela!!.background = DrawableUtil.getRandomImage(context)
+        }
+
+        higherSet!!.setOnClickListener { view: View? ->
+            val builder = Builder(context, R.style.CustomDialogStyle)
+            val inflater = LayoutInflater.from(context)
+            val dialogView = inflater.inflate(R.layout.todo_fragment_add_higher_setting, null)
+            val dialog: Dialog = builder.create()
+            dialog.show()
+            dialog.window!!.setContentView(dialogView)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            val remark = dialog.findViewById<EditText>(R.id.todo_fragment_add_higher_remark)
+            val clockTimes = dialog.findViewById<EditText>(R.id.todo_fragment_add_clock_times)
+            val rest = dialog.findViewById<EditText>(R.id.todo_fragment_add_rest_time)
+            val checkBox = dialog.findViewById<CheckBox>(R.id.todo_fragment_add_higher_again)
+            val clockAbout = dialog.findViewById<Button>(R.id.todo_clock_times_about)
+            val btnYes = dialog.findViewById<Button>(R.id.add_todo_higher_setting_item_yes)
+            val btnNo = dialog.findViewById<Button>(R.id.add_todo_higher_setting_item_no)
+
+            // 什么是单次循环次数
+            clockAbout.setOnClickListener { v: View? ->
+                TipDialog(
+                    context,
+                    "什么是单次循环次数",
+                    """
+                        举例:
+                        小明每次学习想学75分钟，但是75分钟太长学的太累，那么可以设定一个番茄钟的时间为25分钟，单次预期循环次数为3次。
+                        这样的番茄钟就会按照:
+                        学习25分钟-休息-学习25分钟-休息-学习25分钟-休息(共循环三次)
+                        来执行
+                    """.trimIndent()
+                )
+                    .show()
             }
-        });
 
-        higherSet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context, R.style.CustomDialogStyle);
-                LayoutInflater inflater = LayoutInflater.from(context);
-                View dialogView = inflater.inflate(R.layout.todo_fragment_add_higher_setting, null);
-                final Dialog dialog = builder.create();
-                dialog.show();
-                dialog.getWindow().setContentView(dialogView);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                EditText remark = dialogView.findViewById(R.id.todo_fragment_add_higher_remark);
-                EditText clockTimes = dialogView.findViewById(R.id.todo_fragment_add_clock_times);
-                EditText rest = dialogView.findViewById(R.id.todo_fragment_add_rest_time);
-                CheckBox checkBox = dialogView.findViewById(R.id.todo_fragment_add_higher_again);
-                Button clockAbout = dialogView.findViewById(R.id.todo_clock_times_about);
-                Button btnYes = dialogView.findViewById(R.id.add_todo_higher_setting_item_yes);
-                Button btnNo = dialogView.findViewById(R.id.add_todo_higher_setting_item_no);
-
-
-                clockAbout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new XPopup.Builder(context)
-                                .asConfirm("什么是单次循环次数", "举例:\n" +
-                                                "小明每次学习想学75分钟，但是75分钟太长学的太累，那么可以设定一个番茄钟的时间为25分钟，单次预期循环次数为3次。\n" +
-                                                "这样的番茄钟就会按照:\n" +
-                                                "学习25分钟-休息-学习25分钟-休息-学习25分钟-休息(共循环三次)\n" +
-                                                "来执行",
-                                        "关闭", "确认",
-                                        new OnConfirmListener() {
-                                            @Override
-                                            public void onConfirm() {
-                                                Toast.makeText(context, "click", Toast.LENGTH_SHORT);
-                                            }
-                                        }, null, false, R.layout.my_confim_popup)//绑定已有布局
-                                .show();
-                    }
-                });
-
-                btnYes.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                                integerList.add(clockTimes.getText().toString().trim());
-                        map.put("remark", remark.getText().toString().trim());
-                        map.put("clockTimes", clockTimes.getText().toString().trim());
-                        map.put("rest", rest.getText().toString().trim());
-                        if (checkBox.isChecked()) {
-                            map.put("again", "1");
-                        } else {
-                            map.put("again", "0");
-                        }
-                        dialog.dismiss();
-                    }
-                });
-
-                btnNo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
+            btnYes.setOnClickListener { v: View? ->
+                task.remark = remark.text.toString().trim()
+                task.estimate!!.clear()
+                task.estimate!!.add(clockTimes.text.toString().trim().toInt())
+                task.restTime = rest.text.toString().trim().toInt()
+                task.again = if (checkBox.isChecked) 1 else 0
+                dialog.dismiss()
             }
-        });
+            btnNo.setOnClickListener { dialog.dismiss() }
+        }
 
-        itemNameAbout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new XPopup.Builder(context)
-                        .asConfirm("什么是番茄钟", "1.番茄钟是全身心工作25分钟，休息5分钟的工作方法。\n\n" +
-                                        "2.输入事项名称，点击√按钮即可添加一个标准的番茄钟待办。\n\n3.点击代办卡片上的开始按钮就可以开始一个番茄钟啦",
-                                "", "确定",
-                                new OnConfirmListener() {
-                                    @Override
-                                    public void onConfirm() {
-                                        Toast.makeText(context, "click", Toast.LENGTH_SHORT);
-                                    }
-                                }, null, true, R.layout.my_confim_popup)//绑定已有布局
-                        .show();
-            }
-        });
+        itemNameAbout!!.setOnClickListener {
+            TipDialog(
+                context,
+                "什么是番茄钟",
+                """
+                    1.番茄钟是全身心工作25分钟，休息5分钟的工作方法。
+                    2.输入事项名称，点击√按钮即可添加一个标准的番茄钟待办。
+                    3.点击代办卡片上的开始按钮就可以开始一个番茄钟啦
+                """.trimIndent()
+            ).show()
+        }
 
-        todoSetTime.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.set_time_one:
-                        setTimeGroup.setVisibility(View.VISIBLE);
-                        setTimeOneTxt.setVisibility(View.VISIBLE);
-                        setTimeTwoTxt.setVisibility(View.GONE);
-                        setTimeThreeTxt.setVisibility(View.GONE);
-                        break;
-                    case R.id.set_time_two:
-                        setTimeGroup.setVisibility(View.GONE);
-                        setTimeOneTxt.setVisibility(View.GONE);
-                        setTimeTwoTxt.setVisibility(View.VISIBLE);
-                        setTimeThreeTxt.setVisibility(View.GONE);
-                        break;
-                    case R.id.set_time_three:
-                        setTimeGroup.setVisibility(View.GONE);
-                        setTimeOneTxt.setVisibility(View.GONE);
-                        setTimeTwoTxt.setVisibility(View.GONE);
-                        setTimeThreeTxt.setVisibility(View.VISIBLE);
-                        break;
+        todoSetTime!!.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
+                R.id.set_time_one -> {
+                    setTimeGroup!!.visibility = View.VISIBLE
+                    setTimeOneTxt!!.visibility = View.VISIBLE
+                    setTimeTwoTxt!!.visibility = View.GONE
+                    setTimeThreeTxt!!.visibility = View.GONE
+                }
+
+                R.id.set_time_two -> {
+                    setTimeGroup!!.visibility = View.GONE
+                    setTimeOneTxt!!.visibility = View.GONE
+                    setTimeTwoTxt!!.visibility = View.VISIBLE
+                    setTimeThreeTxt!!.visibility = View.GONE
+                }
+
+                R.id.set_time_three -> {
+                    setTimeGroup!!.visibility = View.GONE
+                    setTimeOneTxt!!.visibility = View.GONE
+                    setTimeTwoTxt!!.visibility = View.GONE
+                    setTimeThreeTxt!!.visibility = View.VISIBLE
                 }
             }
-        });
+        }
 
-        setTimeGroupThree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, setTimeGroupThree.getText().toString() + "", Toast.LENGTH_SHORT).show();
-                new XPopup.Builder(context).asInputConfirm("自定义番茄钟时间", "输入倒计时分钟数:",
-                        new OnInputConfirmListener() {
-                            @Override
-                            public void onConfirm(String text) {
-                                setTimeGroupThree.setText(text + " 分钟");
-                            }
-                        }).show();
+        setTimeGroupThree!!.setOnClickListener {
+            Toast.makeText(
+                context,
+                setTimeGroupThree!!.text.toString() + "",
+                Toast.LENGTH_SHORT
+            ).show()
+            XPopup.Builder(context).asInputConfirm("自定义番茄钟时间", "输入倒计时分钟数:"
+            ) { text -> setTimeGroupThree!!.text = "$text 分钟" }.show()
+        }
+
+        addYes!!.setOnClickListener {
+            val taskName = itemName!!.text.toString()
+
+            if (taskName.isBlank()) {
+                "请输入任务名称".showToast()
+                return@setOnClickListener
             }
-        });
 
-        addYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ("".equals(itemName.getText().toString()) && itemName.getText().toString().isEmpty()) {
-                    Toast.makeText(context, "请输入Item名称", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (setTimeOne.isChecked()) {
-                        if (setTimeGroupOne.isChecked()) {
-                            String strings = setTimeGroupOne.getText().toString().split(" ")[0];
-                            updateTask(strings);
+            task.taskName = taskName
 
-                        } else if (setTimeGroupTwo.isChecked()) {
-                            String strings = setTimeGroupTwo.getText().toString().split(" ")[0];
-                            updateTask(strings);
-
-                        } else {
-                            String strings = setTimeGroupThree.getText().toString().split(" ")[0];
-                            updateTask(strings);
-                        }
+            when (todoSetTime!!.checkedRadioButtonId) {
+                // 倒计时
+                R.id.set_time_one -> {
+                    // 番茄钟时长
+                    var tomatoDuration = 0
+                    when (setTimeGroup!!.checkedRadioButtonId) {
+                        R.id.set_time_one_group_one -> tomatoDuration = 25
+                        R.id.set_time_one_group_two -> tomatoDuration = 35
+                        R.id.set_time_one_group_three -> tomatoDuration =
+                            setTimeGroupThree!!.text.toString().split(" ".toRegex())[0].toInt()
                     }
-                    //正向计时：
-                    if (setTimeTwo.isChecked()) {
-                        //取消了单次循环次数
-                        TaskDto taskDto = new TaskDto();
-                        taskDto.setTaskName(itemName.getText().toString().trim());
-                        taskDto.setType(1);
-                        if (map.size() != 0 && map.get("remark") != null) {
-                            taskDto.setRemark(map.get("remark"));
-                        } else {
-                            taskDto.setRemark(task.getRemark());
-                        }
-//                        taskDto.setRemark(map.get("remark"));
-                        if (map.size() != 0 && map.get("rest") != null) {
-                            taskDto.setRestTime(Integer.valueOf(map.get("rest")));
-                        } else {
-                            taskDto.setRestTime(task.getRestTime());
-                        }
-//                        taskDto.setRestTime(Integer.valueOf(map.get("rest")));
-                        if (map.size() != 0 && map.get("again") != null) {
-                            taskDto.setRestTime(Integer.valueOf(map.get("again")));
-                        } else {
-                            taskDto.setAgain(task.getAgain());
-                        }
-//                        taskDto.setAgain(Integer.valueOf(map.get("again")));
-                        taskDto.setType(1);
-                        taskDto.setTaskId(task.getTaskId());
-                        TaskVo taskVo = TaskApi.updateTask(taskDto);
-//                        for (TaskVo vo : tasks) {
-//                            if (vo.getTaskId().longValue() == taskVo.getTaskId()) {
-//                                tasks.remove(vo);
-//                                tasks.add(taskVo);
-//                            }
-//                        }
+                    task.type = 0
+                    task.clockDuration = tomatoDuration
+                }
 
-                        adapter.notifyItemChanged(tasks.indexOf(task),taskVo);
+                // 正向计时
+                R.id.set_time_two -> {
+                    // 取消了单次循环次数
+                    task.taskName = itemName!!.getText().toString().trim()
+                    task.type = 1
+                }
 
-//                        adapter.notifyDataSetChanged();
-                    }
-                    //不计时：
-                    if (setTimeThree.isChecked()) {
-                        TaskDto taskDto = new TaskDto();
-                        taskDto.setTaskName(itemName.getText().toString().trim());
-                        taskDto.setType(2);
-                        if (map.size() != 0 && map.get("remark") != null) {
-                            taskDto.setRemark(map.get("remark"));
-                        } else {
-                            taskDto.setRemark(task.getRemark());
-                        }
-//                        taskDto.setRemark(map.get("remark"));
-                        if (map.size() != 0 && map.get("again") != null) {
-                            taskDto.setRestTime(Integer.valueOf(map.get("again")));
-                        } else {
-                            taskDto.setAgain(task.getAgain());
-                        }
-//                        taskDto.setAgain(Integer.valueOf(map.get("again")));
-                        taskDto.setType(2);
-                        taskDto.setTaskId(task.getTaskId());
-                        TaskVo taskVo = TaskApi.updateTask(taskDto);
-//                        for (TaskVo vo : tasks) {
-//                            if (vo.getTaskId().longValue() == taskVo.getTaskId()) {
-//                                tasks.remove(vo);
-//                                tasks.add(taskVo);
-//                            }
-//                        }
-                        adapter.notifyItemChanged(tasks.indexOf(task),taskVo);
-//                        adapter.notifyDataSetChanged();
-                    }
-                    dialog.dismiss();
+                // 不计时
+                R.id.set_time_three -> {
+                    task.taskName = itemName!!.getText().toString().trim()
+                    task.type = 2
                 }
             }
-        });
 
-        addNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+            val taskVo = TaskApi.updateTask(TaskDto().withTaskVo(task))
+            adapter.notifyItemChanged(tasks.indexOf(taskVo))
+
+            dialog.dismiss()
+        }
+
+        addNo!!.setOnClickListener { dialog.dismiss() }
     }
 
-    private void updateTask(String strings) {
-        ArrayList<Integer> estimate = new ArrayList<>();
-        if (map.size() != 0 && map.get("clockTimes") != null) {
-            estimate.add(Integer.valueOf(map.get("clockTimes")));
-        } else {
-            estimate.addAll(task.getEstimate());
-        }
-
-        TaskDto taskDto = new TaskDto();
-        taskDto.setTaskName(itemName.getText().toString());
-        taskDto.setEstimate(estimate);
-        taskDto.setClockDuration(Integer.valueOf(strings.trim()));
-        taskDto.setTaskId(task.getTaskId());
-
-        if (map.size() != 0 && map.get("remark") != null) {
-            taskDto.setRemark(map.get("remark"));
-        } else {
-            taskDto.setRemark(task.getRemark());
-        }
-        if (map.size() != 0 && map.get("rest") != null) {
-            taskDto.setRestTime(Integer.valueOf(map.get("rest")));
-        } else {
-            taskDto.setRestTime(task.getRestTime());
-        }
-        if (map.size() != 0 && map.get("again") != null) {
-            taskDto.setRestTime(Integer.valueOf(map.get("again")));
-        } else {
-            taskDto.setAgain(task.getAgain());
-        }
-
-        taskDto.setType(0);
-
-        TaskVo taskVo = TaskApi.updateTask(taskDto);
-//        for (TaskVo vo : tasks) {
-//            if (vo.getTaskId() == taskVo.getTaskId()) {
-//                tasks.remove(vo);
-//                tasks.add(taskVo);
-//            }
-//        }
-        adapter.notifyItemChanged(tasks.indexOf(task),taskVo);
-//        adapter.notifyDataSetChanged();
-    }
-
-    private void getViews(View dialogView) {
+    private fun getViews(dialogView: View) {
         //以下是弹窗控件：
-        addYes = dialogView.findViewById(R.id.add_todo_item_yes);
-        addNo = dialogView.findViewById(R.id.add_todo_item_no);
-        itemNameAbout = dialogView.findViewById(R.id.todo_item_about);
-        relaChange = dialogView.findViewById(R.id.add_todo_item_change);
+        addYes = dialogView.findViewById(R.id.add_todo_item_yes)
+        addNo = dialogView.findViewById(R.id.add_todo_item_no)
+        itemNameAbout = dialogView.findViewById(R.id.todo_item_about)
+        relaChange = dialogView.findViewById(R.id.add_todo_item_change)
 
-        itemName = dialogView.findViewById(R.id.todo_item_name);
+        itemName = dialogView.findViewById(R.id.todo_item_name)
 
-        todoSetTime = dialogView.findViewById(R.id.todo_item_set_time);
-        setTimeGroup = dialogView.findViewById(R.id.set_time_one_group);
+        todoSetTime = dialogView.findViewById(R.id.todo_item_set_time)
+        setTimeGroup = dialogView.findViewById(R.id.set_time_one_group)
 
 
-        setTimeOne = dialogView.findViewById(R.id.set_time_one);
-        setTimeTwo = dialogView.findViewById(R.id.set_time_two);
-        setTimeThree = dialogView.findViewById(R.id.set_time_three);
+        setTimeOne = dialogView.findViewById(R.id.set_time_one)
+        setTimeTwo = dialogView.findViewById(R.id.set_time_two)
+        setTimeThree = dialogView.findViewById(R.id.set_time_three)
 
-        setTimeGroupOne = dialogView.findViewById(R.id.set_time_one_group_one);
-        setTimeGroupTwo = dialogView.findViewById(R.id.set_time_one_group_two);
-        setTimeGroupThree = dialogView.findViewById(R.id.set_time_one_group_three);
+        setTimeGroupOne = dialogView.findViewById(R.id.set_time_one_group_one)
+        setTimeGroupTwo = dialogView.findViewById(R.id.set_time_one_group_two)
+        setTimeGroupThree = dialogView.findViewById(R.id.set_time_one_group_three)
 
-        setTimeOneTxt = dialogView.findViewById(R.id.set_time_one_txt);
-        setTimeTwoTxt = dialogView.findViewById(R.id.set_time_two_txt);
-        setTimeThreeTxt = dialogView.findViewById(R.id.set_time_three_txt);
+        setTimeOneTxt = dialogView.findViewById(R.id.set_time_one_txt)
+        setTimeTwoTxt = dialogView.findViewById(R.id.set_time_two_txt)
+        setTimeThreeTxt = dialogView.findViewById(R.id.set_time_three_txt)
 
-        higherSet = dialogView.findViewById(R.id.todo_fragment_add_item_higher_setting);
-        popRela = dialogView.findViewById(R.id.todo_add_item_pop_background);
-    }
-
-    private void setViews(View dialogView) {
-        title = dialogView.findViewById(R.id.txt_title);//待办标题txt
-        changeBackground = dialogView.findViewById(R.id.btn_changeBackground);//设置背景button
-        setItem = dialogView.findViewById(R.id.btn_set);//编辑待办button
-        moveItem = dialogView.findViewById(R.id.btn_move);//排序或移动待办button
-        deleteItem = dialogView.findViewById(R.id.btn_delete);//删除待办button
-        learnFrequency = dialogView.findViewById(R.id.txt_learn_frequency);//累计学习次数txt
-        learnTime = dialogView.findViewById(R.id.txt_learn_time);//累计学习时间txt单位分钟
-        learnHistory = dialogView.findViewById(R.id.learn_history);//历史记录(页面跳转)
-        learnStatistics = dialogView.findViewById(R.id.learn_statistics);//数据统计(页面跳转)
-        textRemark = dialogView.findViewById(R.id.text_remark);
+        higherSet = dialogView.findViewById(R.id.todo_fragment_add_item_higher_setting)
+        popRela = dialogView.findViewById(R.id.todo_add_item_pop_background)
     }
 }
