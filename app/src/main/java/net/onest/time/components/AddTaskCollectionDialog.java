@@ -39,6 +39,7 @@ public class AddTaskCollectionDialog extends AlertDialog {
 
     public AddTaskCollectionDialog(@NonNull Context context, ExpandableListAdapter expandableListAdapter, List<ParentItem> parentItemList) {
         super(context);
+
         this.expandableListAdapter = expandableListAdapter;
         this.parentItemList = parentItemList;
 

@@ -1,5 +1,6 @@
 package net.onest.time.navigation.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,49 +35,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClickListener,
-        CalendarView.OnCalendarSelectListener,
-        CalendarView.OnYearChangeListener,
-        View.OnClickListener {
+public class TodoFragment extends Fragment {
     private CalendarLayout calendarLayout;
     private CalendarView calendarView;
     private RecyclerView recyclerView;//待办事项
-    //    private RecyclerViewEmptySupport recyclerView;
     private Button todoBtn;//添加按钮
     private TextView todayTxt;
-    //    private List<Item> itemList = new ArrayList<>();//待办事项数据源
     private List<TaskVo> itemListByDay = new ArrayList<>();//待办事项数据源
-
     private LinearLayout nullPage;
 
 
     private TodoItemAdapter todoItemAdapter;
     private TodoItemAdapterNew todoItemAdapterNew;
-//    private RelativeLayout popRela;
-//
     private CardView cardView;
 
 
-    //onCreateView()方法是用于创建Fragment的视图，并返回该视图对象
+    /**
+     * onCreateView()方法是用于创建Fragment的视图，并返回该视图对象
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.to_do_fragment, container, false);
-        return view;
+        return inflater.inflate(R.layout.to_do_fragment, container, false);
     }
 
-    //onViewCreated()方法是在视图创建完毕后被调用，允许你对视图进行初始化和操作。
+    /**
+     * onViewCreated()方法是在视图创建完毕后被调用，允许你对视图进行初始化和操作。
+     */
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         findView(view);
+        setListeners();
 
+        // 设置日期文字
         todayTxt.setText(calendarView.getCurYear() + "年" + calendarView.getCurMonth() + "月" + calendarView.getCurDay() + "日");
-
-        //按钮的监听事件
-        btnClickIncidents();
-
 
         LocalDateTime currentDateTime = LocalDateTime.now();
         // 从今天起 往上推一天
@@ -140,7 +134,6 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         //绑定适配器:
         todoItemAdapter = new TodoItemAdapter(getContext(), itemListByDay);
         recyclerView.setAdapter(todoItemAdapter);
-        todoItemAdapter.setOnItemClickListener(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
@@ -170,10 +163,10 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
         return calendar;
     }
 
-    private void btnClickIncidents() {
+    private void setListeners() {
         //添加待办：
         todoBtn.setOnClickListener(v -> new AddTaskDialog(
-                TodoFragment.this.getContext(),
+                getContext(),
                 itemListByDay,
                 new AdapterHolder(todoItemAdapter)
         ));
@@ -207,36 +200,9 @@ public class TodoFragment extends Fragment implements TodoItemAdapter.OnItemClic
     private void findView(View view) {
         calendarLayout = view.findViewById(R.id.cancel_button);
         calendarView = view.findViewById(R.id.calendarView);
-//        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView = view.findViewById(R.id.my_recyclerView);
         todoBtn = view.findViewById(R.id.todo_btn);
         todayTxt = view.findViewById(R.id.todo_fragment_today);
         nullPage = view.findViewById(R.id.null_item_page);
-    }
-
-
-    @Override
-    public void onItemClick(int position) {
-        //点击事项进行编辑:
-        Toast.makeText(getContext(), "你点击了" + itemListByDay.get(position).getTaskName(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onClick(View v) {
-
-    }
-
-    @Override
-    public void onCalendarOutOfRange(Calendar calendar) {
-
-    }
-
-    @Override
-    public void onCalendarSelect(Calendar calendar, boolean isClick) {
-    }
-
-    @Override
-    public void onYearChange(int year) {
-
     }
 }

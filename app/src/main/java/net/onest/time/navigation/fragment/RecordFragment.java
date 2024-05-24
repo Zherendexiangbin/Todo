@@ -1,28 +1,19 @@
 package net.onest.time.navigation.fragment;
 
-import static android.content.ContentValues.TAG;
-
-import android.app.ActivityManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -32,11 +23,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.bumptech.glide.Glide;
-import com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartModel;
-import com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView;
-import com.github.AAChartModel.AAChartCore.AAChartCreator.AASeriesElement;
-import com.github.AAChartModel.AAChartCore.AAChartEnum.AAChartType;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -72,8 +58,6 @@ public class RecordFragment extends Fragment {
     private RadioButton radioDayButton,radioWeekButton,radioMonthButton;
 
     private TextView todayFocus,dataDateTxt,appDateTxt;
-
-    private AAChartView aaChartView;
 
     //水平柱状图:
     private HorizontalBarChart barHor;
@@ -311,20 +295,20 @@ public class RecordFragment extends Fragment {
 //                                .name("Berlin")
 //                                .data(new Object[]{3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8})
 //                });
-        AAChartModel aaChartModel = new AAChartModel()
-                .chartType(AAChartType.Pie)
-                .title("本月中断原因分析")
-                .backgroundColor("#778899")
-
-                .series(new AASeriesElement[]{
-                        new AASeriesElement()
-                                .innerSize(90f)
-                                .borderWidth(2f)
-                                .name("饼图开发")
-                                .data(new Object[]{15, 15, 35, 20, 15})
-
-                });
-        aaChartView.aa_drawChartWithChartModel(aaChartModel);
+//        AAChartModel aaChartModel = new AAChartModel()
+//                .chartType(AAChartType.Pie)
+//                .title("本月中断原因分析")
+//                .backgroundColor("#778899")
+//
+//                .series(new AASeriesElement[]{
+//                        new AASeriesElement()
+//                                .innerSize(90f)
+//                                .borderWidth(2f)
+//                                .name("饼图开发")
+//                                .data(new Object[]{15, 15, 35, 20, 15})
+//
+//                });
+//        aaChartView.aa_drawChartWithChartModel(aaChartModel);
     }
 
     private List<BarEntry> getAppTimeAndHead() {

@@ -1,47 +1,29 @@
 package net.onest.time.navigation.fragment;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.PagerAdapter;
-
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import net.onest.time.R;
 import net.onest.time.adapter.list.ExpandableListAdapter;
 import net.onest.time.api.TaskApi;
 import net.onest.time.api.vo.TaskVo;
 import net.onest.time.components.AddTaskCollectionDialog;
-import net.onest.time.components.AddTaskDialog;
-import net.onest.time.entity.Item;
 import net.onest.time.entity.list.ParentItem;
 import net.onest.time.utils.ColorUtil;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 public class ListFragment extends Fragment {
@@ -53,8 +35,7 @@ public class ListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list_fragment, container, false);
-        return view;
+        return inflater.inflate(R.layout.list_fragment, container, false);
     }
 
     @Override

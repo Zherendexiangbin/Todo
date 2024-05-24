@@ -1,8 +1,5 @@
 package net.onest.time.utils;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class StringUtil {
 
     public static boolean isEmail(String email) {
@@ -11,5 +8,9 @@ public class StringUtil {
 
     public static boolean isPhone(String phone) {
         return phone.matches("^1[3-9]\\d{9}$");
+    }
+
+    public static boolean hasText(String str) {
+        return str != null && !str.trim().isEmpty();
     }
 }
