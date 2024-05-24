@@ -2,11 +2,13 @@ package net.onest.time.components
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
-import android.view.animation.AlphaAnimation
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -14,7 +16,11 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.textfield.TextInputEditText
 import com.lxj.xpopup.XPopup
 import net.onest.time.R
@@ -22,17 +28,19 @@ import net.onest.time.api.TaskApi
 import net.onest.time.api.dto.TaskDto
 import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.holder.AdapterHolder
+import net.onest.time.utils.DrawableUtil
 import net.onest.time.utils.showToast
 import net.onest.time.utils.withCustomAlphaAnimation
 
-/**
- * 添加任务 弹窗
- */
-class AddTaskDialog(
+class UpdateTaskDialog (
     private val context: Context,
-    private val tasks: MutableList<TaskVo>,
-    private val adapter: AdapterHolder
-) : AlertDialog(context) {
+    private val task: TaskVo,
+    private val tasks: List<TaskVo>,
+    private val adapter: AdapterHolder,
+    private val dialog: Dialog
+) : AlertDialog(
+    context
+) {
     private var addYes: Button? = null
     private var addNo: Button? = null
     private var itemNameAbout: Button? = null
@@ -53,30 +61,77 @@ class AddTaskDialog(
     private var higherSet: TextView? = null
     private var popRela: RelativeLayout? = null
 
-    private val task = TaskDto().withDefault()
-
     init {
-        val view = LayoutInflater.from(getContext())
+        Toast.makeText(context, "你点击了" + task.taskName, Toast.LENGTH_SHORT).show()
+
+        //设置弹窗：
+        val dialogView = LayoutInflater.from(context)
             .inflate(R.layout.todo_fragment_add_item_pop_window, null)
             .withCustomAlphaAnimation()
 
-        getViews(view) //获取控件
-        setListeners()
+        getViews(dialogView) //获取控件
 
-        show()
+        dialog.show()
 
-        window!!.setContentView(view)
-        window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window!!.setContentView(dialogView)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        relaChange!!.visibility = View.GONE
+        itemName!!.setText(task.taskName)
+        when (task.type) {
+            // 倒计时
+            0 -> {
+                todoSetTime?.check(R.id.set_time_one)
+                when (task.clockDuration) {
+                    25 -> {
+                        setTimeGroup?.check(R.id.set_time_one_group_one)
+                    }
+                    35 -> {
+                        setTimeGroup?.check(R.id.set_time_one_group_two)
+                    }
+                    else -> {
+                        setTimeGroup?.check(R.id.set_time_one_group_three)
+                        setTimeGroupThree?.text = "${task.clockDuration} 分钟"
+                    }
+                }
+            }
+
+            // 正向计时
+            1 -> {
+                todoSetTime?.check(R.id.set_time_two)
+
+            }
+
+            // 不计时
+            2 -> {
+                todoSetTime?.check(R.id.set_time_three)
+
+            }
+        }
+
         setTimeTwoTxt!!.visibility = View.GONE
         setTimeThreeTxt!!.visibility = View.GONE
 
-        // 文本框获取焦点
-        itemName?.requestFocus()
+        Glide.with(context)
+            .asBitmap()
+            .load(R.drawable.new_card_bg_1)
+            .into(object : SimpleTarget<Bitmap?>() {
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap?>?
+                ) {
+                    val drawable: Drawable = BitmapDrawable(resource)
+                    popRela!!.background = drawable
+                }
+            })
+        setListeners()
     }
 
     private fun setListeners() {
+        //改变背景：
+        relaChange!!.setOnClickListener {
+            popRela!!.background = DrawableUtil.getRandomImage(context)
+        }
+
         higherSet!!.setOnClickListener { view: View? ->
             val builder = Builder(context, R.style.CustomDialogStyle)
             val inflater = LayoutInflater.from(context)
@@ -121,22 +176,19 @@ class AddTaskDialog(
             btnNo.setOnClickListener { dialog.dismiss() }
         }
 
-        // 什么是番茄钟
         itemNameAbout!!.setOnClickListener {
             TipDialog(
                 context,
                 "什么是番茄钟",
                 """
-                1.番茄钟是全身心工作25分钟，休息5分钟的工作方法。
-                2.输入事项名称，点击√按钮即可添加一个标准的番茄钟待办。
-                3.点击代办卡片上的开始按钮就可以开始一个番茄钟啦
+                    1.番茄钟是全身心工作25分钟，休息5分钟的工作方法。
+                    2.输入事项名称，点击√按钮即可添加一个标准的番茄钟待办。
+                    3.点击代办卡片上的开始按钮就可以开始一个番茄钟啦
                 """.trimIndent()
-            )
-                .show()
+            ).show()
         }
 
-        // 计时方式
-        todoSetTime!!.setOnCheckedChangeListener { group: RadioGroup?, checkedId: Int ->
+        todoSetTime!!.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.set_time_one -> {
                     setTimeGroup!!.visibility = View.VISIBLE
@@ -161,17 +213,14 @@ class AddTaskDialog(
             }
         }
 
-        // 番茄钟时长
         setTimeGroupThree!!.setOnClickListener {
-            setTimeGroupThree?.text.toString().showToast()
-
-            XPopup.Builder(context)
-                .asInputConfirm(
-                    "自定义番茄钟时间",
-                    "输入倒计时分钟数:" ) {
-                    text -> setTimeGroupThree!!.text = "$text 分钟"
-                }
-                .show()
+            Toast.makeText(
+                context,
+                setTimeGroupThree!!.text.toString() + "",
+                Toast.LENGTH_SHORT
+            ).show()
+            XPopup.Builder(context).asInputConfirm("自定义番茄钟时间", "输入倒计时分钟数:"
+            ) { text -> setTimeGroupThree!!.text = "$text 分钟" }.show()
         }
 
         addYes!!.setOnClickListener {
@@ -213,42 +262,41 @@ class AddTaskDialog(
                 }
             }
 
-            val taskVo = TaskApi.addTask(task)
-            tasks.add(taskVo)
+            val taskVo = TaskApi.updateTask(TaskDto().withTaskVo(task))
             adapter.notifyItemChanged(tasks.indexOf(taskVo))
 
-            dismiss()
+            dialog.dismiss()
         }
 
-        addNo!!.setOnClickListener { dismiss() }
+        addNo!!.setOnClickListener { dialog.dismiss() }
     }
 
-    private fun getViews(view: View) {
+    private fun getViews(dialogView: View) {
         //以下是弹窗控件：
-        addYes = view.findViewById(R.id.add_todo_item_yes)
-        addNo = view.findViewById(R.id.add_todo_item_no)
-        itemNameAbout = view.findViewById(R.id.todo_item_about)
-        relaChange = view.findViewById(R.id.add_todo_item_change)
+        addYes = dialogView.findViewById(R.id.add_todo_item_yes)
+        addNo = dialogView.findViewById(R.id.add_todo_item_no)
+        itemNameAbout = dialogView.findViewById(R.id.todo_item_about)
+        relaChange = dialogView.findViewById(R.id.add_todo_item_change)
 
-        itemName = view.findViewById(R.id.todo_item_name)
+        itemName = dialogView.findViewById(R.id.todo_item_name)
 
-        todoSetTime = view.findViewById(R.id.todo_item_set_time)
-        setTimeGroup = view.findViewById(R.id.set_time_one_group)
+        todoSetTime = dialogView.findViewById(R.id.todo_item_set_time)
+        setTimeGroup = dialogView.findViewById(R.id.set_time_one_group)
 
 
-        setTimeOne = view.findViewById(R.id.set_time_one)
-        setTimeTwo = view.findViewById(R.id.set_time_two)
-        setTimeThree = view.findViewById(R.id.set_time_three)
+        setTimeOne = dialogView.findViewById(R.id.set_time_one)
+        setTimeTwo = dialogView.findViewById(R.id.set_time_two)
+        setTimeThree = dialogView.findViewById(R.id.set_time_three)
 
-        setTimeGroupOne = view.findViewById(R.id.set_time_one_group_one)
-        setTimeGroupTwo = view.findViewById(R.id.set_time_one_group_two)
-        setTimeGroupThree = view.findViewById(R.id.set_time_one_group_three)
+        setTimeGroupOne = dialogView.findViewById(R.id.set_time_one_group_one)
+        setTimeGroupTwo = dialogView.findViewById(R.id.set_time_one_group_two)
+        setTimeGroupThree = dialogView.findViewById(R.id.set_time_one_group_three)
 
-        setTimeOneTxt = view.findViewById(R.id.set_time_one_txt)
-        setTimeTwoTxt = view.findViewById(R.id.set_time_two_txt)
-        setTimeThreeTxt = view.findViewById(R.id.set_time_three_txt)
+        setTimeOneTxt = dialogView.findViewById(R.id.set_time_one_txt)
+        setTimeTwoTxt = dialogView.findViewById(R.id.set_time_two_txt)
+        setTimeThreeTxt = dialogView.findViewById(R.id.set_time_three_txt)
 
-        higherSet = view.findViewById(R.id.todo_fragment_add_item_higher_setting)
-        popRela = view.findViewById(R.id.todo_add_item_pop_background)
+        higherSet = dialogView.findViewById(R.id.todo_fragment_add_item_higher_setting)
+        popRela = dialogView.findViewById(R.id.todo_add_item_pop_background)
     }
 }

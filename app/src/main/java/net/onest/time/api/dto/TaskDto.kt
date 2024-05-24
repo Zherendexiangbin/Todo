@@ -1,5 +1,6 @@
 package net.onest.time.api.dto
 
+import net.onest.time.api.vo.TaskVo
 import net.onest.time.api.vo.TomatoClock
 import java.util.Date
 
@@ -19,10 +20,10 @@ class TaskDto {
 
     var again: Int? = null
 
-    var category: String? = null
+    var categoryId: Long? = null
 
     var tomatoClockTimes: Int? = null
-    var tomatoClocks: List<TomatoClock>? = null
+    var tomatoClocks: ArrayList<TomatoClock>? = null
 
     var stopTimes: Int? = null
 
@@ -38,21 +39,44 @@ class TaskDto {
         taskId = null
         userId = null
         taskName = ""
-        type = 1
+        type = 0
         clockDuration = 1
         remark = ""
         estimate = ArrayList()
         restTime = 5
         again = 0
-        category = ""
+        categoryId = null
         tomatoClockTimes = 1
         tomatoClocks = ArrayList()
         stopTimes = 0
         taskStatus = 0
         innerInterrupt = 0
         outerInterrupt = 0
-        startedAt = Date()
-        completedAt = Date()
-        return this;
+        startedAt = null
+        completedAt = null
+        return this
+    }
+
+    fun withTaskVo(task: TaskVo): TaskDto {
+        taskId = task.taskId
+        userId = task.userId
+        taskName = task.taskName
+        type = task.type
+        clockDuration = task.clockDuration
+        remark = task.remark
+        estimate = ArrayList(task.estimate)
+        restTime = task.restTime
+        again = task.again
+        categoryId = task.categoryId
+        tomatoClockTimes = task.tomatoClockTimes
+        tomatoClocks = ArrayList(task.tomatoClocks.map { TomatoClock().withTomatoClockVo(it) })
+        stopTimes = task.stopTimes
+        taskStatus = task.taskStatus
+        innerInterrupt = task.innerInterrupt
+        outerInterrupt = task.outerInterrupt
+        startedAt = task.startedAt
+        completedAt = task.completedAt
+
+        return this
     }
 }

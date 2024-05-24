@@ -16,7 +16,7 @@ public class TaskVo implements Serializable {
     private List<Integer> estimate;
     private Integer restTime;
     private Integer again;
-    private String category;
+    private Long categoryId;
     private Integer tomatoClockTimes;
     private List<TomatoClockVo> tomatoClocks;
     private Integer stopTimes;
@@ -142,13 +142,6 @@ public class TaskVo implements Serializable {
         this.completedAt = completedAt;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
 
     public String getRemark() {
         return remark;
@@ -190,17 +183,12 @@ public class TaskVo implements Serializable {
         this.type = type;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TaskVo taskVo = (TaskVo) o;
-        return Objects.equals(taskId, taskVo.taskId) && Objects.equals(userId, taskVo.userId) && Objects.equals(taskName, taskVo.taskName) && Objects.equals(type, taskVo.type) && Objects.equals(taskStatus, taskVo.taskStatus) && Objects.equals(clockDuration, taskVo.clockDuration) && Objects.equals(remark, taskVo.remark) && Objects.equals(estimate, taskVo.estimate) && Objects.equals(restTime, taskVo.restTime) && Objects.equals(again, taskVo.again) && Objects.equals(category, taskVo.category) && Objects.equals(tomatoClockTimes, taskVo.tomatoClockTimes) && Objects.equals(tomatoClocks, taskVo.tomatoClocks) && Objects.equals(stopTimes, taskVo.stopTimes) && Objects.equals(background, taskVo.background) && Objects.equals(innerInterrupt, taskVo.innerInterrupt) && Objects.equals(outerInterrupt, taskVo.outerInterrupt) && Objects.equals(startedAt, taskVo.startedAt) && Objects.equals(completedAt, taskVo.completedAt) && Objects.equals(createdAt, taskVo.createdAt);
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(taskId, userId, taskName, type, taskStatus, clockDuration, remark, estimate, restTime, again, category, tomatoClockTimes, tomatoClocks, stopTimes, background, innerInterrupt, outerInterrupt, startedAt, completedAt, createdAt);
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     @Override
@@ -216,7 +204,7 @@ public class TaskVo implements Serializable {
                 ", estimate=" + estimate +
                 ", restTime=" + restTime +
                 ", again=" + again +
-                ", category='" + category + '\'' +
+                ", categoryId=" + categoryId +
                 ", tomatoClockTimes=" + tomatoClockTimes +
                 ", tomatoClocks=" + tomatoClocks +
                 ", stopTimes=" + stopTimes +
@@ -227,5 +215,18 @@ public class TaskVo implements Serializable {
                 ", completedAt=" + completedAt +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskVo taskVo = (TaskVo) o;
+        return Objects.equals(taskId, taskVo.taskId) && Objects.equals(userId, taskVo.userId) && Objects.equals(taskName, taskVo.taskName) && Objects.equals(type, taskVo.type) && Objects.equals(taskStatus, taskVo.taskStatus) && Objects.equals(clockDuration, taskVo.clockDuration) && Objects.equals(remark, taskVo.remark) && Objects.equals(estimate, taskVo.estimate) && Objects.equals(restTime, taskVo.restTime) && Objects.equals(again, taskVo.again) && Objects.equals(categoryId, taskVo.categoryId) && Objects.equals(tomatoClockTimes, taskVo.tomatoClockTimes) && Objects.equals(tomatoClocks, taskVo.tomatoClocks) && Objects.equals(stopTimes, taskVo.stopTimes) && Objects.equals(background, taskVo.background) && Objects.equals(innerInterrupt, taskVo.innerInterrupt) && Objects.equals(outerInterrupt, taskVo.outerInterrupt) && Objects.equals(startedAt, taskVo.startedAt) && Objects.equals(completedAt, taskVo.completedAt) && Objects.equals(createdAt, taskVo.createdAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(taskId, userId, taskName, type, taskStatus, clockDuration, remark, estimate, restTime, again, categoryId, tomatoClockTimes, tomatoClocks, stopTimes, background, innerInterrupt, outerInterrupt, startedAt, completedAt, createdAt);
     }
 }
