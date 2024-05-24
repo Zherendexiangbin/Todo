@@ -187,7 +187,6 @@ public class AddTaskDialog extends AlertDialog {
                             }else{
                                 map.put("remark", remark.getText().toString().trim());
                             }
-
                             if (checkBox.isChecked()) {
                                 map.put("again", "1");
                             } else {

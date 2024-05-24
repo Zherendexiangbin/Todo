@@ -41,6 +41,7 @@ import com.lxj.xpopup.XPopup;
 import com.mut_jaeryo.circletimer.CircleTimer;
 
 
+import net.onest.time.api.RandomWordApi;
 import net.onest.time.api.TaskApi;
 import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.utils.DrawableUtil;
@@ -102,7 +103,8 @@ public class TimerActivity extends AppCompatActivity {
         draLin.setBackground(DrawableUtil.randomDrawableBack(getApplicationContext()));
 
 //        getOneWord();
-        getOneWordTwo();
+//        getOneWordTwo();
+        text.setText("”"+RandomWordApi.getRandomWord()+"“");
 //        btn.setVisibility(View.GONE);
         //调转屏幕
 //        alterBtn.setOnClickListener(new View.OnClickListener() {
@@ -653,29 +655,29 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     //一言——快一点：
-    private void getOneWordTwo() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                httpClient = new OkHttpClient();
-                request = new Request.Builder().url("https://uapis.cn/api/say").build();
-                call = httpClient.newCall(request);
-
-                try {
-                    response = call.execute();
-                    String result = response.body().string();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            text.setText("“ "+result+" ”");
-                        }
-                    });
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }).start();
-    }
+//    private void getOneWordTwo() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                httpClient = new OkHttpClient();
+//                request = new Request.Builder().url("https://uapis.cn/api/say").build();
+//                call = httpClient.newCall(request);
+//
+//                try {
+//                    response = call.execute();
+//                    String result = response.body().string();
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            text.setText("“ "+result+" ”");
+//                        }
+//                    });
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        }).start();
+//    }
 
     private void restartTimer() {
         if (mCountDownTimer != null) {
