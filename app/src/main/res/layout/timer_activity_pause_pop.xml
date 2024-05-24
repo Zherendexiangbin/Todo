@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/pause_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="02:56"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="28dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:text="以上是暂停的限制时间以避免过长打断专注流程"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="3"
+            android:maxWidth="200dp"
+            android:layout_marginTop="10dp"
+            android:textSize="18dp"
+            android:text="若需要自定义暂停时长，可在计时结束后前往 “我的-辅助功能-自定义暂停上限时间”。"/>
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:cardCornerRadius="20dp">
+            <Button
+                android:id="@+id/continue_btn"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="继续计时"
+                android:textSize="15dp"
+                android:background="@color/lightslategray"
+                android:textColor="@color/black" />
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

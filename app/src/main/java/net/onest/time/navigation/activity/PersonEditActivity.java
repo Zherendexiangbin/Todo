@@ -120,6 +120,9 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
             switch (view.getId()) {
                 case R.id.btn_back:
                     //返回按钮点击事件
+                    Intent resultIntent2 = new Intent();
+                    resultIntent2.putExtra("result", "complete");
+                    setResult(INTENT_CODE, resultIntent2);
                     finish();
                     break;
                 case R.id.btn_save:

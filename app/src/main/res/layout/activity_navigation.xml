@@ -16,7 +16,9 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_navigation"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph" />
+        app:navGraph="@navigation/nav_graph">
+    </fragment>
+
 
     <!--底部导航-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
