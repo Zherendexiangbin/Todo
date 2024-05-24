@@ -260,7 +260,9 @@ public class AddTaskMoreDialog extends AlertDialog {
                                 }
                                 taskDto.setRestTime(Integer.valueOf(map.get("rest")));
                                 taskDto.setAgain(1);
-                                taskDto.setCategory(category);
+//                                taskDto.setCategoryId(category);
+                                //Todo
+                                taskDto.setCategoryId(9L);
 
                                 TaskVo taskVo = TaskApi.addTask(taskDto);
                                 tasks.add(taskVo);
@@ -284,7 +286,9 @@ public class AddTaskMoreDialog extends AlertDialog {
                                 }
                                 taskDto.setRestTime(Integer.valueOf(map.get("rest")));
                                 taskDto.setAgain(1);
-                                taskDto.setCategory(category);
+//                                taskDto.setCategory(category);
+                                //Todo
+                                taskDto.setCategoryId(9L);
 
                                 TaskVo taskVo = TaskApi.addTask(taskDto);
                                 tasks.add(taskVo);
@@ -308,7 +312,9 @@ public class AddTaskMoreDialog extends AlertDialog {
                                 }
                                 taskDto.setRestTime(Integer.valueOf(map.get("rest")));
                                 taskDto.setAgain(1);
-                                taskDto.setCategory(category);
+//                                taskDto.setCategory(category);
+                                //Todo
+                                taskDto.setCategoryId(9L);
 
                                 TaskVo taskVo = TaskApi.addTask(taskDto);
                                 tasks.add(taskVo);

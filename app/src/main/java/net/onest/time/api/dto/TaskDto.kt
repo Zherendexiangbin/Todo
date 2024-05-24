@@ -20,7 +20,7 @@ class TaskDto {
 
     var again: Int? = null
 
-    var category: String? = null
+    var categoryId: Long? = null
 
     var tomatoClockTimes: Int? = null
     var tomatoClocks: ArrayList<TomatoClock>? = null
@@ -45,7 +45,7 @@ class TaskDto {
         estimate = ArrayList()
         restTime = 5
         again = 0
-        category = ""
+        categoryId = null
         tomatoClockTimes = 1
         tomatoClocks = ArrayList()
         stopTimes = 0
@@ -67,7 +67,7 @@ class TaskDto {
         estimate = ArrayList(task.estimate)
         restTime = task.restTime
         again = task.again
-        category = task.category
+        categoryId = task.categoryId
         tomatoClockTimes = task.tomatoClockTimes
         tomatoClocks = ArrayList(task.tomatoClocks.map { TomatoClock().withTomatoClockVo(it) })
         stopTimes = task.stopTimes

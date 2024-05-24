@@ -31,12 +31,13 @@ public class TaskApiTest {
     @Test
     public void addTaskList() {
         TaskDto taskDto = new TaskDto();
-        taskDto.setTaskName("TaskApi测试");
+        taskDto.setTaskName("新增清单分类测试");
         ArrayList<Integer> estimate = new ArrayList<>();
         estimate.add(2);
+        taskDto.setType(0);
         taskDto.setEstimate(estimate);
         taskDto.setClockDuration(30);
-        taskDto.setCategory("TaskApi清单");
+        taskDto.setCategoryId(9L);
         TaskVo taskVo = TaskApi.addTask(taskDto);
         System.out.println(taskVo);
     }
