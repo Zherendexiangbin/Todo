@@ -10,7 +10,7 @@ object AnimationUtil {
         duration: Long = 500
     ): AlphaAnimation {
         val alphaAnimation = AlphaAnimation(.3f, 1f)
-        alphaAnimation.setDuration(5000)
+        alphaAnimation.duration = 500
         return alphaAnimation;
     }
 }

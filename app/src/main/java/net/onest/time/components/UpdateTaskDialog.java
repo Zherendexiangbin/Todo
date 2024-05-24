@@ -291,7 +291,7 @@ public class UpdateTaskDialog extends AlertDialog {
 //                            }
 //                        }
 
-                        adapter.notifyItemChanged(tasks.indexOf(task),taskVo);
+                        adapter.notifyItemChanged(tasks.indexOf(task));
 
 //                        adapter.notifyDataSetChanged();
                     }
@@ -321,7 +321,7 @@ public class UpdateTaskDialog extends AlertDialog {
 //                                tasks.add(taskVo);
 //                            }
 //                        }
-                        adapter.notifyItemChanged(tasks.indexOf(task),taskVo);
+                        adapter.notifyItemChanged(tasks.indexOf(task));
 //                        adapter.notifyDataSetChanged();
                     }
                     dialog.dismiss();
@@ -376,7 +376,7 @@ public class UpdateTaskDialog extends AlertDialog {
 //                tasks.add(taskVo);
 //            }
 //        }
-        adapter.notifyItemChanged(tasks.indexOf(task),taskVo);
+        adapter.notifyItemChanged(tasks.indexOf(task));
 //        adapter.notifyDataSetChanged();
     }
 

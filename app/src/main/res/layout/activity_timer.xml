@@ -16,7 +16,6 @@
 <!--        android:layout_alignParentRight="true"-->
 <!--        android:layout_marginRight="20dp"-->
 <!--        android:background="@drawable/test_icon_33"/>-->
-
     <LinearLayout
         android:id="@+id/timer_background_lin"
         android:layout_width="match_parent"
@@ -57,7 +56,7 @@
             android:textColor="#FFFFFFFF"/>
         <TextView
             android:id="@+id/timer_name"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="70dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="任务名称"
@@ -72,18 +71,18 @@
             android:layout_marginTop="80dp"
             android:gravity="center_horizontal">
             <Button
-                android:id="@+id/timer_outer_stop"
+                android:id="@+id/timer_interrupt"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/stop"/>
             <Button
-                android:id="@+id/timer_reset"
+                android:id="@+id/timer_set_circle"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginLeft="60dp"
                 android:background="@drawable/restart"/>
             <Button
-                android:id="@+id/timer_inner_btn"
+                android:id="@+id/timer_stop_btn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="60dp"
