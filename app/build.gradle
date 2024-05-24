@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -7,6 +8,10 @@ android {
     aaptOptions.useNewCruncher = false
     namespace 'net.onest.time'
     compileSdk 33
+
+    viewBinding {
+        enabled = true
+    }
 
     defaultConfig {
         applicationId "net.onest.time"
@@ -29,6 +34,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -45,6 +53,7 @@ dependencies {
 
     //加载
     implementation 'com.github.bumptech.glide:glide:4.16.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 
     //水波纹

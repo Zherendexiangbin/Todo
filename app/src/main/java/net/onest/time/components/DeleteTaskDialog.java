@@ -40,7 +40,7 @@ public class DeleteTaskDialog {
     public void show() {
         new XPopup
                 .Builder(context)
-                .asConfirm("", "你确定要删除这项任务吗？",
+                .asConfirm("", "你确定要删除这任项务吗？",
                         () -> {
                             TaskApi.removeTask(taskVo.getTaskId());
                             Toast.makeText(context, "删除成功！", Toast.LENGTH_SHORT).show();

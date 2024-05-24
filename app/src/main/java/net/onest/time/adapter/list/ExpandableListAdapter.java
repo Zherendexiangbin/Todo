@@ -12,7 +12,6 @@ import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
