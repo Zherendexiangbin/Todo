@@ -6,6 +6,7 @@ import net.onest.time.api.utils.RequestUtil;
 import net.onest.time.api.vo.TomatoClockVo;
 
 import java.util.List;
+import java.util.Map;
 
 public class TomatoClockApi {
     private final static String PREFIX = "/clock";
@@ -19,12 +20,6 @@ public class TomatoClockApi {
     // 完成一个番茄钟
     private final static String COMPLETE_TOMATO_CLOCK = "/completeTomatoClock";
 
-    // 内部中断
-    private final static String INNER_INTERRUPT = "/innerInterrupt";
-
-    // 外部中断
-    private final static String OUTER_INTERRUPT = "/outerInterrupt";
-
     // 停止番茄钟
     private final static String STOP_TOMATO_CLOCK = "/stopTomatoClock";
 
@@ -36,6 +31,9 @@ public class TomatoClockApi {
 
     // 删除番茄钟
     private final static String DELETE_TOMATO_CLOCK = "/deleteTomatoClock";
+
+    // 每个任务的专注历史记录
+    private final static String STATISTIC_BY_HISTORY = "/";
 
     // 添加番茄钟  --------点击 开始按钮 发送该请求
     public static List<TomatoClockVo> addTomatoClock(Long taskId){
@@ -59,22 +57,6 @@ public class TomatoClockApi {
     public static void completeTomatoClock(Long clockId) {
         RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + COMPLETE_TOMATO_CLOCK + "/" + clockId)
-                .put()
-                .buildAndSend();
-    }
-
-    // 内部中断 ------------ 内部中断 点击事件
-    public static void innerInterrupt(Long clockId) {
-        RequestUtil.builder()
-                .url(ServerConstant.HTTP_ADDRESS + PREFIX + INNER_INTERRUPT + "/" + clockId)
-                .put()
-                .buildAndSend();
-    }
-
-    // 外部中断 ------------ 外部中断 点击事件
-    public static void outerInterrupt(Long clockId) {
-        RequestUtil.builder()
-                .url(ServerConstant.HTTP_ADDRESS + PREFIX + OUTER_INTERRUPT + "/" + clockId)
                 .put()
                 .buildAndSend();
     }
@@ -109,5 +91,13 @@ public class TomatoClockApi {
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + DELETE_TOMATO_CLOCK + "/" + taskId)
                 .delete()
                 .buildAndSend();
+    }
+
+    // 每个任务的专注历史记录
+    public static Map<Long, List<TomatoClockVo>> statisticByHistory(Long taskId) {
+        return RequestUtil.builder()
+                    .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC_BY_HISTORY + taskId)
+                    .get()
+                    .buildAndSend(new TypeToken<Map<Long, List<TomatoClockVo>>>(){});
     }
 }
