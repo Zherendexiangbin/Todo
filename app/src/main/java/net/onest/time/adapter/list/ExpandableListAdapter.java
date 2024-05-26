@@ -182,8 +182,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             //设置弹窗
             new TaskInfoDialog(views.getContext(), taskVo, tasks, new AdapterHolder(ExpandableListAdapter.this));
         });
-
-
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -215,14 +213,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 }
             }
         });
-
         return view;
     }
-
     //当选择子节点的时候，调用该方法(点击二级列表)
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
-
 }

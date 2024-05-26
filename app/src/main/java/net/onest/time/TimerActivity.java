@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -67,7 +68,9 @@ public class TimerActivity extends AppCompatActivity {
     //正向计时：
     private TextView timeTxt;
     private CountDownTimer mCountDownTimer;
-    private long mTimeLeftInMillis = 0; // 初始计时时间为0秒
+    private long mTimeLeftInMillis = 0; // 记录正向计时的时间【初始0秒】
+    private long pauseHave; // 记录暂停的时间
+    private long pauseTime;//设置暂停初始时间3分钟
 
     private Button interruptBtn,circleBtn,alterBtn,stopBtn;
     private LinearLayout draLin;
@@ -81,6 +84,8 @@ public class TimerActivity extends AppCompatActivity {
     private Gson gson = new Gson();
 
     private RelativeLayout timerEntire;
+
+
 
     /** 获取屏幕坐标点 **/
     Point startPoint;// 起始点
@@ -106,6 +111,8 @@ public class TimerActivity extends AppCompatActivity {
 
         //每日一句:
         text.setText("”"+RandomWordApi.getRandomWord()+"“");
+
+        pauseTime = 180000;
 //        btn.setVisibility(View.GONE);
         //调转屏幕
 //        alterBtn.setOnClickListener(new View.OnClickListener() {
@@ -176,68 +183,119 @@ public class TimerActivity extends AppCompatActivity {
 //                }
             }
 
-            //外部打断
-            interruptBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    circleTimer.stop();
-                    //设置弹窗
-                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(TimerActivity.this);
-                    LayoutInflater inflater = LayoutInflater.from(TimerActivity.this);
-                    View dialogView = inflater.inflate(R.layout.timer_activity_pause_pop, null);
-                    final Dialog dialog = builder.create();
-                    dialog.show();
-                    dialog.getWindow().setContentView(dialogView);
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            if(pauseTime==0){
+                Toast toast = Toast.makeText(TimerActivity.this, "本次任务的暂停限制时间已用完!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP,0,0);
+                toast.show();
+            }else{
+                //外部打断
+                interruptBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        circleTimer.stop();
+                        //设置弹窗
+                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(TimerActivity.this);
+                        LayoutInflater inflater = LayoutInflater.from(TimerActivity.this);
+                        View dialogView = inflater.inflate(R.layout.timer_activity_pause_pop, null);
+                        final Dialog dialog = builder.create();
+                        dialog.show();
+                        dialog.getWindow().setContentView(dialogView);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
 
-                    TextView pausedTime = dialogView.findViewById(R.id.pause_time);
-                    Button conBtn = dialogView.findViewById(R.id.continue_btn);
+                        TextView pausedTime = dialogView.findViewById(R.id.pause_time);
+                        Button conBtn = dialogView.findViewById(R.id.continue_btn);
 
-                    CountDownTimer countDownTimer = new CountDownTimer(180000, 1000) {
-                        public void onTick(long millisUntilFinished) {
-                            long day = millisUntilFinished / (1000 * 24 * 60 * 60); //单位天
-                            long hour = (millisUntilFinished - day * (1000 * 24 * 60 * 60)) / (1000 * 60 * 60); //单位时
-                            long minute = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60)) / (1000 * 60); //单位分
-                            long second = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60) - minute * (1000 * 60)) / 1000;//单位秒
+                        CountDownTimer countDownTimer = new CountDownTimer(pauseTime, 1000) {
+                            public void onTick(long millisUntilFinished) {
+                                long day = millisUntilFinished / (1000 * 24 * 60 * 60); //单位天
+                                long hour = (millisUntilFinished - day * (1000 * 24 * 60 * 60)) / (1000 * 60 * 60); //单位时
+                                long minute = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60)) / (1000 * 60); //单位分
+                                long second = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60) - minute * (1000 * 60)) / 1000;//单位秒
+                                pauseHave=millisUntilFinished;
+                                NumberFormat f = new DecimalFormat("00");
+                                pausedTime.setText(minute + ":" + f.format(second));
+                            }
 
-                            NumberFormat f = new DecimalFormat("00");
-                            pausedTime.setText(minute + ":" + f.format(second));
-                        }
-
-                        public void onFinish() {
+                            public void onFinish() {
 //                            pausedTime.setText("done!");
-                            dialog.dismiss();
-                            circleTimer.start();
-                        }
-                    };
-                    countDownTimer.start();
+                                dialog.dismiss();
+                                circleTimer.start();
+                                pauseTime=0;
+                            }
+                        };
+                        countDownTimer.start();
 
-                    conBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            circleTimer.start();
-                            dialog.dismiss();
-                            countDownTimer.cancel();
-                        }
-                    });
-                }
-            });
+                        conBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                circleTimer.start();
+                                dialog.dismiss();
+                                countDownTimer.cancel();
+                                pauseTime = pauseHave;
+                            }
+                        });
+                    }
+                });
+            }
+
 
             circleBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(TimerActivity.this, "现在的时间是"+circleTimer.getValue(), Toast.LENGTH_SHORT).show();
-//                    circleTimer.reset();
+                    if(taskName.getText().toString().contains("无限循环中")){
+                        Toast toast = Toast.makeText(TimerActivity.this, "关闭无限循环模式!", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP,0,0);
+                        toast.show();
+                        taskName.setText(intent.getStringExtra("name"));
+                    }else{
+//                        Toast.makeText(TimerActivity.this, "现在的时间是"+circleTimer.getValue(), Toast.LENGTH_SHORT).show();
+//                        circleTimer.reset();
+                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(TimerActivity.this);
+                        LayoutInflater inflater = LayoutInflater.from(TimerActivity.this);
+                        View dialogView = inflater.inflate(R.layout.timer_activity_circle_times, null);
+                        final Dialog dialog = builder.create();
+                        dialog.show();
+                        dialog.getWindow().setContentView(dialogView);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                        EditText timers = dialogView.findViewById(R.id.circle_timers);
+                        EditText rest = dialogView.findViewById(R.id.per_circle_rest);
+                        Button forever = dialogView.findViewById(R.id.circle_forever);
+                        Button circleYes = dialogView.findViewById(R.id.circle_yes);
+                        Button circleNo = dialogView.findViewById(R.id.circle_no);
+
+                        forever.setOnClickListener(view->{
+                            Toast.makeText(TimerActivity.this, "你选择了无限循环模式!", Toast.LENGTH_SHORT).show();
+                            taskName.setText(intent.getStringExtra("name")+ "    无限循环中");
+                            dialog.dismiss();
+                        });
+
+                        circleYes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //获取文本框的值
+
+                                dialog.dismiss();
+                            }
+                        });
+
+                        circleNo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                    }
                 }
             });
 
-            circleTimer.setBaseTimerEndedListener(new CircleTimer.baseTimerEndedListener() {
-                @Override
-                public void OnEnded() {
-
-                }
-            });
+//            circleTimer.setBaseTimerEndedListener(new CircleTimer.baseTimerEndedListener() {
+//                @Override
+//                public void OnEnded() {
+//
+//                }
+//            });
 
             //暂停，停止
             stopBtn.setOnClickListener(new View.OnClickListener() {
@@ -275,53 +333,63 @@ public class TimerActivity extends AppCompatActivity {
 //            }
 
             //打断:
-            interruptBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(TimerActivity.this, "外部打断", Toast.LENGTH_SHORT).show();
-                    stopTimer();
-                    //设置弹窗
-                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(TimerActivity.this);
-                    LayoutInflater inflater = LayoutInflater.from(TimerActivity.this);
-                    View dialogView = inflater.inflate(R.layout.timer_activity_pause_pop, null);
-                    final Dialog dialog = builder.create();
-                    dialog.show();
-                    dialog.getWindow().setContentView(dialogView);
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            if(pauseTime==0){
+                Toast toast = Toast.makeText(TimerActivity.this, "本次任务的暂停限制时间已用完!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP,0,0);
+                toast.show();
+            }else{
+                interruptBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(TimerActivity.this, "外部打断", Toast.LENGTH_SHORT).show();
+                        stopTimer();
+                        //设置弹窗
+                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(TimerActivity.this);
+                        LayoutInflater inflater = LayoutInflater.from(TimerActivity.this);
+                        View dialogView = inflater.inflate(R.layout.timer_activity_pause_pop, null);
+                        final Dialog dialog = builder.create();
+                        dialog.show();
+                        dialog.getWindow().setContentView(dialogView);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
 
-                    TextView pausedTime = dialogView.findViewById(R.id.pause_time);
-                    Button conBtn = dialogView.findViewById(R.id.continue_btn);
+                        TextView pausedTime = dialogView.findViewById(R.id.pause_time);
+                        Button conBtn = dialogView.findViewById(R.id.continue_btn);
 
-                    CountDownTimer countDownTimer = new CountDownTimer(180000, 1000) {
-                        public void onTick(long millisUntilFinished) {
-                            long day = millisUntilFinished / (1000 * 24 * 60 * 60); //单位天
-                            long hour = (millisUntilFinished - day * (1000 * 24 * 60 * 60)) / (1000 * 60 * 60); //单位时
-                            long minute = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60)) / (1000 * 60); //单位分
-                            long second = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60) - minute * (1000 * 60)) / 1000;//单位秒
+                        CountDownTimer countDownTimer = new CountDownTimer(pauseTime, 1000) {
+                            public void onTick(long millisUntilFinished) {
+                                long day = millisUntilFinished / (1000 * 24 * 60 * 60); //单位天
+                                long hour = (millisUntilFinished - day * (1000 * 24 * 60 * 60)) / (1000 * 60 * 60); //单位时
+                                long minute = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60)) / (1000 * 60); //单位分
+                                long second = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60) - minute * (1000 * 60)) / 1000;//单位秒
 
-                            NumberFormat f = new DecimalFormat("00");
-                            pausedTime.setText(minute + ":" + f.format(second));
-                        }
+                                pauseHave = millisUntilFinished;
+                                NumberFormat f = new DecimalFormat("00");
+                                pausedTime.setText(minute + ":" + f.format(second));
+                            }
 
-                        public void onFinish() {
+                            public void onFinish() {
 //                            pausedTime.setText("done!");
-                            dialog.dismiss();
-                            circleTimer.start();
-                        }
-                    };
-                    countDownTimer.start();
+                                dialog.dismiss();
+                                startTimer();
+                                pauseTime=0;
+                            }
+                        };
+                        countDownTimer.start();
 
-                    conBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            circleTimer.start();
-                            dialog.dismiss();
-                            countDownTimer.cancel();
-                        }
-                    });
-                }
-            });
+                        conBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startTimer();
+                                dialog.dismiss();
+                                countDownTimer.cancel();
+                                pauseTime = pauseHave;
+                            }
+                        });
+                    }
+                });
+            }
+
 
             //停止计时/放弃原因:
             stopBtn.setOnClickListener(new View.OnClickListener() {
