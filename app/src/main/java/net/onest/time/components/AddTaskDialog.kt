@@ -30,7 +30,7 @@ import net.onest.time.utils.withCustomAlphaAnimation
  */
 class AddTaskDialog(
     private val context: Context,
-    private val tasks: MutableList<TaskVo>,
+    private val tasks: List<TaskVo>,
     private val adapter: AdapterHolder
 ) : AlertDialog(context) {
     private var addYes: Button? = null
@@ -112,9 +112,14 @@ class AddTaskDialog(
 
             btnYes.setOnClickListener { v: View? ->
                 task.remark = remark.text.toString().trim()
+
                 task.estimate!!.clear()
-                task.estimate!!.add(clockTimes.text.toString().trim().toInt())
-                task.restTime = rest.text.toString().trim().toInt()
+                val e = clockTimes.text.toString().trim()
+                task.estimate!!.add(if (e.isNotBlank()) e.toInt() else 0)
+
+                val r = rest.text.toString().trim()
+                task.restTime = if (r.isNotBlank()) r.toInt() else 5
+
                 task.again = if (checkBox.isChecked) 1 else 0
                 dialog.dismiss()
             }
@@ -214,7 +219,7 @@ class AddTaskDialog(
             }
 
             val taskVo = TaskApi.addTask(task)
-            tasks.add(taskVo)
+            (tasks as MutableList<TaskVo>).add(taskVo)
             adapter.notifyItemChanged(tasks.indexOf(taskVo))
 
             dismiss()

@@ -1,7 +1,5 @@
 package net.onest.time.utils
 
-import okhttp3.internal.notify
-
 object StringUtil {
     @JvmStatic
     fun isEmail(email: String): Boolean {

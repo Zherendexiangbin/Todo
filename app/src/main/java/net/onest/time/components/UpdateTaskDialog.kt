@@ -98,13 +98,11 @@ class UpdateTaskDialog (
             // 正向计时
             1 -> {
                 todoSetTime?.check(R.id.set_time_two)
-
             }
 
             // 不计时
             2 -> {
                 todoSetTime?.check(R.id.set_time_three)
-
             }
         }
 
@@ -167,9 +165,14 @@ class UpdateTaskDialog (
 
             btnYes.setOnClickListener { v: View? ->
                 task.remark = remark.text.toString().trim()
+
                 task.estimate!!.clear()
-                task.estimate!!.add(clockTimes.text.toString().trim().toInt())
-                task.restTime = rest.text.toString().trim().toInt()
+                val e = clockTimes.text.toString().trim()
+                task.estimate!!.add(if (e.isNotBlank()) e.toInt() else 0)
+
+                val r = rest.text.toString().trim()
+                task.restTime = if (r.isNotBlank()) r.toInt() else 5
+
                 task.again = if (checkBox.isChecked) 1 else 0
                 dialog.dismiss()
             }
@@ -251,13 +254,13 @@ class UpdateTaskDialog (
                 // 正向计时
                 R.id.set_time_two -> {
                     // 取消了单次循环次数
-                    task.taskName = itemName!!.getText().toString().trim()
+                    task.taskName = itemName!!.text.toString().trim()
                     task.type = 1
                 }
 
                 // 不计时
                 R.id.set_time_three -> {
-                    task.taskName = itemName!!.getText().toString().trim()
+                    task.taskName = itemName!!.text.toString().trim()
                     task.type = 2
                 }
             }

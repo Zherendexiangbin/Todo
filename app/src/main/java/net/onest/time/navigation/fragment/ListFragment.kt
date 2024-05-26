@@ -1,113 +1,114 @@
-package net.onest.time.navigation.fragment;
+package net.onest.time.navigation.fragment
 
-import android.os.Bundle;
-import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ExpandableListView;
-import android.widget.Toast;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ExpandableListView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import net.onest.time.R
+import net.onest.time.adapter.list.ExpandableListAdapter
+import net.onest.time.api.TaskApi
+import net.onest.time.api.vo.TaskVo
+import net.onest.time.components.AddTaskCollectionsDialog
+import net.onest.time.entity.list.TaskCollections
+import net.onest.time.utils.ColorUtil
+import net.onest.time.utils.showToast
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import net.onest.time.R;
-import net.onest.time.adapter.list.ExpandableListAdapter;
-import net.onest.time.api.TaskApi;
-import net.onest.time.api.vo.TaskVo;
-import net.onest.time.components.AddTaskCollectionDialog;
-import net.onest.time.entity.list.ParentItem;
-import net.onest.time.utils.ColorUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-
-public class ListFragment extends Fragment {
-    private ExpandableListView backLog;
-    private Button addParentBtn,menuBtn;
-    private List<ParentItem> parentItemList = new ArrayList<>();
-    private Map<String, List<TaskVo>> parentMap;
-    private ExpandableListAdapter expandableListAdapter;
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.list_fragment, container, false);
+class ListFragment : Fragment() {
+    private var backLog: ExpandableListView? = null
+    private var addParentBtn: Button? = null
+    private var menuBtn: Button? = null
+    private var taskCollectionsList: MutableList<TaskCollections> = ArrayList()
+    private var parentMap: Map<String, List<TaskVo?>>? = null
+    private var expandableListAdapter: ExpandableListAdapter? = null
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.list_fragment, container, false)
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        findViews(view);
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        findViews(view)
 
-        expandableListAdapter = new ExpandableListAdapter(R.layout.list_fragment_expandable_parent_list,R.layout.list_fragment_expandable_child_list,getContext(),init());
-        backLog.setAdapter(expandableListAdapter);
+        expandableListAdapter = ExpandableListAdapter(
+            R.layout.list_fragment_expandable_parent_list,
+            R.layout.list_fragment_expandable_child_list,
+            requireContext(),
+            init()
+        )
+        backLog!!.setAdapter(expandableListAdapter)
 
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
+        val display = requireActivity().windowManager.defaultDisplay
+        //        Point size = new Point();
 //        display.getSize(size);
 //        int screenWidth = size.x;
-        int width = display.getWidth();
-//        backLog.setIndicatorBoundsRelative(100,100);
-        backLog.setIndicatorBounds(width-320,width-290);
+        val width = display.width
+        //        backLog.setIndicatorBoundsRelative(100,100);
+        backLog!!.setIndicatorBounds(width - 320, width - 290)
+
 
         //默认展开第一项
 //        backLog.expandGroup(0);
-
-
-        backLog.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                boolean groupExpanded = backLog.isGroupExpanded(groupPosition);
-                if(groupExpanded){
-                    v.findViewById(R.id.list_fragment_parent_arrow).setBackgroundResource(R.drawable.arrow_right2);
-                }else{
-                    v.findViewById(R.id.list_fragment_parent_arrow).setBackgroundResource(R.drawable.arrow_down2);
-                }
-                return false;
+        backLog!!.setOnGroupClickListener { parent, v, groupPosition, id ->
+            val groupExpanded = backLog!!.isGroupExpanded(groupPosition)
+            if (groupExpanded) {
+                v.findViewById<View>(R.id.list_fragment_parent_arrow)
+                    .setBackgroundResource(R.drawable.arrow_right2)
+            } else {
+                v.findViewById<View>(R.id.list_fragment_parent_arrow)
+                    .setBackgroundResource(R.drawable.arrow_down2)
             }
-        });
+            false
+        }
 
-        backLog.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Toast.makeText(getContext(), "点击了"+parentItemList.get(groupPosition).getChildItemList().get(childPosition).getTaskName(), Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
+        backLog!!.setOnChildClickListener { parent, v, groupPosition, childPosition, id ->
+            Toast.makeText(
+                context,
+                "点击了" + taskCollectionsList[groupPosition].tasks[childPosition].taskName,
+                Toast.LENGTH_SHORT
+            ).show()
+            false
+        }
 
         //添加待办集:
-        addParentBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AddTaskCollectionDialog(
-                        getContext(),
-                        expandableListAdapter,
-                        parentItemList
-                );
-            }
-        });
-
+        addParentBtn!!.setOnClickListener {
+            AddTaskCollectionsDialog(
+                requireContext(),
+                expandableListAdapter!!,
+                taskCollectionsList
+            )
+        }
     }
 
-    private List<ParentItem> init() {
-        parentMap = TaskApi.allByCategory();
-        parentItemList = new ArrayList<>();
-        parentMap.forEach((key,value)->{
-                ParentItem parentItem = new ParentItem(key,ColorUtil.getColorByRgb(null),value);
-                parentItemList.add(parentItem);
-        });
+    private fun init(): List<TaskCollections> {
+        try {
+            parentMap = TaskApi.allByCategory()
+        } catch (e: RuntimeException) {
+            e.message?.showToast()
+        }
 
-        return parentItemList;
+        taskCollectionsList = ArrayList()
+        parentMap?.forEach { (key: String?, value: List<TaskVo?>?) ->
+            val taskCollections = TaskCollections(
+                key,
+                ColorUtil.getColorByRgb(null),
+                value
+            )
+            taskCollectionsList.add(taskCollections)
+        }
 
+        return taskCollectionsList
     }
 
-    private void findViews(View view) {
-        backLog = view.findViewById(R.id.list_fragment_backlog);
-        addParentBtn = view.findViewById(R.id.list_fragment_add_btn);
-        menuBtn = view.findViewById(R.id.list_fragment_menu_btn);
+    private fun findViews(view: View) {
+        backLog = view.findViewById(R.id.list_fragment_backlog)
+        addParentBtn = view.findViewById(R.id.list_fragment_add_btn)
+        menuBtn = view.findViewById(R.id.list_fragment_menu_btn)
     }
 }

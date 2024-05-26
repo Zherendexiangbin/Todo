@@ -1,54 +1,37 @@
-package net.onest.time.components.holder;
+package net.onest.time.components.holder
 
-import android.widget.BaseExpandableListAdapter;
+import android.annotation.SuppressLint
+import android.widget.BaseExpandableListAdapter
+import androidx.recyclerview.widget.RecyclerView
 
-import androidx.recyclerview.widget.RecyclerView;
+class AdapterHolder {
+    private var baseExpandableListAdapter: BaseExpandableListAdapter? = null
+    private var recyclerViewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
 
-import net.onest.time.adapter.todo.TodoItemAdapter;
-import net.onest.time.api.vo.TaskVo;
-
-import java.util.List;
-
-public class AdapterHolder {
-    private BaseExpandableListAdapter baseExpandableListAdapter;
-    private RecyclerView.Adapter<RecyclerView.ViewHolder> recyclerViewAdapter;
-    // private TodoItemAdapter todoItemAdapter;
-
-    public AdapterHolder(RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
-        this.recyclerViewAdapter = adapter;
+    constructor(adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>?) {
+        this.recyclerViewAdapter = adapter
     }
 
-    // public AdapterHolder(TodoItemAdapter todoItemAdapter) {
-    //     this.todoItemAdapter = todoItemAdapter;
-    // }
-
-    public AdapterHolder(BaseExpandableListAdapter adapter) {
-        this.baseExpandableListAdapter = adapter;
+    constructor(adapter: BaseExpandableListAdapter?) {
+        this.baseExpandableListAdapter = adapter
     }
 
-    public void notifyDataSetChanged() {
-        if (baseExpandableListAdapter != null) {
-            baseExpandableListAdapter.notifyDataSetChanged();
-            return;
-        }
+    @SuppressLint("NotifyDataSetChanged")
+    fun notifyDataSetChanged() {
+        baseExpandableListAdapter?.notifyDataSetChanged()
 
-        if (recyclerViewAdapter != null) {
-            recyclerViewAdapter.notifyDataSetChanged();
-            return;
-        }
-
+        recyclerViewAdapter?.notifyDataSetChanged()
     }
 
-    // public void notifyItemChanged(int position, TaskVo taskVo) {
-    //     List<TaskVo> itemListByDay = todoItemAdapter.getItemListByDay();
-    //     itemListByDay.set(position,taskVo);
-    //     todoItemAdapter.setItemListByDay(itemListByDay);
-    //     todoItemAdapter.notifyItemChanged(position);
-    // }
+    fun notifyItemChanged(position: Int) {
+        baseExpandableListAdapter?.notifyDataSetChanged()
 
-    public void notifyItemChanged(int position) {
-        if (recyclerViewAdapter != null) {
-            recyclerViewAdapter.notifyItemChanged(position);
-        }
+        recyclerViewAdapter?.notifyItemChanged(position)
+    }
+
+    fun notifyItemRemoved(position: Int) {
+        baseExpandableListAdapter?.notifyDataSetChanged()
+
+        recyclerViewAdapter?.notifyItemRemoved(position)
     }
 }
