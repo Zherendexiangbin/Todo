@@ -22,15 +22,7 @@ class TaskDto {
 
     var categoryId: Long? = null
 
-    var tomatoClockTimes: Int? = null
-    var tomatoClocks: ArrayList<TomatoClock>? = null
-
-    var stopTimes: Int? = null
-
     var taskStatus: Int? = null
-
-    var innerInterrupt: Int? = null
-    var outerInterrupt: Int? = null
 
     var startedAt: Date? = null
     var completedAt: Date? = null
@@ -46,12 +38,7 @@ class TaskDto {
         restTime = 5
         again = 0
         categoryId = null
-        tomatoClockTimes = 1
-        tomatoClocks = ArrayList()
-        stopTimes = 0
         taskStatus = 0
-        innerInterrupt = 0
-        outerInterrupt = 0
         startedAt = null
         completedAt = null
         return this
@@ -68,12 +55,7 @@ class TaskDto {
         restTime = task.restTime
         again = task.again
         categoryId = task.categoryId
-        tomatoClockTimes = task.tomatoClockTimes
-        tomatoClocks = ArrayList(task.tomatoClocks.map { TomatoClock().withTomatoClockVo(it) })
-        stopTimes = task.stopTimes
         taskStatus = task.taskStatus
-        innerInterrupt = task.innerInterrupt
-        outerInterrupt = task.outerInterrupt
         startedAt = task.startedAt
         completedAt = task.completedAt
 
