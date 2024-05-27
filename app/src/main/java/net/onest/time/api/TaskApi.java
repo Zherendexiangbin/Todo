@@ -132,9 +132,9 @@ public class TaskApi {
                 .buildAndSend(new TypeToken<List<TaskVo>>(){});
     }
 
-    public static Map<Long, List<TaskVo>> getTaskDay() {
+    public static Map<Long, List<TaskVo>> getTaskDay(Long timestamp) {
         return RequestUtil.builder()
-                .url(ServerConstant.HTTP_ADDRESS + PREFIX + GET_TASK_DAY)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + GET_TASK_DAY + "/" + timestamp)
                 .get()
                 .buildAndSend(new TypeToken<Map<Long, List<TaskVo>>>(){});
     }

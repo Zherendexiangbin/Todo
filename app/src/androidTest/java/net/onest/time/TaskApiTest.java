@@ -8,6 +8,7 @@ import net.onest.time.api.vo.TaskVo;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -118,7 +119,8 @@ public class TaskApiTest {
 
     @Test
     public void getTaskDay() {
-        Map<Long, List<TaskVo>> taskDay = TaskApi.getTaskDay();
+        Long timestamp = 1714212296000L;
+        Map<Long, List<TaskVo>> taskDay = TaskApi.getTaskDay(timestamp);
         System.out.println(taskDay);
     }
 }
