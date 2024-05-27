@@ -59,9 +59,7 @@ public class PersonFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        if (data.getStringExtra("result").equals("complete")){
-            initData();
-        }
+        initData();
     }
 
     @SuppressLint("SetTextI18n")

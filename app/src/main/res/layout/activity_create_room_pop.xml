@@ -124,13 +124,14 @@
                     app:cardCornerRadius="120dp"
                     tools:ignore="MissingConstraints">
                     <ImageView
-                        android:id="@+id/room_avatar"
+                        android:id="@+id/pop_room_avatar"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:scaleType="centerCrop"
                         android:src="@mipmap/logo2" />
                 </androidx.cardview.widget.CardView>
                 <TextView
+                    android:id="@+id/set_room_avatar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"

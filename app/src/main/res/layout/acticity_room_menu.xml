@@ -8,7 +8,7 @@
     <!--查看自习室加入请求信息、邀请码-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
         <TextView
@@ -38,16 +38,31 @@
         android:background="@color/grey"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"/>
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:gravity="center|left"
-        android:paddingLeft="15dp"
-        android:drawableLeft="@mipmap/room_application"
-        android:drawablePadding="10dp"
-        android:text="房间加入申请"
-        android:textSize="20sp"/>
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_weight="6"
+            android:gravity="center|left"
+            android:paddingLeft="15dp"
+            android:drawableLeft="@mipmap/room_application"
+            android:drawablePadding="10dp"
+            android:text="房间加入申请"
+            android:textSize="20sp"/>
+        <ImageView
+            android:id="@+id/refresh"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:src="@mipmap/refresh"
+            android:alpha="0.6"/>
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="200dp"
