@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
 
@@ -48,7 +49,7 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
     private EditText nickName, signature;
     private TextView userUID;
     private TextView sex, birthday, career, area;
-    private String avatarString;
+    private String avatarString = "null";
     private static final int PICK_IMAGE = 1;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static final String[] PERMISSIONS_STORAGE = {
@@ -170,9 +171,14 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
 
     // 更新用户的信息
     private void updateUserInfo() {
-        UserApi.modifyAvatar(avatarString);//用户头像
-        UserApi.modifyUserName(nickName.getText().toString().trim());//用户名
-        UserApi.modifySignature(signature.getText().toString().trim());//用户个性签名
+        if(avatarString.equals("null")){
+            UserApi.modifyUserName(nickName.getText().toString().trim());//用户名
+            UserApi.modifySignature(signature.getText().toString().trim());//用户个性签名
+        }else {
+            UserApi.modifyAvatar(avatarString);//用户头像
+            UserApi.modifyUserName(nickName.getText().toString().trim());//用户名
+            UserApi.modifySignature(signature.getText().toString().trim());//用户个性签名
+        }
     }
 
     //生日、年龄选择
@@ -223,79 +229,6 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
         }
     }
 
-    //职业选择
-    private void selectCareer() {
-        OptionPicker picker = new OptionPicker(PersonEditActivity.this, new String[]{
-                "在读学生", "服务型职业", "技术型职业", "商业型职业",
-                "艺术型职业", "体育型职业", "社会公益型职业", "政府管理型职业",
-                "农业和渔业型职业", "制造业和建筑业型职业"
-        });
-        picker.setOffset(2);//第一个选项相对于顶部的偏移量
-        picker.setSelectedIndex(0);//设置默认选中项索引
-        picker.setTextSize(15);//设置选项文本大小
-        picker.setTextColor(Color.BLACK);
-        picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
-            @Override
-            public void onOptionPicked(String option) {
-                showToast(option);
-            }
-
-            private void showToast(String option) {
-                career.setText(option);
-            }
-        });
-        picker.show();
-    }
-
-    //性别选择
-    private void selectSex() {
-        OptionPicker picker = new OptionPicker(PersonEditActivity.this, new String[]{
-                "男", "女", "保密"
-        });
-        picker.setOffset(2);
-        picker.setSelectedIndex(0);
-        picker.setTextSize(15);
-        picker.setTextColor(Color.BLACK);
-        picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
-            @Override
-            public void onOptionPicked(String option) {
-                showToast(option);
-            }
-
-            private void showToast(String option) {
-                sex.setText(option);
-            }
-        });
-        picker.show();
-    }
-
-    //地区选择
-    private void selectArea() {
-        OptionPicker picker = new OptionPicker(PersonEditActivity.this, new String[]{
-                "北京", "天津", "上海", "重庆", "香港", "澳门",
-                "河北", "山西", "辽宁省", "吉林", "黑龙江", "江苏", "浙江",
-                "安徽", "福建", "江西", "山东", "河南", "湖南", "广东",
-                "海南", "四川", "贵州", "云南", "陕西", "甘肃", "青海", "台湾",
-                "内蒙古自治区", "宁夏回族自治区", "新疆维吾尔自治区", "广西壮族自治区", "西藏自治区",
-                "新疆生产建设兵团"
-        });
-        picker.setOffset(2);
-        picker.setSelectedIndex(0);
-        picker.setTextSize(15);
-        picker.setTextColor(Color.BLACK);
-        picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
-            @Override
-            public void onOptionPicked(String option) {
-                showToast(option);
-            }
-
-            private void showToast(String option) {
-                area.setText(option);
-            }
-        });
-        picker.show();
-    }
-
     private void checkPermission() {
         //检查权限（NEED_PERMISSION）是否被授权 PackageManager.PERMISSION_GRANTED表示同意授权
         if (Build.VERSION.SDK_INT >= 30) {
@@ -340,4 +273,5 @@ public class PersonEditActivity extends AppCompatActivity implements DatePickerD
             }
         }
     }
+
 }

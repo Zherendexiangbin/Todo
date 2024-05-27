@@ -88,6 +88,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
+                android:layout_marginTop="-10dp"
                 android:src="@drawable/down_arrow"/>
 <!--            <net.onest.time.RecyclerViewEmptySupport-->
 <!--                android:id="@+id/my_recyclerView"-->

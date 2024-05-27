@@ -10,40 +10,42 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import net.onest.time.R;
+import net.onest.time.api.vo.UserVo;
 
 import java.util.List;
 
 public class StudyRoomItemAdapter extends RecyclerView.Adapter<StudyRoomItemAdapter.ViewHolder> {
-    private List<String> avatarList;
+    private List<UserVo> userVoList;
     private Context context;
 
-    public StudyRoomItemAdapter(Context context, List<String> avatarList) {
+    public StudyRoomItemAdapter(Context context, List<UserVo> userVoList) {
         this.context = context;
-        this.avatarList = avatarList;
+        this.userVoList = userVoList;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
-        String data = avatarList.get(position);
+        UserVo userVo = userVoList.get(position);
 
-        holder.avatar.setBackgroundResource(R.mipmap.head);
-        holder.avatar.setOnClickListener(view -> {
-            if(avatarList.size()>1){
-                Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
-                avatarList.remove(position);
-                notifyDataSetChanged();
-            }
-        });
+        Glide.with(context)
+                        .load(userVo.getAvatar())
+                                .into(holder.avatar);
+
+//        holder.avatar.setOnClickListener(view -> {
+//                notifyDataSetChanged();
+//        });
 
     }
 
     @Override
     public int getItemCount() {
-        if (avatarList.size()==0){
+        if (userVoList.size()==0){
             return 0;
         }else {
-            return avatarList.size();
+            return userVoList.size();
         }
     }
 
@@ -69,8 +71,8 @@ public class StudyRoomItemAdapter extends RecyclerView.Adapter<StudyRoomItemAdap
         }
     }
 
-    public void updateData(List<String> newData) {
-        this.avatarList = newData;
+    public void updateData(List<UserVo> userVos) {
+        this.userVoList = userVos;
         notifyDataSetChanged(); // 通知适配器数据集已更改，刷新列表
     }
 

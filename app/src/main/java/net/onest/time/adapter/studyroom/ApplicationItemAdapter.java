@@ -11,44 +11,54 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import net.onest.time.R;
+import net.onest.time.api.RoomApi;
+import net.onest.time.api.UserApi;
+import net.onest.time.api.vo.UserVo;
 
 import java.util.List;
 
 public class ApplicationItemAdapter extends RecyclerView.Adapter<ApplicationItemAdapter.ViewHolder> {
-    private List<String> avatarList;
+    private Long roomId;
+    private List<UserVo> userVoList;
     private Context context;
 
-    public ApplicationItemAdapter(Context context, List<String> avatarList){
+    public ApplicationItemAdapter(Long roomId, Context context, List<UserVo> userVoList){
+        this.roomId = roomId;
         this.context = context;
-        this.avatarList = avatarList;
+        this.userVoList = userVoList;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
-        String info = avatarList.get(position);
+        UserVo userVo = userVoList.get(position);
 
         //渲染数据
-        holder.avatar.setBackgroundResource(R.mipmap.head);
-        holder.userName.setText(info);
+        Glide.with(context)
+                .load(userVo.getAvatar())
+                .into(holder.avatar);
+        holder.userName.setText(userVo.getUserName());
 
         holder.agree.setOnClickListener(view -> {
-            avatarList.remove(position);
+            RoomApi.acceptRequest(roomId, userVo.getUserId());
+            userVoList.remove(position);
             notifyDataSetChanged();
         });
 
         holder.refuse.setOnClickListener(view -> {
-            avatarList.remove(position);
+            userVoList.remove(position);
             notifyDataSetChanged();
         });
     }
 
     @Override
     public int getItemCount(){
-        if (avatarList.size()==0){
+        if (userVoList.size()==0){
             return 0;
         }else{
-            return avatarList.size();
+            return userVoList.size();
         }
     }
 
@@ -79,8 +89,8 @@ public class ApplicationItemAdapter extends RecyclerView.Adapter<ApplicationItem
         }
     }
 
-    public void updateData(List<String> newData) {
-        this.avatarList = newData;
+    public void updateData(List<UserVo> userVo) {
+        this.userVoList = userVo;
         notifyDataSetChanged(); // 通知适配器数据集已更改，刷新列表
     }
 }
