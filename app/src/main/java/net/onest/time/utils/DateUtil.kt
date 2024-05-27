@@ -5,6 +5,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 
 class DateUtil {
     private val currentDateTime: LocalDateTime = LocalDateTime.now()
@@ -111,6 +112,23 @@ class DateUtil {
          */
         @JvmStatic
         fun epochMillisecond(millisecond: Long) = epochMillisecond(Date(millisecond))
+
+        /**
+         * year年month月第一天的时间戳
+         */
+        @JvmStatic
+        fun epochMillisecond(year: Int, month: Int, day: Int = 1): Long {
+            val calendar = Calendar.getInstance()
+            calendar[Calendar.YEAR] = year
+            calendar[Calendar.MONTH] = month - 1
+            calendar[Calendar.DAY_OF_MONTH] = day
+
+            calendar[Calendar.HOUR_OF_DAY] = 0
+            calendar[Calendar.MINUTE] = 0
+            calendar[Calendar.SECOND] = 0
+            calendar[Calendar.MILLISECOND] = 0
+            return calendar.toInstant().epochSecond * 1000
+        }
 
     }
 }

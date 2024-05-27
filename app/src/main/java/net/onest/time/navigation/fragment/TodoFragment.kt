@@ -44,7 +44,7 @@ class TodoFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         try {
-            dayTaskMap = TaskApi.getTaskDay()
+            dayTaskMap = TaskApi.getTaskDay(DateUtil.epochMillisecond())
         } catch (e: Exception) {
             e.message?.showToast()
         }
@@ -72,12 +72,7 @@ class TodoFragment : Fragment() {
         setListeners()
 
         // 设置日期文字
-        todayTxt!!.text =
-            calendarView!!.curYear.toString() + "年" + calendarView!!.curMonth + "月" + calendarView!!.curDay + "日"
-
-        //《标记》日期:
-        val year = calendarView!!.curYear
-        val month = calendarView!!.curMonth
+        todayTxt!!.text = "${calendarView?.curYear}年 ${calendarView?.curMonth}月 ${calendarView?.curDay}日"
 
         val map: MutableMap<String, Calendar> = HashMap()
         dayTaskMap.entries.forEach {
@@ -111,7 +106,24 @@ class TodoFragment : Fragment() {
         return calendar
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setListeners() {
+        calendarView?.setOnMonthChangeListener { year, month ->
+            try {
+                dayTaskMap = TaskApi.getTaskDay(DateUtil.epochMillisecond(year, month))
+                val map: MutableMap<String, Calendar> = HashMap()
+                dayTaskMap.entries.forEach {
+                    val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(it.key), ZoneId.of("UTC+8"))
+                    map[getSchemeCalendar(date.year, date.monthValue, date.dayOfMonth, Color.parseColor("#FFA500"), it.value.size.toString()).toString()] =
+                        getSchemeCalendar(date.year, date.monthValue, date.dayOfMonth, Color.parseColor("#FFA500"), it.value.size.toString())
+                }
+                //此方法在巨大的数据量上不影响遍历性能，推荐使用
+                calendarView!!.setSchemeDate(map)
+            } catch (e: Exception) {
+                e.message?.showToast()
+            }
+        }
+
         //添加待办：
         todoBtn!!.setOnClickListener { v: View? ->
             AddTaskDialog(
@@ -119,6 +131,9 @@ class TodoFragment : Fragment() {
                 tasks,
                 AdapterHolder(todoItemAdapter)
             )
+
+            // 回到当前日期
+            calendarView?.scrollToCurrent()
         }
 
         //日历选中事件
@@ -128,8 +143,10 @@ class TodoFragment : Fragment() {
 
             @SuppressLint("NotifyDataSetChanged")
             override fun onCalendarSelect(calendar: Calendar, isClick: Boolean) {
+                todayTxt?.text = "${calendar.year}年 ${calendar.month}月 ${calendar.day}日"
+
                 try {
-                    tasks = dayTaskMap[DateUtil.epochMillisecond(calendar.timeInMillis)]!!
+                    tasks = dayTaskMap[DateUtil.epochMillisecond(calendar.timeInMillis)] ?: ArrayList()
                 } catch (e: Exception) {
                     e.message?.showToast()
                 }
@@ -138,6 +155,7 @@ class TodoFragment : Fragment() {
                 todoItemAdapter?.notifyDataSetChanged()
             }
         })
+
     }
 
     private fun findView(view: View) {
