@@ -92,8 +92,9 @@ class ListFragment : Fragment() {
 
                 bottomSheetDialog.setContentView(bottomView)
 
-                //设置点击dialog外部不消失
-                bottomSheetDialog.setCanceledOnTouchOutside(false);
+                //设置点击dialog外部消失
+                bottomSheetDialog.setCanceledOnTouchOutside(true)
+
                 bottomSheetDialog.show()
                 val cancel = bottomView.findViewById<Button>(R.id.parent_btn_cancel)
                 val edit = bottomView.findViewById<Button>(R.id.parent_btn_edit)
@@ -111,17 +112,16 @@ class ListFragment : Fragment() {
                     bottomSheetDialog.dismiss()
                     XPopup.Builder(context)
                             .asConfirm("",
-                                    "你确定要删除"+taskCollectionsList[position].taskCollectionsName+"项务吗？") {
+                                    "你确定要删除${taskCollectionsList[position].taskCollectionsName}待办集吗？") {
                                 try {
                                     TaskCategoryApi.deleteTaskCategory(taskCollectionsList[position].taskCollectionsId)
                                     "删除成功！".showToast()
                                 } catch (e: RuntimeException) {
                                     e.message?.showToast()
                                 }
-//                                val position = taskCollectionsList.indexOf(taskVo)
-//                                (tasks as MutableList).removeAt(position)
-//                                adapter.notifyItemRemoved(position)
-//                                dialog.dismiss()
+
+                                taskCollectionsList.removeAt(position)
+                                expandableListAdapter?.notifyDataSetChanged()
                             }
                             .show()
                 }
