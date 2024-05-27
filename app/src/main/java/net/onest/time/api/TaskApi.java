@@ -43,6 +43,9 @@ public class TaskApi {
     // 查询某一天的任务
     private final static String FIND_BY_DAY = "/findByDay";
 
+    // 查询某一天的任务
+    private final static String GET_TASK_DAY = "/getTaskDay";
+
 
     /*
      * 添加一项任务
@@ -128,4 +131,12 @@ public class TaskApi {
                 .get()
                 .buildAndSend(new TypeToken<List<TaskVo>>(){});
     }
+
+    public static Map<Long, List<TaskVo>> getTaskDay(Long timestamp) {
+        return RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + GET_TASK_DAY + "/" + timestamp)
+                .get()
+                .buildAndSend(new TypeToken<Map<Long, List<TaskVo>>>(){});
+    }
+
 }

@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioGroup
@@ -143,7 +144,8 @@ class AddTaskCollectionsDialog(
             taskCategoryDto.categoryName=taskCollections.taskCollectionsName
             taskCategoryDto.color=taskCollections.taskCollectionsColor
             try {
-                TaskCategoryApi.addTaskCategory(taskCategoryDto)
+                val taskCategory = TaskCategoryApi.addTaskCategory(taskCategoryDto)
+                taskCollections.taskCollectionsId = taskCategory.categoryId
             } catch (e: RuntimeException) {
                 e.message?.showToast()
             }
