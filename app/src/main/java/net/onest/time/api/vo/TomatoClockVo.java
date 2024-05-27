@@ -7,12 +7,11 @@ import java.util.Objects;
 public class TomatoClockVo implements Serializable {
     private Long clockId;
     private Long taskId;
+    private Long parentId;
     private Integer sequence;
     private Integer clockDuration;
     private Integer clockStatus;
     private String stopReason;
-    private Integer innerInterrupt;
-    private Integer outerInterrupt;
     private Date startedAt;
     private Date completedAt;
 
@@ -64,22 +63,6 @@ public class TomatoClockVo implements Serializable {
         this.stopReason = stopReason;
     }
 
-    public Integer getInnerInterrupt() {
-        return innerInterrupt;
-    }
-
-    public void setInnerInterrupt(Integer innerInterrupt) {
-        this.innerInterrupt = innerInterrupt;
-    }
-
-    public Integer getOuterInterrupt() {
-        return outerInterrupt;
-    }
-
-    public void setOuterInterrupt(Integer outerInterrupt) {
-        this.outerInterrupt = outerInterrupt;
-    }
-
     public Date getStartedAt() {
         return startedAt;
     }
@@ -102,12 +85,7 @@ public class TomatoClockVo implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TomatoClockVo that = (TomatoClockVo) o;
-        return Objects.equals(clockId, that.clockId) && Objects.equals(taskId, that.taskId) && Objects.equals(sequence, that.sequence) && Objects.equals(clockDuration, that.clockDuration) && Objects.equals(clockStatus, that.clockStatus) && Objects.equals(stopReason, that.stopReason) && Objects.equals(innerInterrupt, that.innerInterrupt) && Objects.equals(outerInterrupt, that.outerInterrupt) && Objects.equals(startedAt, that.startedAt) && Objects.equals(completedAt, that.completedAt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(clockId, taskId, sequence, clockDuration, clockStatus, stopReason, innerInterrupt, outerInterrupt, startedAt, completedAt);
+        return Objects.equals(clockId, that.clockId) && Objects.equals(taskId, that.taskId) && Objects.equals(parentId, that.parentId) && Objects.equals(sequence, that.sequence) && Objects.equals(clockDuration, that.clockDuration) && Objects.equals(clockStatus, that.clockStatus) && Objects.equals(stopReason, that.stopReason) && Objects.equals(startedAt, that.startedAt) && Objects.equals(completedAt, that.completedAt);
     }
 
     @Override
@@ -115,15 +93,19 @@ public class TomatoClockVo implements Serializable {
         return "TomatoClockVo{" +
                 "clockId=" + clockId +
                 ", taskId=" + taskId +
+                ", parentId=" + parentId +
                 ", sequence=" + sequence +
                 ", clockDuration=" + clockDuration +
                 ", clockStatus=" + clockStatus +
                 ", stopReason='" + stopReason + '\'' +
-                ", innerInterrupt=" + innerInterrupt +
-                ", outerInterrupt=" + outerInterrupt +
                 ", startedAt=" + startedAt +
                 ", completedAt=" + completedAt +
                 '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clockId, taskId, parentId, sequence, clockDuration, clockStatus, stopReason, startedAt, completedAt);
     }
 
     public static TomatoClockVo.Status of(Integer code) {

@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public class TaskVo implements Serializable {
     private Long taskId;
+    private Long parentId;
     private Long userId;
     private String taskName;
     private Integer type;
@@ -17,19 +18,10 @@ public class TaskVo implements Serializable {
     private Integer restTime;
     private Integer again;
     private Long categoryId;
-    private Integer tomatoClockTimes;
-    private List<TomatoClockVo> tomatoClocks;
-    private Integer stopTimes;
-
     private String background;
-    private Integer innerInterrupt;
-    private Integer outerInterrupt;
-
     private Date startedAt;
     private Date completedAt;
-
     private Date createdAt;
-
     public Long getTaskId() {
         return taskId;
     }
@@ -70,30 +62,6 @@ public class TaskVo implements Serializable {
         this.clockDuration = clockDuration;
     }
 
-    public Integer getTomatoClockTimes() {
-        return tomatoClockTimes;
-    }
-
-    public void setTomatoClockTimes(Integer tomatoClockTimes) {
-        this.tomatoClockTimes = tomatoClockTimes;
-    }
-
-    public List<TomatoClockVo> getTomatoClocks() {
-        return tomatoClocks;
-    }
-
-    public void setTomatoClocks(List<TomatoClockVo> tomatoClocks) {
-        this.tomatoClocks = tomatoClocks;
-    }
-
-    public Integer getStopTimes() {
-        return stopTimes;
-    }
-
-    public void setStopTimes(Integer stopTimes) {
-        this.stopTimes = stopTimes;
-    }
-
     public Integer getTaskStatus() {
         return taskStatus;
     }
@@ -108,22 +76,6 @@ public class TaskVo implements Serializable {
 
     public void setBackground(String background) {
         this.background = background;
-    }
-
-    public Integer getInnerInterrupt() {
-        return innerInterrupt;
-    }
-
-    public void setInnerInterrupt(Integer innerInterrupt) {
-        this.innerInterrupt = innerInterrupt;
-    }
-
-    public Integer getOuterInterrupt() {
-        return outerInterrupt;
-    }
-
-    public void setOuterInterrupt(Integer outerInterrupt) {
-        this.outerInterrupt = outerInterrupt;
     }
 
     public Date getStartedAt() {
@@ -191,10 +143,32 @@ public class TaskVo implements Serializable {
         this.categoryId = categoryId;
     }
 
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskVo taskVo = (TaskVo) o;
+        return Objects.equals(taskId, taskVo.taskId) && Objects.equals(parentId, taskVo.parentId) && Objects.equals(userId, taskVo.userId) && Objects.equals(taskName, taskVo.taskName) && Objects.equals(type, taskVo.type) && Objects.equals(taskStatus, taskVo.taskStatus) && Objects.equals(clockDuration, taskVo.clockDuration) && Objects.equals(remark, taskVo.remark) && Objects.equals(estimate, taskVo.estimate) && Objects.equals(restTime, taskVo.restTime) && Objects.equals(again, taskVo.again) && Objects.equals(categoryId, taskVo.categoryId) && Objects.equals(background, taskVo.background) && Objects.equals(startedAt, taskVo.startedAt) && Objects.equals(completedAt, taskVo.completedAt) && Objects.equals(createdAt, taskVo.createdAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(taskId, parentId, userId, taskName, type, taskStatus, clockDuration, remark, estimate, restTime, again, categoryId, background, startedAt, completedAt, createdAt);
+    }
+
     @Override
     public String toString() {
         return "TaskVo{" +
                 "taskId=" + taskId +
+                ", parentId=" + parentId +
                 ", userId=" + userId +
                 ", taskName='" + taskName + '\'' +
                 ", type=" + type +
@@ -205,28 +179,11 @@ public class TaskVo implements Serializable {
                 ", restTime=" + restTime +
                 ", again=" + again +
                 ", categoryId=" + categoryId +
-                ", tomatoClockTimes=" + tomatoClockTimes +
-                ", tomatoClocks=" + tomatoClocks +
-                ", stopTimes=" + stopTimes +
                 ", background='" + background + '\'' +
-                ", innerInterrupt=" + innerInterrupt +
-                ", outerInterrupt=" + outerInterrupt +
                 ", startedAt=" + startedAt +
                 ", completedAt=" + completedAt +
                 ", createdAt=" + createdAt +
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TaskVo taskVo = (TaskVo) o;
-        return Objects.equals(taskId, taskVo.taskId) && Objects.equals(userId, taskVo.userId) && Objects.equals(taskName, taskVo.taskName) && Objects.equals(type, taskVo.type) && Objects.equals(taskStatus, taskVo.taskStatus) && Objects.equals(clockDuration, taskVo.clockDuration) && Objects.equals(remark, taskVo.remark) && Objects.equals(estimate, taskVo.estimate) && Objects.equals(restTime, taskVo.restTime) && Objects.equals(again, taskVo.again) && Objects.equals(categoryId, taskVo.categoryId) && Objects.equals(tomatoClockTimes, taskVo.tomatoClockTimes) && Objects.equals(tomatoClocks, taskVo.tomatoClocks) && Objects.equals(stopTimes, taskVo.stopTimes) && Objects.equals(background, taskVo.background) && Objects.equals(innerInterrupt, taskVo.innerInterrupt) && Objects.equals(outerInterrupt, taskVo.outerInterrupt) && Objects.equals(startedAt, taskVo.startedAt) && Objects.equals(completedAt, taskVo.completedAt) && Objects.equals(createdAt, taskVo.createdAt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(taskId, userId, taskName, type, taskStatus, clockDuration, remark, estimate, restTime, again, categoryId, tomatoClockTimes, tomatoClocks, stopTimes, background, innerInterrupt, outerInterrupt, startedAt, completedAt, createdAt);
-    }
 }

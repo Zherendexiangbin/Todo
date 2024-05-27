@@ -69,7 +69,12 @@ class TaskDto {
         again = task.again
         categoryId = task.categoryId
         tomatoClockTimes = task.tomatoClockTimes
-        tomatoClocks = ArrayList(task.tomatoClocks.map { TomatoClock().withTomatoClockVo(it) })
+
+        val clocks = task.tomatoClocks?.run {
+            map { TomatoClock().withTomatoClockVo(it) }
+        }
+        tomatoClocks = if (clocks != null) ArrayList(clocks) else ArrayList()
+
         stopTimes = task.stopTimes
         taskStatus = task.taskStatus
         innerInterrupt = task.innerInterrupt

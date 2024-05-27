@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 public class TomatoApiTest {
     @Test
@@ -19,18 +20,6 @@ public class TomatoApiTest {
     public void completeTomatoClock() {
         Long clockId = 1235L;
         TomatoClockApi.completeTomatoClock(clockId);
-    }
-
-    @Test
-    public void innerInterrupt() {
-        Long clockId = 59L;
-        TomatoClockApi.innerInterrupt(clockId);
-    }
-
-    @Test
-    public void outerInterrupt() {
-        Long clockId = 59L;
-        TomatoClockApi.outerInterrupt(clockId);
     }
 
     @Test
@@ -63,5 +52,12 @@ public class TomatoApiTest {
     public void deleteTomatoClock() {
         Long taskId = 28L;
         TomatoClockApi.deleteTomatoClock(taskId);
+    }
+
+    @Test
+    public void statisticByHistory() {
+        Long taskId = 227L;
+        Map<Long, List<TomatoClockVo>> result = TomatoClockApi.statisticByHistory(taskId);
+        System.out.println(result);
     }
 }
