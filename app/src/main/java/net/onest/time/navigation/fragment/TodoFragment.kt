@@ -192,11 +192,21 @@ class TodoFragment : Fragment() {
             }
 
             override fun onCalendarSelect(calendar: Calendar, isClick: Boolean) {
+                (""+calendar).showToast()
                 try {
                     itemListByDay = TaskApi.findByDay(calendar.timeInMillis)
                 } catch (e: Exception) {
                     e.message?.showToast()
                 }
+
+                todoItemAdapter!!.itemListByDay = itemListByDay
+                todoItemAdapter!!.notifyDataSetChanged()
+//                if(calendar.compareTo(calendar.lunarCalendar)==1){
+//                    todoItemAdapter!!.itemListByDay = itemListByDay
+//                }else{
+//
+//                }
+
                 //                if(itemListByDay.isEmpty()){
 //                    recyclerView.setVisibility(View.GONE);
 //                    nullPage.setVisibility(View.VISIBLE);
@@ -204,9 +214,6 @@ class TodoFragment : Fragment() {
 //                    recyclerView.setVisibility(View.VISIBLE);
 //                    nullPage.setVisibility(View.GONE);
 //                }
-                todoItemAdapter!!.itemListByDay = itemListByDay
-                todoItemAdapter!!.notifyDataSetChanged()
-
                 //                todoItemAdapterNew.setDiffNewData(itemListByDay);
 //                todoItemAdapterNew.notifyDataSetChanged();
             }

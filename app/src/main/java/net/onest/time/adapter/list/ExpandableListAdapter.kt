@@ -103,7 +103,7 @@ class ExpandableListAdapter(
             AddTaskMoreDialog(
                     context, taskCollections.taskCollectionsId, tasks as MutableList<TaskVo>, AdapterHolder(
                     this@ExpandableListAdapter
-            )
+                )
             )
         }
 
@@ -167,11 +167,12 @@ class ExpandableListAdapter(
 
 
         startBtn.setOnClickListener {
-            if (taskCollectionsList[groupPosition].tasks[childPosition].type == 0) {
+            if (taskCollectionsList[groupPosition].tasks[childPosition].type == 1) {
                 // 正向计时
                 intent = Intent()
                 intent!!.setClass(context, TimerActivity::class.java)
                 intent!!.putExtra("method", "forWard")
+                intent!!.putExtra("name", taskCollectionsList[groupPosition].tasks[childPosition].taskName)
                 context.startActivity(
                         intent, ActivityOptions.makeSceneTransitionAnimation(
                         context as Activity, startBtn, "fab"
@@ -205,6 +206,9 @@ class ExpandableListAdapter(
                 //                int num = Integer.parseInt(parts[0]);
                 intent!!.putExtra("time", num)
                 intent!!.putExtra("method", "countDown")
+                intent!!.putExtra("name", taskCollectionsList[groupPosition].tasks[childPosition].taskName)
+                intent!!.putExtra("taskId", taskCollectionsList[groupPosition].tasks[childPosition].taskId)
+                intent!!.putExtra("start", "go")
                 intent!!.setClass(context, TimerActivity::class.java)
                 context.startActivity(
                         intent, ActivityOptions.makeSceneTransitionAnimation(
