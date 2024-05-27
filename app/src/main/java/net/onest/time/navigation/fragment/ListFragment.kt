@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import net.onest.time.R
 import net.onest.time.adapter.list.ExpandableListAdapter
 import net.onest.time.api.TaskApi
+import net.onest.time.api.TaskCategoryApi
+import net.onest.time.api.vo.TaskCategoryVo
 import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.AddTaskCollectionsDialog
 import net.onest.time.entity.list.TaskCollections
@@ -22,7 +24,7 @@ class ListFragment : Fragment() {
     private var addParentBtn: Button? = null
     private var menuBtn: Button? = null
     private var taskCollectionsList: MutableList<TaskCollections> = ArrayList()
-    private var parentMap: Map<String, List<TaskVo?>>? = null
+    private var parentMap: MutableMap<TaskCategoryVo, List<TaskVo?>> = HashMap()
     private var expandableListAdapter: ExpandableListAdapter? = null
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,17 +90,23 @@ class ListFragment : Fragment() {
 
     private fun init(): List<TaskCollections> {
         try {
-            parentMap = TaskApi.allByCategory()
+            val all = TaskCategoryApi.getAll()
+            all.forEach { taskCategoryVo ->
+                var allTasks = TaskCategoryApi.getAllTasks(taskCategoryVo.categoryId)
+                parentMap[taskCategoryVo] = allTasks
+            }
+
         } catch (e: RuntimeException) {
             e.message?.showToast()
         }
 
         taskCollectionsList = ArrayList()
-        parentMap?.forEach { (key: String?, value: List<TaskVo?>?) ->
+        parentMap.forEach { (key: TaskCategoryVo, value: List<TaskVo?>) ->
             val taskCollections = TaskCollections(
-                key,
-                ColorUtil.getColorByRgb(null),
-                value
+                    key.categoryId,
+                    key.categoryName,
+                    key.color!!,
+                    value
             )
             taskCollectionsList.add(taskCollections)
         }

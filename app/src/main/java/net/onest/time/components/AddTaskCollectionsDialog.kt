@@ -13,8 +13,11 @@ import android.widget.RadioGroup
 import androidx.appcompat.app.AlertDialog
 import net.onest.time.R
 import net.onest.time.adapter.list.ExpandableListAdapter
+import net.onest.time.api.TaskCategoryApi
+import net.onest.time.api.dto.TaskCategoryDto
 import net.onest.time.entity.list.TaskCollections
 import net.onest.time.utils.makeToast
+import net.onest.time.utils.showToast
 
 /**
  * 添加待办集合
@@ -130,10 +133,21 @@ class AddTaskCollectionsDialog(
             val taskCollectionsColor = edit!!.currentTextColor
 
             val taskCollections = TaskCollections(
+                    null,
                 taskCollectionsName,
                 taskCollectionsColor,
                 ArrayList()
             )
+
+            val taskCategoryDto = TaskCategoryDto()
+            taskCategoryDto.categoryName=taskCollections.taskCollectionsName
+            taskCategoryDto.color=taskCollections.taskCollectionsColor
+            try {
+                TaskCategoryApi.addTaskCategory(taskCategoryDto)
+            } catch (e: RuntimeException) {
+                e.message?.showToast()
+            }
+
             taskCollectionsList.add(taskCollections)
             expandableListAdapter.notifyDataSetChanged()
             dismiss()
