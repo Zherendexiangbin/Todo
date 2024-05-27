@@ -78,52 +78,7 @@ class AddTaskDialog(
 
     private fun setListeners() {
         higherSet!!.setOnClickListener { view: View? ->
-            val builder = Builder(context, R.style.CustomDialogStyle)
-            val inflater = LayoutInflater.from(context)
-            val dialogView = inflater.inflate(R.layout.todo_fragment_add_higher_setting, null)
-            val dialog: Dialog = builder.create()
-            dialog.show()
-            dialog.window!!.setContentView(dialogView)
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-            val remark = dialog.findViewById<EditText>(R.id.todo_fragment_add_higher_remark)
-            val clockTimes = dialog.findViewById<EditText>(R.id.todo_fragment_add_clock_times)
-            val rest = dialog.findViewById<EditText>(R.id.todo_fragment_add_rest_time)
-            val checkBox = dialog.findViewById<CheckBox>(R.id.todo_fragment_add_higher_again)
-            val clockAbout = dialog.findViewById<Button>(R.id.todo_clock_times_about)
-            val btnYes = dialog.findViewById<Button>(R.id.add_todo_higher_setting_item_yes)
-            val btnNo = dialog.findViewById<Button>(R.id.add_todo_higher_setting_item_no)
-
-            // 什么是单次循环次数
-            clockAbout.setOnClickListener { v: View? ->
-                TipDialog(
-                    context,
-                    "什么是单次循环次数",
-                    """
-                        举例:
-                        小明每次学习想学75分钟，但是75分钟太长学的太累，那么可以设定一个番茄钟的时间为25分钟，单次预期循环次数为3次。
-                        这样的番茄钟就会按照:
-                        学习25分钟-休息-学习25分钟-休息-学习25分钟-休息(共循环三次)
-                        来执行
-                    """.trimIndent()
-                )
-                    .show()
-            }
-
-            btnYes.setOnClickListener { v: View? ->
-                task.remark = remark.text.toString().trim()
-
-                task.estimate!!.clear()
-                val e = clockTimes.text.toString().trim()
-                task.estimate!!.add(if (e.isNotBlank()) e.toInt() else 0)
-
-                val r = rest.text.toString().trim()
-                task.restTime = if (r.isNotBlank()) r.toInt() else 5
-
-                task.again = if (checkBox.isChecked) 1 else 0
-                dialog.dismiss()
-            }
-            btnNo.setOnClickListener { dialog.dismiss() }
+            HigherSetDialog(context, task)
         }
 
         // 什么是番茄钟
