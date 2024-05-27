@@ -10,8 +10,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import net.onest.time.R
+import net.onest.time.api.StatisticApi
 import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.holder.AdapterHolder
+import net.onest.time.utils.showToast
 import net.onest.time.utils.withCustomAlphaAnimation
 
 class TaskInfoDialog(
@@ -42,6 +44,20 @@ class TaskInfoDialog(
 
         findViews(dialogView)
         setListeners()
+
+        title?.text = task.taskName
+        try {
+            val statistics = StatisticApi.statisticByTask(task.taskId)
+            // 累计专注次数
+            learnFrequency?.text = (statistics.tomatoTimes ?: 0).toString()
+
+            // 累计专注时长
+            learnTime?.text = (statistics.tomatoDuration ?: 0).toString()
+        } catch (e: RuntimeException) {
+            e.message?.showToast()
+        }
+        textRemark?.text = task.remark
+
         show()
         window!!.setContentView(dialogView)
         window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

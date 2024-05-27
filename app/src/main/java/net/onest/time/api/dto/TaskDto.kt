@@ -68,12 +68,8 @@ class TaskDto {
         restTime = task.restTime
         again = task.again
         categoryId = task.categoryId
-        tomatoClockTimes = task.tomatoClockTimes
-        tomatoClocks = ArrayList(task.tomatoClocks.map { TomatoClock().withTomatoClockVo(it) })
-        stopTimes = task.stopTimes
+
         taskStatus = task.taskStatus
-        innerInterrupt = task.innerInterrupt
-        outerInterrupt = task.outerInterrupt
         startedAt = task.startedAt
         completedAt = task.completedAt
 

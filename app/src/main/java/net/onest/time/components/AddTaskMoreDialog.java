@@ -26,7 +26,6 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 
 import net.onest.time.R;
-import net.onest.time.adapter.todo.TodoItemAdapter;
 import net.onest.time.api.TaskApi;
 import net.onest.time.api.dto.TaskDto;
 import net.onest.time.api.vo.TaskVo;
