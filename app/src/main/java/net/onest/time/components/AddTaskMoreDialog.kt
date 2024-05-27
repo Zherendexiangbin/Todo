@@ -14,8 +14,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.lxj.xpopup.XPopup
 import net.onest.time.R
 import net.onest.time.api.TaskApi
-import net.onest.time.api.TaskCategoryApi
-import net.onest.time.api.dto.TaskCategoryDto
 import net.onest.time.api.dto.TaskDto
 import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.holder.AdapterHolder
@@ -61,7 +59,7 @@ class AddTaskMoreDialog(
     private var goalLinear: LinearLayout? = null
     private var habitLinear: LinearLayout? = null
 
-    private val task = TaskCategoryDto().withDefault()
+    private val task = TaskDto().withDefault()
 
     private fun setListeners() {
         higherSet!!.setOnClickListener {
@@ -160,6 +158,7 @@ class AddTaskMoreDialog(
             XPopup.Builder(context).asInputConfirm("自定义番茄钟时间", "输入倒计时分钟数:"
             ) { text -> setTimeGroupThree!!.text = "$text 分钟" }.show()
         }
+
         addYes!!.setOnClickListener {
             val taskName = itemName!!.text.toString()
 
@@ -168,7 +167,7 @@ class AddTaskMoreDialog(
                 return@setOnClickListener
             }
 
-            task.categoryName = taskName
+            task.taskName = taskName
 
             when (todoSetTime!!.checkedRadioButtonId) {
                 // 倒计时
@@ -181,7 +180,7 @@ class AddTaskMoreDialog(
                         R.id.set_time_one_group_three -> tomatoDuration =
                                 setTimeGroupThree!!.text.toString().split(" ".toRegex())[0].toInt()
                     }
-                    task. = 0
+                    task.type = 0
                     task.clockDuration = tomatoDuration
                 }
 
@@ -199,7 +198,9 @@ class AddTaskMoreDialog(
                 }
             }
 
-            val taskVo = TaskCategoryApi.addTaskCategory(task)
+            task.categoryId = categoryId
+
+            val taskVo = TaskApi.addTask(task)
             (tasks as MutableList<TaskVo>).add(taskVo)
             adapter.notifyItemChanged(tasks.indexOf(taskVo))
 
