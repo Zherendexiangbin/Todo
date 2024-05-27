@@ -115,4 +115,10 @@ public class TaskApiTest {
                     v.forEach(System.out::println);
                 });
     }
+
+    @Test
+    public void getTaskDay() {
+        Map<Long, List<TaskVo>> taskDay = TaskApi.getTaskDay();
+        System.out.println(taskDay);
+    }
 }
