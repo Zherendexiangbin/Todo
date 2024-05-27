@@ -97,7 +97,44 @@ public class TimerActivity extends AppCompatActivity {
     private float mCurPosX = 0;
     private float mCurPosY = 0;
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
+        if("forWard".equals(intent.getStringExtra("method"))){
+            if(mTimeLeftInMillis/1000<5){
+                Toast toast = Toast.makeText(TimerActivity.this, "不记录5秒以下的专注记录!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP,0,0);
+                toast.show();
+                Intent intent2 = new Intent();
+                intent2.setClass(TimerActivity.this, NavigationActivity.class);
+                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
+                startActivity(intent2);
+                overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
+                mCountDownTimer.cancel();
+            }else{
+                new StopClockDialog(TimerActivity.this);
+            }
+        }else{
+            int time = Integer.parseInt(intent.getStringExtra("time"));
+            if(time*60 - circleTimer.getValue()<5){
+                Toast toast = Toast.makeText(TimerActivity.this, "不记录5秒以下的专注记录!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP,0,0);
+                toast.show();
+                Intent intent2 = new Intent();
+                intent2.setClass(TimerActivity.this, NavigationActivity.class);
+                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
+                startActivity(intent2);
+                overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
+//                        finish();
+//                        NavController navController = Navigation.findNavController(TimerActivity.this, R.id.nav_host_fragments);
+//                        navController.navigate(R.id.action_todo_fragment_to_list_fragment);
+            }else{
+                new StopClockDialog(TimerActivity.this);
+
+            }
+        }
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override

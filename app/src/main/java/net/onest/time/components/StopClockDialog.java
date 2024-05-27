@@ -2,6 +2,7 @@ package net.onest.time.components;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -29,6 +30,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import net.onest.time.R;
 import net.onest.time.TimerActivity;
+import net.onest.time.navigation.activity.NavigationActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,9 +114,9 @@ public class StopClockDialog extends AlertDialog {
                 List<PieEntry> yVals = new ArrayList<>();
                 List<Integer> colors = new ArrayList<>();
                 //设置饼状图数据：
-                yVals.add(new PieEntry(28.6f, "陆地"));
-                yVals.add(new PieEntry(60.3f, "海洋"));
-                yVals.add(new PieEntry(100f-28.6f-60.3f, "天空"));
+                yVals.add(new PieEntry(0.286f, "吃饭"));
+                yVals.add(new PieEntry(0.603f, "睡觉"));
+                yVals.add(new PieEntry(1f-0.286f-0.603f, "洗澡"));
 
                 colors.add(Color.parseColor("#4A92FC"));
                 colors.add(Color.parseColor("#ee6e55"));
@@ -132,6 +134,11 @@ public class StopClockDialog extends AlertDialog {
 
                         }else{
                             dialogAban.dismiss();
+                            Intent intent2 = new Intent();
+                            intent2.setClass(getContext(), NavigationActivity.class);
+                            intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
+                            getContext().startActivity(intent2);
+//                            overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
                         }
                     }
                 });

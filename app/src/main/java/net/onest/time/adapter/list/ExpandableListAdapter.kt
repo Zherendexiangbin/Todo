@@ -40,6 +40,7 @@ class ExpandableListAdapter(
         private val childViewId: Int,
         private val context: Context,
         private var taskCollectionsList: List<TaskCollections>
+
 ) : BaseExpandableListAdapter() {
     var childItemList: List<TaskVo>? = null
     private var intent: Intent? = null

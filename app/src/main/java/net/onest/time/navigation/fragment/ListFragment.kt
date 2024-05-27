@@ -7,7 +7,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ExpandableListView
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.lxj.xpopup.XPopup
 import net.onest.time.R
 import net.onest.time.adapter.list.ExpandableListAdapter
 import net.onest.time.api.TaskApi
@@ -16,7 +20,6 @@ import net.onest.time.api.vo.TaskCategoryVo
 import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.AddTaskCollectionsDialog
 import net.onest.time.entity.list.TaskCollections
-import net.onest.time.utils.ColorUtil
 import net.onest.time.utils.showToast
 
 class ListFragment : Fragment() {
@@ -69,11 +72,73 @@ class ListFragment : Fragment() {
             false
         }
 
+//        长按删除/编辑事件:
+        backLog!!.setOnItemLongClickListener { parent, view, position, id ->
+
+            val packedPositionType = ExpandableListView.getPackedPositionType(id)
+            if (packedPositionType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+//                val groupPosition = ExpandableListView.getPackedPositionGroup(id)
+                // 处理长按parentItem的逻辑
+//                Toast.makeText(context, "长按了parentItem：$groupPosition", Toast.LENGTH_SHORT).show()
+
+                // 参数2：设置BottomSheetDialog的主题样式；将背景设置为transparent，这样我们写的shape_bottom_sheet_dialog.xml才会起作用
+                val bottomSheetDialog = BottomSheetDialog(requireContext());
+                //不传第二个参数
+                //BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+
+                // 底部弹出的布局
+//                val binding = DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, R.layout.list_fragment_parent_edit, null, false)
+                val bottomView = LayoutInflater.from(requireContext()).inflate(R.layout.list_fragment_parent_edit, null);
+
+                bottomSheetDialog.setContentView(bottomView)
+
+                //设置点击dialog外部不消失
+                bottomSheetDialog.setCanceledOnTouchOutside(false);
+                bottomSheetDialog.show()
+                val cancel = bottomView.findViewById<Button>(R.id.parent_btn_cancel)
+                val edit = bottomView.findViewById<Button>(R.id.parent_btn_edit)
+                val delete = bottomView.findViewById<Button>(R.id.parent_btn_delete)
+
+                cancel.setOnClickListener {
+                    bottomSheetDialog.dismiss()
+                }
+
+                edit.setOnClickListener {
+                    bottomSheetDialog.dismiss()
+                }
+
+                delete.setOnClickListener {
+                    bottomSheetDialog.dismiss()
+                    XPopup.Builder(context)
+                            .asConfirm("",
+                                    "你确定要删除"+taskCollectionsList[position].taskCollectionsName+"项务吗？") {
+                                try {
+                                    TaskCategoryApi.deleteTaskCategory(taskCollectionsList[position].taskCollectionsId)
+                                    "删除成功！".showToast()
+                                } catch (e: RuntimeException) {
+                                    e.message?.showToast()
+                                }
+//                                val position = taskCollectionsList.indexOf(taskVo)
+//                                (tasks as MutableList).removeAt(position)
+//                                adapter.notifyItemRemoved(position)
+//                                dialog.dismiss()
+                            }
+                            .show()
+                }
+
+                true // 返回true表示消费了长按事件
+            } else {
+                false
+            }
+        }
+
+
+
         backLog!!.setOnChildClickListener { parent, v, groupPosition, childPosition, id ->
             Toast.makeText(
-                context,
-                "点击了" + taskCollectionsList[groupPosition].tasks[childPosition].taskName,
-                Toast.LENGTH_SHORT
+                    context,
+                    "点击了" + taskCollectionsList[groupPosition].tasks[childPosition].taskName,
+                    Toast.LENGTH_SHORT
             ).show()
             false
         }
@@ -81,9 +146,9 @@ class ListFragment : Fragment() {
         //添加待办集:
         addParentBtn!!.setOnClickListener {
             AddTaskCollectionsDialog(
-                requireContext(),
-                expandableListAdapter!!,
-                taskCollectionsList
+                    requireContext(),
+                    expandableListAdapter!!,
+                    taskCollectionsList
             )
         }
     }

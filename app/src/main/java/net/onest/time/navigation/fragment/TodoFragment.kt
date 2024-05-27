@@ -35,7 +35,7 @@ class TodoFragment : Fragment() {
     private var recyclerView: RecyclerView? = null //待办事项
     private var todoBtn: Button? = null //添加按钮
     private var todayTxt: TextView? = null
-    private var itemListByDay: List<TaskVo> = ArrayList() //待办事项数据源
+    private var itemListByDay: MutableList<TaskVo> = ArrayList() //待办事项数据源
     private var nullPage: LinearLayout? = null
 
     private var todoItemAdapter: TodoItemAdapter? = null
@@ -179,11 +179,20 @@ class TodoFragment : Fragment() {
     private fun setListeners() {
         //添加待办：
         todoBtn!!.setOnClickListener { v: View? ->
+            calendarView!!.scrollToCurrent()
             AddTaskDialog(
                 requireContext(),
                 itemListByDay,
                 AdapterHolder(todoItemAdapter)
             )
+            //如果不是当前日期，就会跳转回来
+            val currentCalendar = Calendar()
+            currentCalendar.year = calendarView!!.curYear
+            currentCalendar.month = calendarView!!.curMonth
+            currentCalendar.day = calendarView!!.curDay
+            if(calendarView!!.selectedCalendar.compareTo(currentCalendar)!=0){
+                calendarView!!.scrollToCurrent()
+            }
         }
 
         //日历选中事件
@@ -192,15 +201,25 @@ class TodoFragment : Fragment() {
             }
 
             override fun onCalendarSelect(calendar: Calendar, isClick: Boolean) {
-                (""+calendar).showToast()
-                try {
-                    itemListByDay = TaskApi.findByDay(calendar.timeInMillis)
-                } catch (e: Exception) {
-                    e.message?.showToast()
+                val currentCalendar = Calendar()
+                currentCalendar.year = calendarView!!.curYear
+                currentCalendar.month = calendarView!!.curMonth
+                currentCalendar.day = calendarView!!.curDay
+                if(calendar.differ(currentCalendar)>0){
+                    itemListByDay.clear()
+                    todoItemAdapter!!.itemListByDay = itemListByDay
+                    todoItemAdapter!!.notifyDataSetChanged()
+                }else{
+                    try {
+                        itemListByDay = TaskApi.findByDay(calendar.timeInMillis)
+                    } catch (e: Exception) {
+                        e.message?.showToast()
+                    }
+
+                    todoItemAdapter!!.itemListByDay = itemListByDay
+                    todoItemAdapter!!.notifyDataSetChanged()
                 }
 
-                todoItemAdapter!!.itemListByDay = itemListByDay
-                todoItemAdapter!!.notifyDataSetChanged()
 //                if(calendar.compareTo(calendar.lunarCalendar)==1){
 //                    todoItemAdapter!!.itemListByDay = itemListByDay
 //                }else{
