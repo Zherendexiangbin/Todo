@@ -26,10 +26,10 @@ import java.util.*
  * 同AddTaskDialog，但有更多选项
  */
 class AddTaskMoreDialog(
-        private val context: Context,
-        private val categoryId: Long,
-        private val tasks: MutableList<TaskVo>,
-        private val adapter: AdapterHolder
+    private val context: Context,
+    private val categoryId: Long,
+    private val tasks: MutableList<TaskVo>,
+    private val adapter: AdapterHolder
 ) : AlertDialog(context) {
     //以下是弹框布局控件：
     private var addYes: Button? = null
@@ -80,30 +80,44 @@ class AddTaskMoreDialog(
             val btnNo = dialog.findViewById<Button>(R.id.add_todo_higher_setting_item_no)
             clockAbout.setOnClickListener {
                 XPopup.Builder(context)
-                        .asConfirm("什么是单次循环次数", """
+                    .asConfirm(
+                        "什么是单次循环次数",
+                        """
      举例:
      小明每次学习想学75分钟，但是75分钟太长学的太累，那么可以设定一个番茄钟的时间为25分钟，单次预期循环次数为3次。
      这样的番茄钟就会按照:
      学习25分钟-休息-学习25分钟-休息-学习25分钟-休息(共循环三次)
      来执行
      """.trimIndent(),
-                                "关闭", "确认",
-                                { Toast.makeText(context, "click", Toast.LENGTH_SHORT) }, null, false, R.layout.my_confim_popup) //绑定已有布局
-                        .show()
+                        "关闭",
+                        "确认",
+                        { Toast.makeText(context, "click", Toast.LENGTH_SHORT) },
+                        null,
+                        false,
+                        R.layout.my_confim_popup
+                    ) //绑定已有布局
+                    .show()
             }
             btnYes.setOnClickListener { dialog.dismiss() }
             btnNo.setOnClickListener { dialog.dismiss() }
         }
         itemNameAbout!!.setOnClickListener {
             XPopup.Builder(context)
-                    .asConfirm("什么是番茄钟", """
+                .asConfirm(
+                    "什么是番茄钟",
+                    """
      1.番茄钟是全身心工作25分钟，休息5分钟的工作方法。
      2.输入事项名称，点击√按钮即可添加一个标准的番茄钟待办。
      3.点击代办卡片上的开始按钮就可以开始一个番茄钟啦
      """.trimIndent(),
-                            "关闭", "番茄钟牛逼",
-                            { Toast.makeText(context, "click", Toast.LENGTH_SHORT) }, null, false, R.layout.my_confim_popup) //绑定已有布局
-                    .show()
+                    "关闭",
+                    "番茄钟牛逼",
+                    { Toast.makeText(context, "click", Toast.LENGTH_SHORT) },
+                    null,
+                    false,
+                    R.layout.my_confim_popup
+                ) //绑定已有布局
+                .show()
         }
         todoWant!!.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
@@ -112,11 +126,13 @@ class AddTaskMoreDialog(
                     goalLinear!!.visibility = View.GONE
                     habitLinear!!.visibility = View.GONE
                 }
+
                 R.id.want_two -> {
                     //定目标
                     goalLinear!!.visibility = View.VISIBLE
                     habitLinear!!.visibility = View.GONE
                 }
+
                 R.id.want_three -> {
                     //养习惯
                     goalLinear!!.visibility = View.GONE
@@ -132,12 +148,14 @@ class AddTaskMoreDialog(
                     setTimeTwoTxt!!.visibility = View.GONE
                     setTimeThreeTxt!!.visibility = View.GONE
                 }
+
                 R.id.set_time_two -> {
                     setTimeGroup!!.visibility = View.GONE
                     setTimeOneTxt!!.visibility = View.GONE
                     setTimeTwoTxt!!.visibility = View.VISIBLE
                     setTimeThreeTxt!!.visibility = View.GONE
                 }
+
                 R.id.set_time_three -> {
                     setTimeGroup!!.visibility = View.GONE
                     setTimeOneTxt!!.visibility = View.GONE
@@ -156,8 +174,10 @@ class AddTaskMoreDialog(
             DatePickerDialog(context, onDateSetListener, mYear, mMonth, mDay).show()
         }
         setTimeGroupThree!!.setOnClickListener {
-            Toast.makeText(context, setTimeGroupThree!!.text.toString() + "", Toast.LENGTH_SHORT).show()
-            XPopup.Builder(context).asInputConfirm("自定义番茄钟时间", "输入倒计时分钟数:"
+            Toast.makeText(context, setTimeGroupThree!!.text.toString() + "", Toast.LENGTH_SHORT)
+                .show()
+            XPopup.Builder(context).asInputConfirm(
+                "自定义番茄钟时间", "输入倒计时分钟数:"
             ) { text -> setTimeGroupThree!!.text = "$text 分钟" }.show()
         }
 
@@ -180,7 +200,7 @@ class AddTaskMoreDialog(
                         R.id.set_time_one_group_one -> tomatoDuration = 25
                         R.id.set_time_one_group_two -> tomatoDuration = 35
                         R.id.set_time_one_group_three -> tomatoDuration =
-                                setTimeGroupThree!!.text.toString().split(" ".toRegex())[0].toInt()
+                            setTimeGroupThree!!.text.toString().split(" ".toRegex())[0].toInt()
                     }
                     task.type = 0
                     task.clockDuration = tomatoDuration
@@ -202,10 +222,13 @@ class AddTaskMoreDialog(
 
             task.categoryId = categoryId
 
-            val taskVo = TaskApi.addTask(task)
-            (tasks as MutableList<TaskVo>).add(taskVo)
-            adapter.notifyItemChanged(tasks.indexOf(taskVo))
-
+            try {
+                val taskVo = TaskApi.addTask(task)
+                tasks.add(taskVo!!)
+                adapter.notifyItemChanged(tasks.indexOf(taskVo))
+            } catch (e: RuntimeException) {
+                e.message?.showToast()
+            }
             dismiss()
         }
 
@@ -358,22 +381,27 @@ class AddTaskMoreDialog(
         val days: String
         days = if (monthOfYear + 1 < 10) {
             if (dayOfMonth < 10) {
-                StringBuffer().append(year).append("年").append("0").append(monthOfYear + 1).append("月").append("0").append(dayOfMonth).append("日").toString()
+                StringBuffer().append(year).append("年").append("0").append(monthOfYear + 1)
+                    .append("月").append("0").append(dayOfMonth).append("日").toString()
             } else {
-                StringBuffer().append(year).append("年").append("0").append(monthOfYear + 1).append("月").append(dayOfMonth).append("日").toString()
+                StringBuffer().append(year).append("年").append("0").append(monthOfYear + 1)
+                    .append("月").append(dayOfMonth).append("日").toString()
             }
         } else {
             if (dayOfMonth < 10) {
-                StringBuffer().append(year).append("年").append(monthOfYear + 1).append("月").append("0").append(dayOfMonth).append("日").toString()
+                StringBuffer().append(year).append("年").append(monthOfYear + 1).append("月")
+                    .append("0").append(dayOfMonth).append("日").toString()
             } else {
-                StringBuffer().append(year).append("年").append(monthOfYear + 1).append("月").append(dayOfMonth).append("日").toString()
+                StringBuffer().append(year).append("年").append(monthOfYear + 1).append("月")
+                    .append(dayOfMonth).append("日").toString()
             }
         }
         goalDate!!.text = days
     }
 
     init {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.list_fragment_add_expandable_child_item_pop_window, null)
+        val dialogView = LayoutInflater.from(context)
+            .inflate(R.layout.list_fragment_add_expandable_child_item_pop_window, null)
         getViews(dialogView) //获取控件
         show()
         window!!.setContentView(dialogView)
@@ -382,7 +410,7 @@ class AddTaskMoreDialog(
         setTimeThreeTxt!!.visibility = View.GONE
         goalLinear!!.visibility = View.GONE
         habitLinear!!.visibility = View.GONE
-        task.categoryId=categoryId
+        task.categoryId = categoryId
         setListeners()
     }
 }

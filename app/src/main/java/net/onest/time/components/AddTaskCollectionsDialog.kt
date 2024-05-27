@@ -144,7 +144,8 @@ class AddTaskCollectionsDialog(
             taskCategoryDto.categoryName=taskCollections.taskCollectionsName
             taskCategoryDto.color=taskCollections.taskCollectionsColor
             try {
-                TaskCategoryApi.addTaskCategory(taskCategoryDto)
+                val taskCategory = TaskCategoryApi.addTaskCategory(taskCategoryDto)
+                taskCollections.taskCollectionsId = taskCategory.categoryId
             } catch (e: RuntimeException) {
                 e.message?.showToast()
             }

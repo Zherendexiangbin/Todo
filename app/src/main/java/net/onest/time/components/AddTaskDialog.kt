@@ -1,15 +1,11 @@
 package net.onest.time.components
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
-import android.view.animation.AlphaAnimation
 import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
