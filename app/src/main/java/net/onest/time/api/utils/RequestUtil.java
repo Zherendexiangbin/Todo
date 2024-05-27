@@ -26,12 +26,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -170,6 +172,34 @@ public class RequestUtil {
 
     public void buildAndSend() {
         send();
+    }
+
+    public <T> void buildAndSendAndConsume(Consumer<? super T> consumer) {
+        TypeToken<T> typeToken = new TypeToken<T>() {};
+        sendAndConsume((jsonElement -> {
+            T t = gson.fromJson(jsonElement, typeToken);
+            consumer.accept(t);
+        }));
+    }
+
+    private void sendAndConsume(Consumer<? super JsonElement> consumer) {
+        CompletableFuture.supplyAsync(
+                () -> {
+                    Request request = requestBuilder.build();
+                    Call call = httpClient.newCall(request);
+                    call.timeout().timeout(15, TimeUnit.SECONDS);
+
+                    try (Response response = call.execute()) {
+                        String body = response.body().string();
+                        Result<?> result = gson.fromJson(body, Result.class);
+                        checkResult(result);
+                        return gson.fromJson(body, JsonObject.class).get("data");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                },
+                executorService
+        ).thenAccept(consumer);
     }
 
     private JsonElement send() {

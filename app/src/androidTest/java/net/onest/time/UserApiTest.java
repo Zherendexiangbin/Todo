@@ -1,7 +1,10 @@
 package net.onest.time;
 
+import net.onest.time.api.ServerConstant;
 import net.onest.time.api.UserApi;
 import net.onest.time.api.dto.UserDto;
+import net.onest.time.api.utils.RequestUtil;
+import net.onest.time.api.vo.TaskVo;
 import net.onest.time.api.vo.UserVo;
 import org.junit.Test;
 import java.time.LocalDateTime;
@@ -98,5 +101,18 @@ public class UserApiTest {
     public void dateConver() {
         System.out.println(LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.of("+8")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         System.out.println(LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.of("+8")).getMonth());
+    }
+
+    @Test
+    public void completableFutureTest() {
+        System.out.println("before");
+        RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + "/user" + "/getUserInfo")
+                .get()
+//            .buildAndSendAndConsume<TaskVo>(::println)
+                .buildAndSendAndConsume((taskVo) -> System.out.println(taskVo));
+        System.out.println("after");
+
+        try { Thread.sleep(500); } catch (InterruptedException e) { throw new RuntimeException(e); }
     }
 }

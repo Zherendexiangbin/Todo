@@ -1,8 +1,8 @@
 package net.onest.time.api;
 
 public class ServerConstant {
-   // public static final String HTTP_HOST = "http://8.130.163.41";
-   public static final String HTTP_HOST = "http://192.168.3.17";
+   public static final String HTTP_HOST = "http://8.130.163.41";
+   // public static final String HTTP_HOST = "http://192.168.3.17";
    // public static final String HTTP_HOST = "http://8.130.17.7";
 //    public static final String HTTP_HOST = "http://192.168.137.1";
 //    public static final String HTTP_HOST = "http://192.168.3.36";

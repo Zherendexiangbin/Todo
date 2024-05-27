@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +17,6 @@ import com.haibin.calendarview.CalendarView
 import com.haibin.calendarview.CalendarView.OnCalendarSelectListener
 import net.onest.time.R
 import net.onest.time.adapter.todo.TodoItemAdapter
-import net.onest.time.adapter.todo.TodoItemAdapterNew
 import net.onest.time.api.TaskApi
 import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.AddTaskDialog
@@ -35,7 +32,7 @@ class TodoFragment : Fragment() {
     private var recyclerView: RecyclerView? = null //待办事项
     private var todoBtn: Button? = null //添加按钮
     private var todayTxt: TextView? = null
-    private var itemListByDay: List<TaskVo> = ArrayList() //待办事项数据源
+    private var tasks: List<TaskVo> = ArrayList() //待办事项数据源
     private var nullPage: LinearLayout? = null
 
     private var todoItemAdapter: TodoItemAdapter? = null
@@ -43,7 +40,12 @@ class TodoFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         try {
-            itemListByDay = TaskApi.findByDay(DateUtil.epochMillisecond())
+            TaskApi.findByDay(DateUtil.epochMillisecond()) { taskVo ->
+                println(taskVo)
+            }
+//            {
+//                todoItemAdapter!!.tasks = tasks
+//            }
         } catch (e: Exception) {
             e.message?.showToast()
         }
@@ -140,7 +142,7 @@ class TodoFragment : Fragment() {
 //            nullPage.setVisibility(View.GONE);
 //        }
         //绑定适配器:
-        todoItemAdapter = TodoItemAdapter(context, itemListByDay)
+        todoItemAdapter = TodoItemAdapter(requireContext(), tasks)
         recyclerView!!.adapter = todoItemAdapter
         val layoutManager = LinearLayoutManager(context)
         recyclerView!!.layoutManager = layoutManager
@@ -181,7 +183,7 @@ class TodoFragment : Fragment() {
         todoBtn!!.setOnClickListener { v: View? ->
             AddTaskDialog(
                 requireContext(),
-                itemListByDay,
+                tasks,
                 AdapterHolder(todoItemAdapter)
             )
         }
@@ -193,7 +195,10 @@ class TodoFragment : Fragment() {
 
             override fun onCalendarSelect(calendar: Calendar, isClick: Boolean) {
                 try {
-                    itemListByDay = TaskApi.findByDay(calendar.timeInMillis)
+                    TaskApi.findByDay(calendar.timeInMillis) {
+                        todoItemAdapter!!.tasks = tasks
+                        tasks.toString().showToast()
+                    }
                 } catch (e: Exception) {
                     e.message?.showToast()
                 }
@@ -204,7 +209,7 @@ class TodoFragment : Fragment() {
 //                    recyclerView.setVisibility(View.VISIBLE);
 //                    nullPage.setVisibility(View.GONE);
 //                }
-                todoItemAdapter!!.itemListByDay = itemListByDay
+//                todoItemAdapter!!.tasks = tasks
                 todoItemAdapter!!.notifyDataSetChanged()
 
                 //                todoItemAdapterNew.setDiffNewData(itemListByDay);

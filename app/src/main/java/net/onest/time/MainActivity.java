@@ -22,6 +22,7 @@ import net.onest.time.api.utils.RequestUtil;
 import net.onest.time.api.vo.UserVo;
 import net.onest.time.constant.SharedPreferencesConstant;
 import net.onest.time.constant.UserInfoConstant;
+import net.onest.time.db.DatabaseHelper;
 import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.navigation.activity.RegisterActivity;
 import net.onest.time.navigation.activity.ResetPasswordActivity;
@@ -47,20 +48,31 @@ public class MainActivity extends AppCompatActivity {
 
         autoLogin();
 
-//        loginUser.setText("2808021998@qq.com");
-//        loginPassword.setText("admin");
+       // loginUser.setText("2808021998@qq.com");
+       // loginPassword.setText("admin");
         loginUser.setText("212296944@qq.com");
         loginPassword.setText("123456");
 
         setListeners();
         setAnimator();
+
+        // 创建数据库
+        DatabaseHelper databaseHelper = new DatabaseHelper();
+        databaseHelper.getWritableDatabase();
+        databaseHelper.close();
     }
 
     /**
      * 通过token自动登录
      */
     private void autoLogin() {
-        UserVo userInfo = UserApi.getUserInfo();
+        UserVo userInfo = null;
+        try {
+            userInfo = UserApi.getUserInfo();
+        } catch (RuntimeException e) {
+            // 自动登录失败
+        }
+
         if (userInfo != null) {
             getApplication()
                     .getApplicationContext()

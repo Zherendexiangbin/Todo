@@ -15,8 +15,7 @@
             android:layout_height="70dp"
             android:orientation="horizontal"
             android:padding="5dp"
-            android:scaleType="center"
-            android:background="@drawable/ic_bgm_custom">
+            android:scaleType="center">
             <RelativeLayout
                 android:id="@+id/click_statistics"
                 android:layout_gravity="center"
