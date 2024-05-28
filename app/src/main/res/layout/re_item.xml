@@ -25,16 +25,28 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:paddingLeft="20dp">
-                <TextView
+
+                <net.onest.time.MyTextView
                     android:id="@+id/re_item_txt_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:maxLength="15"
-                    android:maxLines="1"
                     android:text="待办事项"
                     android:textSize="15dp"
                     android:textStyle="bold"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    app:deleteLineWidth="1dp"
+                    app:deleteLineColor="@color/black"
+                    app:showDeleteLine="show" />
+<!--                <TextView-->
+<!--                    android:id="@+id/re_item_txt_name"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:maxLength="15"-->
+<!--                    android:maxLines="1"-->
+<!--                    android:text="待办事项"-->
+<!--                    android:textSize="15dp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:textColor="@color/white"/>-->
                 <TextView
                     android:id="@+id/re_item_txt_time"
                     android:layout_marginTop="15dp"

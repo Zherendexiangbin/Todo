@@ -12,4 +12,14 @@
         <item>每周</item>
         <item>每月</item>
     </string-array>
+
+<!--    MyTextView-->
+    <declare-styleable name="DeleteLineTextView">
+        <attr name="showDeleteLine">
+            <enum name="show" value="0" />
+            <enum name="hide" value="1" />
+        </attr>
+        <attr name="deleteLineColor" format="color|reference" />
+        <attr name="deleteLineWidth" format="dimension" />
+    </declare-styleable>
 </resources>
