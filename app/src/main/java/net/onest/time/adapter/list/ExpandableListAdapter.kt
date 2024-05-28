@@ -59,10 +59,10 @@ class ExpandableListAdapter(
     override fun getChild(groupPosition: Int, childPosition: Int): TaskVo = taskCollectionsList[groupPosition].tasks[childPosition]
 
     //获得父列表id
-    override fun getGroupId(groupPosition: Int): Long = taskCollectionsList[groupPosition].taskCollectionsId
+    override fun getGroupId(groupPosition: Int): Long = groupPosition.toLong()
 
     //获得子列表id
-    override fun getChildId(groupPosition: Int, childPosition: Int): Long = taskCollectionsList[groupPosition].tasks[childPosition].taskId
+    override fun getChildId(groupPosition: Int, childPosition: Int): Long = childPosition.toLong()
 
     //指定位置相应的组视图
     override fun hasStableIds() = true
@@ -186,7 +186,7 @@ class ExpandableListAdapter(
 //                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 val spannableString = SpannableString(
                         taskCollectionsList[groupPosition].tasks.get(childPosition)
-                                .getTaskName()
+                                .taskName
                 )
                 spannableString.setSpan(
                         StrikethroughSpan(),
@@ -196,7 +196,7 @@ class ExpandableListAdapter(
                 )
 
                 taskCollectionsList[groupPosition].tasks.get(childPosition)
-                        .setTaskName(spannableString.toString())
+                        .taskName = spannableString.toString()
                 //                    TextView textView = findViewById(R.id.textView);
 //                    textView.setText(spannableString);
             } else {

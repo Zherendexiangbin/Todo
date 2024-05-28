@@ -1,171 +1,61 @@
-package net.onest.time.api.vo;
+package net.onest.time.api.vo
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.io.Serializable
+import java.util.Date
+import java.util.Objects
 
-public class TaskVo implements Serializable {
-    private Long taskId;
-    private Long parentId;
-    private Long userId;
-    private String taskName;
-    private Integer type;
-    private Integer taskStatus;
-    private Integer clockDuration;
-    private String remark;
-    private List<Integer> estimate;
-    private Integer restTime;
-    private Integer again;
-    private Long categoryId;
-    private String background;
-    private Date startedAt;
-    private Date completedAt;
-    private Date createdAt;
-    public Long getTaskId() {
-        return taskId;
+class TaskVo : Serializable {
+    var taskId: Long? = null
+    var parentId: Long? = null
+    var userId: Long? = null
+    var taskName: String? = null
+    var type: Int? = null
+
+    // 0 清单页面
+    // 1 清单集合
+    // 2 已完成=
+    var taskStatus: Int? = null
+    var clockDuration: Int? = null
+    var remark: String? = null
+    var estimate: MutableList<Int>? = null
+    var restTime: Int? = null
+    var again: Int? = null
+    var categoryId: Long? = null
+    var background: String? = null
+    var startedAt: Date? = null
+    var completedAt: Date? = null
+    var createdAt: Date? = null
+
+
+    override fun equals(o: Any?): Boolean {
+        if (this === o) return true
+        if (o == null || javaClass != o.javaClass) return false
+        val taskVo = o as TaskVo
+        return taskId == taskVo.taskId && parentId == taskVo.parentId && userId == taskVo.userId && taskName == taskVo.taskName && type == taskVo.type && taskStatus == taskVo.taskStatus && clockDuration == taskVo.clockDuration && remark == taskVo.remark && estimate == taskVo.estimate && restTime == taskVo.restTime && again == taskVo.again && categoryId == taskVo.categoryId && background == taskVo.background && startedAt == taskVo.startedAt && completedAt == taskVo.completedAt && createdAt == taskVo.createdAt
     }
 
-    public void setTaskId(Long taskId) {
-        this.taskId = taskId;
+    override fun hashCode(): Int {
+        return Objects.hash(
+            taskId,
+            parentId,
+            userId,
+            taskName,
+            type,
+            taskStatus,
+            clockDuration,
+            remark,
+            estimate,
+            restTime,
+            again,
+            categoryId,
+            background,
+            startedAt,
+            completedAt,
+            createdAt
+        )
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
-    public List<Integer> getEstimate() {
-        return estimate;
-    }
-
-    public void setEstimate(List<Integer> estimate) {
-        this.estimate = estimate;
-    }
-
-    public Integer getClockDuration() {
-        return clockDuration;
-    }
-
-    public void setClockDuration(Integer clockDuration) {
-        this.clockDuration = clockDuration;
-    }
-
-    public Integer getTaskStatus() {
-        return taskStatus;
-    }
-
-    public void setTaskStatus(Integer taskStatus) {
-        this.taskStatus = taskStatus;
-    }
-
-    public String getBackground() {
-        return background;
-    }
-
-    public void setBackground(String background) {
-        this.background = background;
-    }
-
-    public Date getStartedAt() {
-        return startedAt;
-    }
-
-    public void setStartedAt(Date startedAt) {
-        this.startedAt = startedAt;
-    }
-
-    public Date getCompletedAt() {
-        return completedAt;
-    }
-
-    public void setCompletedAt(Date completedAt) {
-        this.completedAt = completedAt;
-    }
-
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public Integer getRestTime() {
-        return restTime;
-    }
-
-    public void setRestTime(Integer restTime) {
-        this.restTime = restTime;
-    }
-
-    public Integer getAgain() {
-        return again;
-    }
-
-    public void setAgain(Integer again) {
-        this.again = again;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TaskVo taskVo = (TaskVo) o;
-        return Objects.equals(taskId, taskVo.taskId) && Objects.equals(parentId, taskVo.parentId) && Objects.equals(userId, taskVo.userId) && Objects.equals(taskName, taskVo.taskName) && Objects.equals(type, taskVo.type) && Objects.equals(taskStatus, taskVo.taskStatus) && Objects.equals(clockDuration, taskVo.clockDuration) && Objects.equals(remark, taskVo.remark) && Objects.equals(estimate, taskVo.estimate) && Objects.equals(restTime, taskVo.restTime) && Objects.equals(again, taskVo.again) && Objects.equals(categoryId, taskVo.categoryId) && Objects.equals(background, taskVo.background) && Objects.equals(startedAt, taskVo.startedAt) && Objects.equals(completedAt, taskVo.completedAt) && Objects.equals(createdAt, taskVo.createdAt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(taskId, parentId, userId, taskName, type, taskStatus, clockDuration, remark, estimate, restTime, again, categoryId, background, startedAt, completedAt, createdAt);
-    }
-
-    @Override
-    public String toString() {
+    override fun toString(): String {
         return "TaskVo{" +
                 "taskId=" + taskId +
                 ", parentId=" + parentId +
@@ -183,7 +73,28 @@ public class TaskVo implements Serializable {
                 ", startedAt=" + startedAt +
                 ", completedAt=" + completedAt +
                 ", createdAt=" + createdAt +
-                '}';
+                '}'
     }
 
+    companion object {
+        fun comparator(): Comparator<TaskVo> =
+            Comparator.comparing(TaskVo::taskStatus) { a, b ->
+                if (a != 2 && b == 2) {
+                    1
+                } else if (a == 2 && b != 2) {
+                    -1
+                } else {
+                    0
+                }
+            }.thenComparing(TaskVo::createdAt) { a, b ->
+                if (a!!.before(b)) {
+                    -1
+                } else if (a.after(b)) {
+                    1
+                } else {
+                    0
+                }
+            }
+
+    }
 }
