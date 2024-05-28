@@ -10,10 +10,10 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
-import android.widget.EditText
 import android.widget.RadioGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.graphics.translationMatrix
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import net.onest.time.R
 import net.onest.time.adapter.list.ExpandableListAdapter
 import net.onest.time.api.TaskCategoryApi
@@ -34,7 +34,8 @@ class AddTaskCollectionsDialog(
     private var addNo: Button? = null
     private var groupOne: RadioGroup? = null
     private var groupTwo: RadioGroup? = null
-    private var edit: EditText? = null
+    private var edit: TextInputEditText? = null
+    private var editLayout: TextInputLayout? = null
 
     init {
         val dialogView = LayoutInflater.from(getContext())
@@ -44,7 +45,9 @@ class AddTaskCollectionsDialog(
         window!!.setContentView(dialogView)
         window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        getWindow()?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+        window?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+
+        setEditColor("#0000ff")
 
         findViews(dialogView)
         setListeners()
@@ -56,6 +59,7 @@ class AddTaskCollectionsDialog(
         groupOne = dialogView.findViewById(R.id.list_fragment_pop_window_group_one)
         groupTwo = dialogView.findViewById(R.id.list_fragment_pop_window_group_two)
         edit = dialogView.findViewById(R.id.list_fragment_group_edit)
+        editLayout = dialogView.findViewById(R.id.list_fragment_group_edit_layout)
     }
 
     private fun setListeners() {
@@ -67,27 +71,19 @@ class AddTaskCollectionsDialog(
             }
             when (checkedId) {
                 R.id.list_fragment_group_one_card_view_blue -> {
-                    edit!!.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#0000ff"))
-                    edit!!.setTextColor(Color.parseColor("#0000ff"))
-                    edit!!.setHintTextColor(Color.parseColor("#0000ff"))
+                    setEditColor("#0000ff")
                 }
 
                 R.id.list_fragment_group_one_card_view_brown -> {
-                    edit!!.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#a52a2a"))
-                    edit!!.setTextColor(Color.parseColor("#a52a2a"))
-                    edit!!.setHintTextColor(Color.parseColor("#a52a2a"))
+                    setEditColor("#a52a2a")
                 }
 
                 R.id.list_fragment_group_one_card_view_gray -> {
-                    edit!!.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#808080"))
-                    edit!!.setTextColor(Color.parseColor("#808080"))
-                    edit!!.setHintTextColor(Color.parseColor("#808080"))
+                    setEditColor("#808080")
                 }
 
                 R.id.list_fragment_group_one_card_view_pink -> {
-                    edit!!.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#ffc0cb"))
-                    edit!!.setTextColor(Color.parseColor("#ffc0cb"))
-                    edit!!.setHintTextColor(Color.parseColor("#ffc0cb"))
+                    setEditColor("#ffc0cb")
                 }
             }
         }
@@ -100,27 +96,19 @@ class AddTaskCollectionsDialog(
             }
             when (checkedId) {
                 R.id.list_fragment_group_two_card_view_blueviolet -> {
-                    edit!!.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#8a2be2"))
-                    edit!!.setTextColor(Color.parseColor("#8a2be2"))
-                    edit!!.setHintTextColor(Color.parseColor("#8a2be2"))
+                    setEditColor("#8a2be2")
                 }
 
                 R.id.list_fragment_group_two_card_view_lightgreen -> {
-                    edit!!.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#90ee90"))
-                    edit!!.setTextColor(Color.parseColor("#90ee90"))
-                    edit!!.setHintTextColor(Color.parseColor("#90ee90"))
+                    setEditColor("#90ee90")
                 }
 
                 R.id.list_fragment_group_two_card_view_purple -> {
-                    edit!!.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#800080"))
-                    edit!!.setTextColor(Color.parseColor("#800080"))
-                    edit!!.setHintTextColor(Color.parseColor("#800080"))
+                    setEditColor("#800080")
                 }
 
                 R.id.list_fragment_group_two_card_view_red -> {
-                    edit!!.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#E83141"))
-                    edit!!.setTextColor(Color.parseColor("#E83141"))
-                    edit!!.setHintTextColor(Color.parseColor("#E83141"))
+                    setEditColor("#E83141")
                 }
             }
         }
@@ -144,7 +132,7 @@ class AddTaskCollectionsDialog(
                 return@setOnClickListener
             }
 
-            val taskCollectionsColor = edit!!.currentTextColor
+            val taskCollectionsColor = editLayout!!.boxStrokeColor
 
             val taskCollections = TaskCollections(
                     null,
@@ -163,12 +151,25 @@ class AddTaskCollectionsDialog(
                 e.message?.showToast()
             }
 
+            // TODO: 换组件，受不了了！！！！！！！！！！！！！！！！！
             taskCollectionsList.add(taskCollections)
             expandableListAdapter.notifyDataSetChanged()
             dismiss()
         }
 
         addNo!!.setOnClickListener { dismiss() }
+    }
+
+    private fun setEditColor(color: String) {
+        val colorStateList = ColorStateList.valueOf(Color.parseColor(color))
+        val parseColor = Color.parseColor(color)
+
+        editLayout?.run {
+            defaultHintTextColor = colorStateList
+            hintTextColor = colorStateList
+            boxStrokeColor = parseColor
+        }
+
     }
 
     private fun showKeyboard(view: View) {

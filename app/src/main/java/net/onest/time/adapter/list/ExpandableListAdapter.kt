@@ -39,10 +39,10 @@ import net.onest.time.entity.list.TaskCollections
  * 待办集的Adapter
  */
 class ExpandableListAdapter(
-        private val itemViewId: Int,
-        private val childViewId: Int,
-        private val context: Context,
-        private var taskCollectionsList: List<TaskCollections>
+        val itemViewId: Int,
+        val childViewId: Int,
+        val context: Context,
+        var taskCollectionsList: List<TaskCollections>
 
 ) : BaseExpandableListAdapter() {
     private var intent: Intent? = null

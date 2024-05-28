@@ -112,4 +112,9 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="button" parent="Theme.Time">
+        <item name="android:backgroundTint">@color/wheat</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

@@ -90,9 +90,9 @@ class TaskVo : Serializable {
             }.thenComparing(TaskVo::createdAt) { a, b ->
                 // 按时间排序
                 if (a!!.before(b)) {
-                    -1
-                } else if (a.after(b)) {
                     1
+                } else if (a.after(b)) {
+                    -1
                 } else {
                     0
                 }

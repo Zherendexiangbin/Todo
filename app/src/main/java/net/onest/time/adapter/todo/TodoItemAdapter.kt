@@ -121,8 +121,8 @@ class TodoItemAdapter(private val context: Context, itemListByDay: List<TaskVo>)
                         .asConfirm(
                             "", "该待办为不计时待办，点击确认完成即可完成一次。\n \n确定要完成一次吗？"
                         ) {
-                            TaskApi.removeTask(task.taskId)
-                            notifyDataSetChanged()
+                            TaskApi.complete(task.taskId) //完成任务
+                            notifyItemChanged(itemListByDay.indexOf(task))
                         }
                         .show()
                     //                    TextView textView = findViewById(R.id.textView);

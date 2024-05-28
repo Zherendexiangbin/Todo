@@ -47,7 +47,7 @@ class TaskInfoDialog(
 
         title?.text = task.taskName
         try {
-            val statistics = StatisticApi.statisticByTask(task.taskId)
+            val statistics = StatisticApi.simpleStatisticByTask(task.taskId)
             // 累计专注次数
             learnFrequency?.text = (statistics.tomatoTimes ?: 0).toString()
 

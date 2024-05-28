@@ -2,6 +2,7 @@ package net.onest.time.entity.list;
 
 import net.onest.time.api.vo.TaskVo;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class TaskCollections {
@@ -50,5 +51,9 @@ public class TaskCollections {
 
     public void setTasks(List<TaskVo> tasks) {
         this.tasks = tasks;
+    }
+
+    public static Comparator<TaskCollections> comparator() {
+        return Comparator.comparing(TaskCollections::getTaskCollectionsId, Comparator.reverseOrder());
     }
 }

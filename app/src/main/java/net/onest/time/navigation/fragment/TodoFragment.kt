@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -109,6 +110,7 @@ class TodoFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun setListeners() {
+        // 切换月份事件
         calendarView?.setOnMonthChangeListener { year, month ->
             try {
                 dayTaskMap = TaskApi.getTaskDay(DateUtil.epochMillisecond(year, month))
