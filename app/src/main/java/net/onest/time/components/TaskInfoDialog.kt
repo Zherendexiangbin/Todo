@@ -56,7 +56,8 @@ class TaskInfoDialog(
         } catch (e: RuntimeException) {
             e.message?.showToast()
         }
-        textRemark?.text = task.remark
+
+        textRemark?.text = if (task.remark.isNullOrBlank()) "无" else task.remark
 
         show()
         window!!.setContentView(dialogView)

@@ -371,8 +371,7 @@ class RecordFragment : Fragment() {
 
         //设置描述的位置
         pieDataSet.xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-        pieDataSet.valueLinePart1Length = 0.6f //设置描述连接线长度
-
+        pieDataSet.valueLinePart1Length = 0.5f //设置描述连接线长度
         //设置数据的位置
         pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
         pieDataSet.valueLinePart2Length = 0.6f //设置数据连接线长度

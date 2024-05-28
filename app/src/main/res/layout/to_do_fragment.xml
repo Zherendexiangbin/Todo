@@ -77,6 +77,7 @@
             app:month_view_show_mode="mode_only_current"
             app:week_text_color="@color/black"
             app:week_text_size="20dp"
+            app:selected_theme_color="@color/wheat"
             app:week_bar_view="" />
 
         <LinearLayout
@@ -99,7 +100,7 @@
                 android:id="@+id/my_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/transparent"/>
+                android:background="@color/white"/>
 
 <!--            <include layout="@layout/null_item_page"/>-->
 <!--            <LinearLayout-->

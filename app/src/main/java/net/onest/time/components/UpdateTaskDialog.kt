@@ -9,6 +9,8 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -62,7 +64,8 @@ class UpdateTaskDialog (
     private var popRela: RelativeLayout? = null
 
     init {
-        Toast.makeText(context, "你点击了" + task.taskName, Toast.LENGTH_SHORT).show()
+
+//        Toast.makeText(context, "你点击了" + task.taskName, Toast.LENGTH_SHORT).show()
 
         //设置弹窗：
         val dialogView = LayoutInflater.from(context)
@@ -77,6 +80,8 @@ class UpdateTaskDialog (
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         itemName!!.setText(task.taskName)
+
+
         when (task.type) {
             // 倒计时
             0 -> {
@@ -121,13 +126,29 @@ class UpdateTaskDialog (
                     popRela!!.background = drawable
                 }
             })
+
+        // 文本框获取焦点
+        itemName?.requestFocus()
+
+        getWindow()?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+
         setListeners()
+
     }
 
     private fun setListeners() {
+
         //改变背景：
         relaChange!!.setOnClickListener {
             popRela!!.background = DrawableUtil.getRandomImage(context)
+        }
+
+        itemName?.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                showKeyboard(v)
+            } else {
+                hideKeyboard(v)
+            }
         }
 
         higherSet!!.setOnClickListener { view: View? ->
@@ -301,5 +322,15 @@ class UpdateTaskDialog (
 
         higherSet = dialogView.findViewById(R.id.todo_fragment_add_item_higher_setting)
         popRela = dialogView.findViewById(R.id.todo_add_item_pop_background)
+    }
+
+    private fun showKeyboard(view: View) {
+        val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun hideKeyboard(view: View) {
+        val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

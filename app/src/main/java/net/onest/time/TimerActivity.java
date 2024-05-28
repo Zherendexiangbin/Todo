@@ -85,6 +85,8 @@ public class TimerActivity extends AppCompatActivity {
 
     private RelativeLayout timerEntire;
 
+    private StopClockDialog stopClockDialog;
+
 
 
     /** 获取屏幕坐标点 **/
@@ -99,9 +101,9 @@ public class TimerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
 
         if("forWard".equals(intent.getStringExtra("method"))){
+
             if(mTimeLeftInMillis/1000<5){
                 Toast toast = Toast.makeText(TimerActivity.this, "不记录5秒以下的专注记录!", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP,0,0);
@@ -113,10 +115,11 @@ public class TimerActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
                 mCountDownTimer.cancel();
             }else{
-                new StopClockDialog(TimerActivity.this);
+                stopClockDialog = new StopClockDialog(TimerActivity.this);
             }
         }else{
             int time = Integer.parseInt(intent.getStringExtra("time"));
+
             if(time*60 - circleTimer.getValue()<5){
                 Toast toast = Toast.makeText(TimerActivity.this, "不记录5秒以下的专注记录!", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP,0,0);
@@ -130,7 +133,7 @@ public class TimerActivity extends AppCompatActivity {
 //                        NavController navController = Navigation.findNavController(TimerActivity.this, R.id.nav_host_fragments);
 //                        navController.navigate(R.id.action_todo_fragment_to_list_fragment);
             }else{
-                new StopClockDialog(TimerActivity.this);
+                stopClockDialog = new StopClockDialog(TimerActivity.this);
 
             }
         }
@@ -352,7 +355,7 @@ public class TimerActivity extends AppCompatActivity {
 //                        NavController navController = Navigation.findNavController(TimerActivity.this, R.id.nav_host_fragments);
 //                        navController.navigate(R.id.action_todo_fragment_to_list_fragment);
                     }else{
-                        new StopClockDialog(TimerActivity.this);
+                        stopClockDialog = new StopClockDialog(TimerActivity.this);
 
                     }
                 }
@@ -443,7 +446,7 @@ public class TimerActivity extends AppCompatActivity {
                         overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
                         mCountDownTimer.cancel();
                     }else{
-                        new StopClockDialog(TimerActivity.this);
+                        stopClockDialog = new StopClockDialog(TimerActivity.this);
                     }
                 }
             });
@@ -528,6 +531,14 @@ public class TimerActivity extends AppCompatActivity {
         text = findViewById(R.id.timer_text);
         taskName = findViewById(R.id.timer_name);
         timerEntire = findViewById(R.id.timer_entirely);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(stopClockDialog != null) {
+            stopClockDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }
 

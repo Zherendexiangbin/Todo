@@ -2,15 +2,15 @@ package net.onest.time.components
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getSystemService
 import com.google.android.material.textfield.TextInputEditText
 import com.lxj.xpopup.XPopup
 import net.onest.time.R
@@ -70,6 +70,8 @@ class AddTaskDialog(
 
 //        // 文本框获取焦点
 //        itemName?.requestFocus()
+
+        getWindow()?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
     }
 
     private fun setListeners() {
@@ -89,6 +91,14 @@ class AddTaskDialog(
                 """.trimIndent()
             )
                 .show()
+        }
+
+        itemName?.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                showKeyboard(v)
+            } else {
+                hideKeyboard(v)
+            }
         }
 
         // 计时方式
@@ -206,5 +216,15 @@ class AddTaskDialog(
 
         higherSet = view.findViewById(R.id.todo_fragment_add_item_higher_setting)
         popRela = view.findViewById(R.id.todo_add_item_pop_background)
+    }
+
+    private fun showKeyboard(view: View) {
+        val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun hideKeyboard(view: View) {
+        val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

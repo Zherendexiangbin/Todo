@@ -71,7 +71,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/todo_item_name"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
             </com.google.android.material.textfield.TextInputLayout>
             <Button
                 android:id="@+id/todo_item_about"
