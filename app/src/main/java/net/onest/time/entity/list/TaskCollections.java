@@ -5,6 +5,7 @@ import net.onest.time.api.vo.TaskVo;
 import java.util.List;
 
 public class TaskCollections {
+    private Long taskCollectionsId;
     private String taskCollectionsName;
     private int taskCollectionsColor;
     private List<TaskVo> tasks;
@@ -12,10 +13,19 @@ public class TaskCollections {
     public TaskCollections() {
     }
 
-    public TaskCollections(String taskCollectionsName, int taskCollectionsColor, List<TaskVo> tasks) {
+    public TaskCollections(Long taskCollectionsId, String taskCollectionsName, int taskCollectionsColor, List<TaskVo> tasks) {
+        this.taskCollectionsId = taskCollectionsId;
         this.taskCollectionsName = taskCollectionsName;
         this.taskCollectionsColor = taskCollectionsColor;
         this.tasks = tasks;
+    }
+
+    public Long getTaskCollectionsId() {
+        return taskCollectionsId;
+    }
+
+    public void setTaskCollectionsId(Long taskCollectionsId) {
+        this.taskCollectionsId = taskCollectionsId;
     }
 
     public String getTaskCollectionsName() {

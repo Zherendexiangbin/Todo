@@ -37,6 +37,7 @@ import net.onest.time.R
 import net.onest.time.api.StatisticApi
 import net.onest.time.api.vo.statistic.StatisticVo
 import net.onest.time.databinding.RecordFragmentBinding
+import net.onest.time.utils.ColorUtil
 import net.onest.time.utils.DateUtil
 import net.onest.time.utils.showToast
 import java.util.SortedMap
@@ -98,8 +99,56 @@ class RecordFragment : Fragment() {
         val view = binding.root
 
         findViews(view)
+        setListeners()
         return view
     }
+
+    private fun setListeners() {
+        radioDataGroup!!.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
+                R.id.record_fragment_time_data_day -> {
+                    val pieEntries = statisticsVo!!.ratioByDurationOfDay.map {
+                        PieEntry(it.ratio.toFloat(), it.taskName)
+                    }
+
+                    val colors = statisticsVo!!.ratioByDurationOfDay.map {
+                        ColorUtil.getColorByRgb(null)
+                    }
+
+                    setPieChartData(pieEntries, colors)
+                    pieChart!!.notifyDataSetChanged()
+                }
+
+                R.id.record_fragment_time_data_week -> {
+                    val pieEntries = statisticsVo!!.ratioByDurationOfWeek.map {
+                        PieEntry(it.ratio.toFloat(), it.taskName)
+                    }
+
+                    val colors = statisticsVo!!.ratioByDurationOfWeek.map {
+                        ColorUtil.getColorByRgb(null)
+                    }
+
+                    setPieChartData(pieEntries, colors)
+                    pieChart!!.notifyDataSetChanged()
+                }
+
+                R.id.record_fragment_time_data_month -> {
+                    val pieEntries = statisticsVo!!.ratioByDurationOfMonth.map {
+                        PieEntry(it.ratio.toFloat(), it.taskName)
+                    }
+
+                    val colors = statisticsVo!!.ratioByDurationOfMonth.map {
+                        ColorUtil.getColorByRgb(null)
+                    }
+
+                    setPieChartData(pieEntries, colors)
+                    pieChart!!.notifyDataSetChanged()
+                }
+            }
+        }
+
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -127,33 +176,6 @@ class RecordFragment : Fragment() {
 //            colors.add(Color.parseColor("#ee6e55"))
 //            colors.add(Color.parseColor("#adff2f"))
 //            setPieChartData(yVals, colors)
-//        }
-
-//        radioDataGroup!!.setOnCheckedChangeListener { group, checkedId ->
-//            when (checkedId) {
-//                R.id.record_fragment_time_data_day -> {
-//                    dataDateTxt!!.text = DateUtil.curDay
-//
-//                    setPieChartData(yVals, colors)
-//                    pieChart!!.invalidate() //实时更新数据
-//                }
-//
-//                R.id.record_fragment_time_data_week -> {
-//                    dataDateTxt!!.text = DateUtil.curWeek
-//
-//                    pieChart!!.data = null
-//                    pieChart!!.notifyDataSetChanged()
-//                    pieChart!!.invalidate()
-//                }
-//
-//                R.id.record_fragment_time_data_month -> {
-//                    dataDateTxt!!.text = DateUtil.curMonth
-//
-//                    pieChart!!.data = null
-//                    pieChart!!.notifyDataSetChanged()
-//                    pieChart!!.invalidate()
-//                }
-//            }
 //        }
 
 
@@ -244,7 +266,7 @@ class RecordFragment : Fragment() {
                 return ""
             }
         }
-        barHor!!.axisLeft.axisMaximum = 500f //Y轴最大数值
+        barHor!!.axisLeft.axisMaximum = 2000f //Y轴最大数值
         barHor!!.axisLeft.axisMinimum = 0f //Y轴最小数值
 
         //设置动画
@@ -336,7 +358,7 @@ class RecordFragment : Fragment() {
         }
 
         val colors = statisticsVo!!.ratioByDurationOfDay.map {
-            Color.parseColor("#363636")
+            ColorUtil.getColorByRgb(null)
         }
 
         setPieChartData(pieEntries, colors)
