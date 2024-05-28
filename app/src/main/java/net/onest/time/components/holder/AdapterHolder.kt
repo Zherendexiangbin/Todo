@@ -34,4 +34,10 @@ class AdapterHolder {
 
         recyclerViewAdapter?.notifyItemRemoved(position)
     }
+
+    fun notifyItemInserted(position: Int) {
+        baseExpandableListAdapter?.notifyDataSetChanged()
+
+        recyclerViewAdapter?.notifyItemInserted(position)
+    }
 }

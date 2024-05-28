@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.StrikethroughSpan
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -42,7 +43,6 @@ class ExpandableListAdapter(
         private var taskCollectionsList: List<TaskCollections>
 
 ) : BaseExpandableListAdapter() {
-    var childItemList: List<TaskVo>? = null
     private var intent: Intent? = null
 
 
@@ -59,10 +59,10 @@ class ExpandableListAdapter(
     override fun getChild(groupPosition: Int, childPosition: Int): TaskVo = taskCollectionsList[groupPosition].tasks[childPosition]
 
     //获得父列表id
-    override fun getGroupId(groupPosition: Int) = groupPosition.toLong()
+    override fun getGroupId(groupPosition: Int): Long = taskCollectionsList[groupPosition].taskCollectionsId
 
     //获得子列表id
-    override fun getChildId(groupPosition: Int, childPosition: Int) = childPosition.toLong()
+    override fun getChildId(groupPosition: Int, childPosition: Int): Long = taskCollectionsList[groupPosition].tasks[childPosition].taskId
 
     //指定位置相应的组视图
     override fun hasStableIds() = true
@@ -122,6 +122,8 @@ class ExpandableListAdapter(
             convertView: View?,
             parent: ViewGroup
     ): View {
+
+        Log.i("tag", "($groupPosition, $childPosition) ${taskCollectionsList[groupPosition].tasks[childPosition].taskName}")
         if (convertView != null) return convertView
         val view = LayoutInflater.from(context).inflate(childViewId, parent, false)
 

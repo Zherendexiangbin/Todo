@@ -68,8 +68,8 @@ class AddTaskDialog(
         setTimeTwoTxt!!.visibility = View.GONE
         setTimeThreeTxt!!.visibility = View.GONE
 
-        // 文本框获取焦点
-        itemName?.requestFocus()
+//        // 文本框获取焦点
+//        itemName?.requestFocus()
     }
 
     private fun setListeners() {

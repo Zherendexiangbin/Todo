@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             .transition(DrawableTransitionOptions.withCrossFade(2000))
             .into(logo!!)
 
-        autoLogin()
+//        autoLogin()
 
         loginUser?.setText("2808021998@qq.com");
         loginPassword?.setText("admin");

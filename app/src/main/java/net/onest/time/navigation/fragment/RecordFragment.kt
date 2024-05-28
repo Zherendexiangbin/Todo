@@ -1,5 +1,6 @@
 package net.onest.time.navigation.fragment
 
+import android.annotation.SuppressLint
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.pm.PackageManager
@@ -83,19 +84,6 @@ class RecordFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = RecordFragmentBinding.inflate(inflater, container, false)
-        //改变资源文件颜色
-//        // 获取drawable资源文件
-//        Drawable drawable = getResources().getDrawable(R.drawable.shape_10dp_all_corners);
-//
-//// 将drawable资源文件转换为GradientDrawable对象
-//        GradientDrawable gradientDrawable = (GradientDrawable) drawable;
-//
-//// 设置新的颜色
-//        gradientDrawable.setColor(Color.parseColor("#FFFFFF"));
-//
-//// 将修改后的drawable重新设置给View
-//        view.findViewById(R.id.record_fragment_lin1).setBackground(gradientDrawable);
-//        view.findViewById(R.id.record_fragment_lin2).setBackground(gradientDrawable);
         val view = binding.root
 
         findViews(view)
@@ -104,6 +92,23 @@ class RecordFragment : Fragment() {
     }
 
     private fun setListeners() {
+        // 专注时长分布
+        // 左按钮
+        binding.focusDurationRatioRight.setOnClickListener {
+
+        }
+
+        // 右按钮
+        binding.focusDurationRatioRight.setOnClickListener {
+
+        }
+
+        // 分享按钮
+        binding.focusDurationRatioShare.setOnClickListener {
+
+        }
+
+        // 日 周 月 按钮
         radioDataGroup!!.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.record_fragment_time_data_day -> {
@@ -115,6 +120,7 @@ class RecordFragment : Fragment() {
                         ColorUtil.getColorByRgb(null)
                     }
 
+                    dataDateTxt!!.text = DateUtil.curDay
                     setPieChartData(pieEntries, colors)
                     pieChart!!.notifyDataSetChanged()
                 }
@@ -128,6 +134,7 @@ class RecordFragment : Fragment() {
                         ColorUtil.getColorByRgb(null)
                     }
 
+                    dataDateTxt!!.text = DateUtil.curWeek
                     setPieChartData(pieEntries, colors)
                     pieChart!!.notifyDataSetChanged()
                 }
@@ -141,12 +148,18 @@ class RecordFragment : Fragment() {
                         ColorUtil.getColorByRgb(null)
                     }
 
+                    dataDateTxt!!.text = DateUtil.curMonth
                     setPieChartData(pieEntries, colors)
                     pieChart!!.notifyDataSetChanged()
                 }
             }
         }
 
+        // App前台使用时长分布
+        // 分享按钮
+        binding.appUsedTimeShare.setOnClickListener {
+
+        }
     }
 
 
@@ -164,20 +177,6 @@ class RecordFragment : Fragment() {
         dataDateTxt!!.text = DateUtil.curDay
         appDateTxt!!.text = DateUtil.curDay
 
-//        val yVals: MutableList<PieEntry> = ArrayList()
-//        val colors: MutableList<Int> = ArrayList()
-//        if (radioDayButton!!.isChecked) {
-//            //设置饼状图数据：
-//            yVals.add(PieEntry(28.6f, "陆地"))
-//            yVals.add(PieEntry(60.3f, "海洋"))
-//            yVals.add(PieEntry(100f - 28.6f - 60.3f, "天空"))
-//
-//            colors.add(Color.parseColor("#4A92FC"))
-//            colors.add(Color.parseColor("#ee6e55"))
-//            colors.add(Color.parseColor("#adff2f"))
-//            setPieChartData(yVals, colors)
-//        }
-
 
         //设置圆大小:
         pieChart!!.holeRadius = 50f
@@ -189,50 +188,6 @@ class RecordFragment : Fragment() {
         //设置饼状图主题：
         pieChart!!.description.isEnabled = false
 
-
-        //        String descriptionStr = "平台上有违章车辆和没违章车辆的占比统计";
-//        Description description = new Description();
-//        description.setText(descriptionStr);
-//        pieChart.setDescription(description);
-//        //设置饼状图主题样式：
-//        description.setTextSize(18f);
-//        description.setTextColor(Color.parseColor("#4A92FC"));
-//
-////设置饼状图主题位置
-//        // 获取屏幕中间x 轴的像素坐标
-//        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-//        DisplayMetrics dm = new DisplayMetrics();
-//        wm.getDefaultDisplay().getMetrics(dm);
-//        float x = dm.widthPixels / 2;
-//// y轴像素坐标，获取文本高度（dp）+上方间隔12dp 转换为像素
-//        Paint paint = new Paint();
-//        paint.setTextSize(18f);
-//        Rect rect = new Rect();
-//        paint.getTextBounds(descriptionStr, 0, descriptionStr.length(), rect);
-//        float y = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-//                rect.height() + 12, getResources().getDisplayMetrics());
-//// 设置饼状图主题的位置
-//        description.setPosition(x, y);
-
-
-//-----------------------------------------------------------------------------------------------
-
-//        Drawable drawable1 = getContext().getResources().getDrawable(R.drawable.add,null);
-//        Drawable drawable2 = getContext().getResources().getDrawable(R.drawable.trophy,null);
-//        Drawable drawable3 = getContext().getResources().getDrawable(R.drawable.trophy1,null);
-//        Drawable drawable4 = getContext().getResources().getDrawable(R.drawable.home1,null);
-//        Drawable drawable5 = getContext().getResources().getDrawable(R.drawable.person1,null);
-//        drawable1.setBounds(0,40,0,40);
-
-        //获取app运行时间及其头像:
-//        getAppTimeAndHead();
-
-        //水平柱状图:X、Y轴颠倒   //设置图片大小及其距离：
-//        list.add(new BarEntry(1,3,setImageSizeAndDistance("add")));
-//        list.add(new BarEntry(2,5,setImageSizeAndDistance("trophy")));
-//        list.add(new BarEntry(3,6,setImageSizeAndDistance("trophy1")));
-//        list.add(new BarEntry(4,4,setImageSizeAndDistance("home1")));
-//        list.add(new BarEntry(5,2,setImageSizeAndDistance("person1")));
         val barDataSet = BarDataSet(appTimeAndHead, "App前台使用时间")
         val barData = BarData(barDataSet)
         barData.barWidth = 0.5f //设置条形柱的宽度
@@ -280,76 +235,6 @@ class RecordFragment : Fragment() {
         barHor!!.isScaleXEnabled = false
         barHor!!.isScaleYEnabled = false
         barHor!!.setScaleEnabled(false)
-
-
-        //禁止所有事件
-//        barHor.setTouchEnabled(false);
-
-//        barHor.setBackgroundColor(Color.RED);//设置表格背景颜色
-
-//        barHor.getDescription().setEnabled(true);                  //是否显示右下角描述
-//        barHor.getDescription().setText("这是修改那串英文的方法");    //修改右下角字母的显示
-//        barHor.getDescription().setTextSize(20);                    //字体大小
-//        barHor.getDescription().setTextColor(Color.RED);             //字体颜色
-
-//        //图例
-//        Legend legend=barHor.getLegend();
-//        legend.setEnabled(true);    //是否显示图例
-//        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);    //图例的位置
-//        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-
-//        //X轴自定义值
-//        xAxis.setValueFormatter(new ValueFormatter() {
-//            @Override
-//            public String getAxisLabel(float value, AxisBase axis) {
-//                return dateValueList.get((int) value % dateValueList.size()).getTradeDate();
-//            }
-//        });
-//        //右侧Y轴自定义值
-//        rightAxis.setValueFormatter(new ValueFormatter() {
-//            @Override
-//            public String getAxisLabel(float value, AxisBase axis) {
-//                return (int) value + "%";
-//            }
-//        });
-
-
-//        AAChartModel aaChartModel = new AAChartModel()
-//                .chartType(AAChartType.Area)
-//                .title("THE HEAT OF PROGRAMMING LANGUAGE")
-//                .subtitle("Virtual Data")
-//                .backgroundColor("#4b2b7f")
-//                .categories(new String[]{"Java", "Swift", "Python", "Ruby", "PHP", "Go", "C", "C#", "C++"})
-//                .dataLabelsEnabled(false)
-//                .yAxisGridLineWidth(0f)
-//                .series(new AASeriesElement[]{
-//                        new AASeriesElement()
-//                                .name("Tokyo")
-//                                .data(new Object[]{7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6}),
-//                        new AASeriesElement()
-//                                .name("NewYork")
-//                                .data(new Object[]{0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5}),
-//                        new AASeriesElement()
-//                                .name("London")
-//                                .data(new Object[]{0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0}),
-//                        new AASeriesElement()
-//                                .name("Berlin")
-//                                .data(new Object[]{3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8})
-//                });
-//        AAChartModel aaChartModel = new AAChartModel()
-//                .chartType(AAChartType.Pie)
-//                .title("本月中断原因分析")
-//                .backgroundColor("#778899")
-//
-//                .series(new AASeriesElement[]{
-//                        new AASeriesElement()
-//                                .innerSize(90f)
-//                                .borderWidth(2f)
-//                                .name("饼图开发")
-//                                .data(new Object[]{15, 15, 35, 20, 15})
-//
-//                });
-//        aaChartView.aa_drawChartWithChartModel(aaChartModel);
     }
 
     private fun setFocusDurationRatio() {
@@ -389,15 +274,6 @@ class RecordFragment : Fragment() {
 
     private val appTimeAndHead: List<BarEntry>
         get() {
-            //        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//            try {
-//                startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
-//            } catch (Exception e) {
-//                Toast.makeText(getContext(),"无s法开启允许查看使用情况的应用界面",Toast.LENGTH_LONG).show();
-//                e.printStackTrace();
-//            }
-//        }
-
             XXPermissions.with(this) // 申请单个权限
                 .permission(Permission.PACKAGE_USAGE_STATS) // 设置权限请求拦截器（局部设置）
                 //.interceptor(new PermissionInterceptor())
@@ -483,16 +359,24 @@ class RecordFragment : Fragment() {
     private fun setPieChartData(yVals: List<PieEntry>, colors: List<Int>) {
         val pieDataSet = PieDataSet(yVals, "")
         pieDataSet.colors = colors
-        pieChart!!.setEntryLabelColor(Color.RED) //描述文字的颜色
+        pieChart!!.setEntryLabelColor(Color.parseColor("#ff8c00")) //描述文字的颜色
         pieDataSet.valueTextSize = 15f //数字大小
         pieDataSet.valueTextColor = Color.BLACK //数字颜色
+        pieDataSet.valueFormatter = object : ValueFormatter() {
+            @SuppressLint("DefaultLocale")
+            override fun getFormattedValue(value: Float): String {
+                return String.format("%.2f%%", value * 100)
+            }
+        }
 
         //设置描述的位置
         pieDataSet.xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
         pieDataSet.valueLinePart1Length = 0.6f //设置描述连接线长度
+
         //设置数据的位置
         pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
         pieDataSet.valueLinePart2Length = 0.6f //设置数据连接线长度
+
         //设置两根连接线的颜色
         pieDataSet.valueLineColor = Color.BLUE
 
@@ -506,11 +390,6 @@ class RecordFragment : Fragment() {
     }
 
     private fun setImageSizeAndDistance(drawable: Drawable): Drawable {
-//        int imageResId = getContext().getResources().getIdentifier(name,"drawable", getActivity().getPackageName());
-//        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(),imageResId);
-//        Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,50,50,false);
-//        Drawable alteredDrawable = new BitmapDrawable(getActivity().getResources(),bitmap1);
-//        alteredDrawable.setBounds(100,0,0,0);
 
         val bitmap: Bitmap
         if (drawable is BitmapDrawable) {

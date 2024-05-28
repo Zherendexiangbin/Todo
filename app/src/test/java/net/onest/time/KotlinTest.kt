@@ -2,6 +2,8 @@ package net.onest.time
 
 import org.junit.Assert
 import org.junit.Test
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 class StringDelegator(var str: String = "haha") {
 }
@@ -22,7 +24,30 @@ data class Money(val amount: Double) {
     }
 }
 
+open class Person(var name: String, var birthday: LocalDate) {
+    val age: Int
+        get() = LocalDate.now().year - birthday.year
+
+}
+
+class Employee(
+    name: String,
+    birthday: LocalDate,
+    var rank: String
+) : Person(
+    name,
+    birthday
+) {
+
+}
+
 class KotlinTest {
+    @Test
+    fun classTest() {
+        val person = Person("zhangsan", LocalDate.now().minusYears(18))
+        println(person.age)
+    }
+
     @Test
     fun returnTest() {
 //        listOf(1, 2, 3, 4, 5)
