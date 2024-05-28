@@ -179,10 +179,11 @@ class AddTaskDialog(
                 }
             }
 
+
             val taskVo = TaskApi.addTask(task)
             (tasks as MutableList<TaskVo>).add(taskVo)
-            adapter.notifyItemChanged(tasks.indexOf(taskVo))
-
+//            adapter.notifyItemChanged(tasks.indexOf(taskVo))
+            adapter.notifyDataSetChanged()
             dismiss()
         }
 

@@ -39,7 +39,7 @@ public class MyTextView extends TextView {
         deleteLineColor = typedArray.getColor(R.styleable.DeleteLineTextView_deleteLineColor, Color.BLACK);
         deleteLineWidth = (int) typedArray.getDimension(R.styleable.DeleteLineTextView_deleteLineWidth, 1f);
         typedArray.recycle();
-        Log.e(TAG, "deleteLineWidth:" + deleteLineWidth);
+//        Log.e(TAG, "deleteLineWidth:" + deleteLineWidth);
         i = dip2px(context, deleteLineWidth);
         linePaint = new Paint();
 
