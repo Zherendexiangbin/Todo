@@ -88,7 +88,7 @@ class TaskInfoDialog(
         title = dialogView.findViewById(R.id.txt_title) //待办标题txt
         changeBackground = dialogView.findViewById(R.id.btn_changeBackground) //设置背景button
         setItem = dialogView.findViewById(R.id.btn_set) //编辑待办button
-        moveItem = dialogView.findViewById(R.id.btn_move) //排序或移动待办button
+//        moveItem = dialogView.findViewById(R.id.btn_move) //排序或移动待办button
         deleteItem = dialogView.findViewById(R.id.btn_delete) //删除待办button
         learnFrequency = dialogView.findViewById(R.id.txt_learn_frequency) //累计学习次数txt
         learnTime = dialogView.findViewById(R.id.txt_learn_time) //累计学习时间txt单位分钟

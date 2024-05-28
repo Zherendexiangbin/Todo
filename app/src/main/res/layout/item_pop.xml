@@ -1,225 +1,248 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@drawable/gradient_gray_white"
-    android:paddingRight="10dp"
-    android:paddingLeft="10dp">
-    <LinearLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/txt_title"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:padding="5dp"
-            android:text="待办标题tilte"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:singleLine="false"
-            android:ellipsize="end"
-            android:maxLines="2"/>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            android:gravity="right|center"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btn_changeBackground"
-                android:layout_width="70dp"
-                android:layout_height="50dp"
-                android:background="@color/transparent"
-                android:drawableTop="@mipmap/image"
-                android:text="更换背景"
-                android:textColor="@color/white"
-                android:textSize="13dp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:padding="5dp">
-        <Button
-            android:id="@+id/btn_set"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/button_radius"
-            android:text="编辑"
-            android:textColor="@color/black"/>
-        <Button
-            android:id="@+id/btn_move"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/button_radius"
-            android:text="排序  |  移动"
-            android:textColor="@color/black"/>
-        <Button
-            android:id="@+id/btn_delete"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/button_ivory"
-            android:text="删除"
-            android:textColor="@color/black"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="5dp">
-        <LinearLayout
-            android:id="@+id/learn_history"
-            android:layout_width="0dp"
-            android:layout_height="70dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_radius"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@mipmap/history"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginLeft="5dp"
-                android:text="专注历史记录"
-                android:textSize="18dp"
-                android:textColor="@color/black"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/learn_statistics"
-            android:layout_width="0dp"
-            android:layout_height="70dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/button_radius"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@mipmap/statistics"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginLeft="5dp"
-                android:text="数据统计"
-                android:textSize="18dp"
-                android:textColor="@color/black"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="230dp"
-        android:layout_margin="5dp"
-        android:gravity="center"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
         android:orientation="vertical"
-        android:background="@drawable/button_radius">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="累计专注"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textSize="18dp"/>
+        android:background="@drawable/gradient_gray_white"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp">
 
-        <LinearLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <LinearLayout
+
+        <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:padding="5dp"
+                android:text="待办标题tilte"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:singleLine="false"
+                android:ellipsize="end"
+                android:maxLines="2" />
+
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:gravity="right|center"
+                android:orientation="horizontal">
+
+            <Button
+                    android:id="@+id/btn_changeBackground"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
+                    android:background="@color/transparent"
+                    android:drawableTop="@mipmap/image"
+                    android:text="更换背景"
+                    android:textColor="@color/white"
+                    android:textSize="13dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+        <Button
+                android:id="@+id/btn_set"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:backgroundTint="@color/white"
+                android:text="编辑"
+                android:textColor="@color/black" />
+
+        <!-- <Button -->
+        <!--         android:id="@+id/btn_move" -->
+        <!--         android:layout_width="0dp" -->
+        <!--         android:layout_height="wrap_content" -->
+        <!--         android:layout_weight="1" -->
+        <!--         android:layout_marginLeft="10dp" -->
+        <!--         android:backgroundTint="@color/white" -->
+        <!--         android:text="排序 | 移动" -->
+        <!--         android:textColor="@color/black" /> -->
+
+        <Button
+                android:id="@+id/btn_delete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:backgroundTint="@color/white"
+                android:text="删除"
+                android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+        <LinearLayout
+                android:id="@+id/learn_history"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_radius"
+                android:gravity="center">
+
+            <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@mipmap/history" />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="专注历史记录"
+                    android:textSize="18dp"
+                    android:textColor="@color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/learn_statistics"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/button_radius"
+                android:gravity="center">
+
+            <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@mipmap/statistics" />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="数据统计"
+                    android:textSize="18dp"
+                    android:textColor="@color/black" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:orientation="vertical"
+            android:background="@drawable/button_radius">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="累计专注"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/txt_learn_frequency"
-                    android:layout_width="wrap_content"
+
+            <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:text="3"
-                    android:textSize="30dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
+                    android:orientation="horizontal">
+
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:text="次"
-                    android:textSize="10dp"/>
+                        android:id="@+id/txt_learn_frequency"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="3"
+                        android:textSize="30dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:text="次"
+                        android:textSize="10dp" />
             </LinearLayout>
+
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/txt_learn_time"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:text="63"
-                    android:textSize="30dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
+                    android:orientation="horizontal">
+
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:text="分钟"
-                    android:textSize="10dp"/>
+                        android:id="@+id/txt_learn_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="63"
+                        android:textSize="30dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:text="分钟"
+                        android:textSize="10dp" />
             </LinearLayout>
         </LinearLayout>
+
         <Button
-            android:id="@+id/btn_timing"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:gravity="left"
-            android:padding="10dp"
-            android:textStyle="bold"
-            android:text="定时提醒 | 定时学霸模式"
-            android:textColor="@color/black"
-            android:textSize="18dp"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/btn_timing"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="备注"
+                android:background="@color/transparent"
+                android:gravity="left"
                 android:padding="10dp"
                 android:textStyle="bold"
-                android:textSize="18dp"
-                android:textColor="@color/black"/>
-            <TextView
-                android:id="@+id/text_remark"
-                android:layout_width="wrap_content"
+                android:text="定时提醒 | 定时学霸模式"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="666"
-                android:textSize="16dp"
-                android:padding="10dp"
-                />
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="备注"
+                    android:padding="10dp"
+                    android:textStyle="bold"
+                    android:textSize="18dp"
+                    android:textColor="@color/black" />
+
+            <TextView
+                    android:id="@+id/text_remark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="666"
+                    android:textSize="16dp"
+                    android:padding="10dp" />
         </LinearLayout>
     </LinearLayout>
 
