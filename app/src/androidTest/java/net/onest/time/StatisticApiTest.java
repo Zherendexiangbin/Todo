@@ -13,14 +13,21 @@ public class StatisticApiTest {
 
     @Test
     public void statistic() {
-        StatisticVo statistic = StatisticApi.statistic();
-        System.out.println(statistic);
+        StatisticVo statisticVo = StatisticApi.statistic();
+        System.out.println(statisticVo);
     }
 
     @Test
     public void statisticByTask() {
         Long taskId = 122L;
-        StatisticVo statistic = StatisticApi.statisticByTask(taskId);
-        System.out.println(statistic);
+        StatisticVo statisticVo = StatisticApi.statisticByTask(taskId);
+        System.out.println(statisticVo);
+    }
+
+    @Test
+    public void simpleStatisticByTask() {
+        Long taskId = 227L;
+        StatisticVo statisticVo = StatisticApi.simpleStatisticByTask(taskId);
+        System.out.println(statisticVo);
     }
 }

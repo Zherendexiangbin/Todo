@@ -33,7 +33,10 @@ public class TomatoClockApi {
     private final static String DELETE_TOMATO_CLOCK = "/deleteTomatoClock";
 
     // 每个任务的专注历史记录
-    private final static String STATISTIC_BY_HISTORY = "/";
+    private final static String STATISTIC_HISTORY_BY_TASK = "/";
+
+    // 每个任务的专注历史记录
+    private final static String STATISTIC_HISTORY_BY_USER = "/user";
 
     // 添加番茄钟  --------点击 开始按钮 发送该请求
     public static List<TomatoClockVo> addTomatoClock(Long taskId){
@@ -94,10 +97,18 @@ public class TomatoClockApi {
     }
 
     // 每个任务的专注历史记录
-    public static Map<Long, List<TomatoClockVo>> statisticByHistory(Long taskId) {
+    public static Map<Long, List<TomatoClockVo>> statisticHistoryByTask(Long taskId) {
         return RequestUtil.builder()
-                    .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC_BY_HISTORY + taskId)
+                    .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC_HISTORY_BY_TASK + taskId)
                     .get()
                     .buildAndSend(new TypeToken<Map<Long, List<TomatoClockVo>>>(){});
+    }
+
+    // 每位用户的专注历史记录
+    public static Map<Long, List<TomatoClockVo>> statisticHistoryByUser() {
+        return RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC_HISTORY_BY_USER)
+                .get()
+                .buildAndSend(new TypeToken<Map<Long, List<TomatoClockVo>>>(){});
     }
 }
