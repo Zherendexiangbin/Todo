@@ -115,6 +115,8 @@ class RecordFragment : Fragment() {
                         ColorUtil.getColorByRgb(null)
                     }
 
+                    dataDateTxt!!.text = DateUtil.curDay
+
                     setPieChartData(pieEntries, colors)
                     pieChart!!.notifyDataSetChanged()
                 }
@@ -128,6 +130,7 @@ class RecordFragment : Fragment() {
                         ColorUtil.getColorByRgb(null)
                     }
 
+                    dataDateTxt!!.text = DateUtil.curWeek
                     setPieChartData(pieEntries, colors)
                     pieChart!!.notifyDataSetChanged()
                 }
@@ -141,6 +144,7 @@ class RecordFragment : Fragment() {
                         ColorUtil.getColorByRgb(null)
                     }
 
+                    dataDateTxt!!.text = DateUtil.curMonth
                     setPieChartData(pieEntries, colors)
                     pieChart!!.notifyDataSetChanged()
                 }
@@ -486,10 +490,15 @@ class RecordFragment : Fragment() {
         pieChart!!.setEntryLabelColor(Color.RED) //描述文字的颜色
         pieDataSet.valueTextSize = 15f //数字大小
         pieDataSet.valueTextColor = Color.BLACK //数字颜色
+        pieDataSet.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return String.format("%.2f%%", value * 100)
+            }
+        }
 
         //设置描述的位置
         pieDataSet.xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-        pieDataSet.valueLinePart1Length = 0.6f //设置描述连接线长度
+        pieDataSet.valueLinePart1Length = 0.5f //设置描述连接线长度
         //设置数据的位置
         pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
         pieDataSet.valueLinePart2Length = 0.6f //设置数据连接线长度

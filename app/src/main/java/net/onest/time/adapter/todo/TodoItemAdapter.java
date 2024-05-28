@@ -101,11 +101,11 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holders.time.setText("普通待办");
             }
             holders.name.setText(task.getTaskName());
-            if(itemListByDay.get(position).getTaskStatus()==2){
-                holders.name.setPaintFlags(holders.name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-//                SpannableString spannableString = new SpannableString(itemListByDay.get(position).getTaskName());
-//                spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
+//            if(itemListByDay.get(position).getTaskStatus()==2){
+//                holders.name.setPaintFlags(holders.name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+////                SpannableString spannableString = new SpannableString(itemListByDay.get(position).getTaskName());
+////                spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            }
             Glide.with(context).asBitmap().load(task.getBackground()).into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {

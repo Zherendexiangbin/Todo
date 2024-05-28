@@ -72,10 +72,7 @@ class AddTaskDialog(
         // 文本框获取焦点
         itemName?.requestFocus()
 
-        itemName?.findFocus()
-
         getWindow()?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
-        getWindow()?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     private fun setListeners() {
@@ -104,7 +101,6 @@ class AddTaskDialog(
                 hideKeyboard(v)
             }
         }
-
 
         // 计时方式
         todoSetTime!!.setOnCheckedChangeListener { group: RadioGroup?, checkedId: Int ->

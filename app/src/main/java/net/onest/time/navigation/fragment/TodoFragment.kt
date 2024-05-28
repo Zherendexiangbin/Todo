@@ -85,7 +85,11 @@ class TodoFragment : Fragment() {
         calendarView!!.setSchemeDate(map)
 
         //绑定适配器:
-        todoItemAdapter = TodoItemAdapter(context, dayTaskMap[DateUtil.epochMillisecond()])
+        val taskVos = dayTaskMap[DateUtil.epochMillisecond()]
+        taskVos?.let {
+            todoItemAdapter = TodoItemAdapter(context, taskVos)
+        }
+
         recyclerView?.adapter = todoItemAdapter
         recyclerView?.layoutManager = LinearLayoutManager(context)
     }

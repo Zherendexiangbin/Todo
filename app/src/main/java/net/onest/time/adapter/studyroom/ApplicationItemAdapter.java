@@ -55,11 +55,12 @@ public class ApplicationItemAdapter extends RecyclerView.Adapter<ApplicationItem
 
     @Override
     public int getItemCount(){
-        if (userVoList.size()==0){
-            return 0;
-        }else{
-            return userVoList.size();
-        }
+//        if (userVoList.size()==0){
+//            return 0;
+//        }else{
+//            return userVoList.size();
+//        }
+        return 0;
     }
 
     @Override
