@@ -32,8 +32,8 @@ public class UserApiTest {
     @Test
     public void login() {
         UserDto userDto = new UserDto();
-        userDto.setEmail("2808021998@qq.com");
-        userDto.setPassword("admin");
+        userDto.setEmail("212296944@qq.com");
+        userDto.setPassword("123456");
         String token = UserApi.login(userDto);
         System.out.println(token);
     }

@@ -91,9 +91,20 @@ public class StudyRoomFragment extends Fragment {
     }
 
     private void setListeners() {
-        //刷新自习室用户列表
+        //刷新自习室信息
         userRefresh.setOnClickListener(view1 -> {
+
             userVos = RoomApi.listUsers(roomVo.getRoomId());
+
+            Glide.with(getContext())
+                    .load(roomVo.getRoomAvatar())
+                    .into(roomAvatar);
+            roomName.setText(roomVo.getRoomName());
+            roomManager.setText("管理员：" + userVo.getUserName());
+
+            if (userVos != null){
+                itemAdapter.updateData(userVos);
+            }
         });
 
         btnAdd.setOnClickListener(view -> {
@@ -318,15 +329,15 @@ public class StudyRoomFragment extends Fragment {
                 public void onComplete(String code) {
                     new XPopup.Builder(getContext())
                             .dismissOnTouchOutside(false)
-                            .asConfirm("确认加入", "是否提交自习室加入申请？",
+                            .asConfirm("确认加入", "是否加入自习室？",
                                 new OnConfirmListener() {
                                 @Override
                                 public void onConfirm() {
                                     //向自习室管理员/创建者提交加入申请
-                                    RoomApi.requestJoin(Long.parseLong(code));
+                                    RoomApi.acceptInvitation(code);
                                     userRefresh.setVisibility(View.VISIBLE);
                                     dismiss();
-                                    Toast.makeText(getContext(), "发送成功！", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "加入成功！", Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .show();
@@ -345,7 +356,7 @@ public class StudyRoomFragment extends Fragment {
         private ImageView refresh;
         private RecyclerView applicationList;
         private ApplicationItemAdapter applicationItemAdapter;
-        private List<UserVo> userVos2;
+        private List<UserVo> userVos2 = new ArrayList<>();
 
         public MenuPopWindow(Context context){
             //设置view
@@ -378,11 +389,18 @@ public class StudyRoomFragment extends Fragment {
             //刷新获取房间申请列表
             refresh.setOnClickListener(view1 -> {
                 userVos2 = RoomApi.findRequests(roomVo.getRoomId());
+                if (userVos2 != null){
+                    applicationItemAdapter.updateData(userVos2);
+                }
             });
 
             //绑定数据
+
             RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
-            applicationItemAdapter = new ApplicationItemAdapter(roomVo.getRoomId(), getContext(), userVos2);
+            if(userVos2 != null){
+                //绑定适配器
+                applicationItemAdapter = new ApplicationItemAdapter(roomVo.getRoomId(), getContext(), userVos2);
+            }
             applicationList.setLayoutManager(manager);
             applicationList.setAdapter(applicationItemAdapter);
         }

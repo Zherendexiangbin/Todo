@@ -43,7 +43,7 @@ public class StudyRoomItemAdapter extends RecyclerView.Adapter<StudyRoomItemAdap
     @Override
     public int getItemCount() {
         if (userVoList.size()==0){
-            return 0;
+            return 1;
         }else {
             return userVoList.size();
         }
