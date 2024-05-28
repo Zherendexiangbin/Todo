@@ -84,6 +84,7 @@ class TodoFragment : Fragment() {
 
         //绑定适配器:
         tasks = dayTaskMap[DateUtil.epochMillisecond()] ?: ArrayList()
+        tasks.sortWith(TaskVo.comparator())
         todoItemAdapter = TodoItemAdapter(requireContext(), tasks)
         recyclerView?.adapter = todoItemAdapter
         recyclerView?.layoutManager = LinearLayoutManager(context)
@@ -145,8 +146,9 @@ class TodoFragment : Fragment() {
             override fun onCalendarSelect(calendar: Calendar, isClick: Boolean) {
                 todayTxt?.text = "${calendar.year}年 ${calendar.month}月 ${calendar.day}日"
 
-                todoItemAdapter?.itemListByDay = dayTaskMap[DateUtil.epochMillisecond(calendar.timeInMillis)] ?: ArrayList()
+                tasks = dayTaskMap[DateUtil.epochMillisecond(calendar.timeInMillis)] ?: ArrayList()
                 tasks.sortWith(TaskVo.comparator())
+                todoItemAdapter?.itemListByDay = tasks
                 todoItemAdapter?.notifyDataSetChanged()
             }
         })

@@ -13,7 +13,7 @@ class TaskVo : Serializable {
 
     // 0 清单页面
     // 1 清单集合
-    // 2 已完成=
+    // 2 已完成
     var taskStatus: Int? = null
     var clockDuration: Int? = null
     var remark: String? = null
@@ -79,14 +79,16 @@ class TaskVo : Serializable {
     companion object {
         fun comparator(): Comparator<TaskVo> =
             Comparator.comparing(TaskVo::taskStatus) { a, b ->
+                // 未完成的排前面
                 if (a != 2 && b == 2) {
-                    1
-                } else if (a == 2 && b != 2) {
                     -1
+                } else if (a == 2 && b != 2) {
+                    1
                 } else {
                     0
                 }
             }.thenComparing(TaskVo::createdAt) { a, b ->
+                // 按时间排序
                 if (a!!.before(b)) {
                     -1
                 } else if (a.after(b)) {

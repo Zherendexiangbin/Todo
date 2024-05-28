@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <!-- <style name="Theme.Time" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge"> -->
-    <style name="Theme.Time" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.Time" parent="Theme.Material3.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -104,5 +104,12 @@
     <!-- 按钮 -->
     <style name="buttonBackground" parent="Theme.Time">
         <item name="background">@drawable/button_wheat</item>
+    </style>
+
+    <style name="editText" parent="Theme.Time">
+        <item name="android:textColorHint">#ff8c00</item>
+        <item name="android:backgroundTint">#ff8c00</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>

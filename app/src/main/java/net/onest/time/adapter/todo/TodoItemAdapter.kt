@@ -6,7 +6,7 @@ import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Paint
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.lxj.xpopup.XPopup
+import net.onest.time.MyTextView
 import net.onest.time.R
 import net.onest.time.TimerActivity
 import net.onest.time.api.TaskApi
@@ -28,10 +29,8 @@ import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.TaskInfoDialog
 import net.onest.time.components.holder.AdapterHolder
 
-class TodoItemAdapter(
-    private val context: Context,
-    itemListByDay: MutableList<TaskVo>
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TodoItemAdapter(private val context: Context, itemListByDay: List<TaskVo>) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var itemListByDay: List<TaskVo> = ArrayList()
 
     private var mItemClickListener: OnItemClickListener? = null
@@ -67,6 +66,7 @@ class TodoItemAdapter(
         if (holder is MyViewHolder) {
             val holders = holder
             val task = itemListByDay[position]
+
             if (task.type == 0) {
                 holders.time.text = task.clockDuration.toString() + " 分钟"
             } else if (task.type == 1) {
@@ -74,12 +74,21 @@ class TodoItemAdapter(
             } else {
                 holders.time.text = "普通待办"
             }
-            holders.name.text = task.taskName
+
             if (itemListByDay[position].taskStatus == 2) {
-                holders.name.paintFlags = holders.name.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                //                SpannableString spannableString = new SpannableString(itemListByDay.get(position).getTaskName());
+                //完成状态==设置删除线:
+                holders.name.text = task.taskName
+                holders.name.setDeleteLineColor(Color.parseColor("#ffffff")) //设置删除线的颜色
+                holders.name.setShowDeleteLine(true) //删除线是否显示
+                holders.name.setDeleteLineWidth(context, 3) //删除线显示宽度
+                //                holders.name.setPaintFlags(holders.name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//                SpannableString spannableString = new SpannableString(itemListByDay.get(position).getTaskName());
 //                spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else {
+                holders.name.text = task.taskName
+                holders.name.setShowDeleteLine(false)
             }
+
             Glide.with(context).asBitmap().load(task.background)
                 .into(object : SimpleTarget<Bitmap?>() {
                     override fun onResourceReady(
@@ -160,7 +169,7 @@ class TodoItemAdapter(
 
     internal class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var statistics: RelativeLayout = itemView.findViewById(R.id.click_statistics)
-        var name: TextView = itemView.findViewById(R.id.re_item_txt_name)
+        var name: MyTextView = itemView.findViewById(R.id.re_item_txt_name)
         var time: TextView = itemView.findViewById(R.id.re_item_txt_time)
         var btn: Button = itemView.findViewById(R.id.re_item_ry_btn)
         var backGroundLin: LinearLayout = itemView.findViewById(R.id.re_item_background_lin)
