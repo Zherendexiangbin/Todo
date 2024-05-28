@@ -96,7 +96,7 @@
                 app:vciv_et_cursor_color="@color/transparent"
                 app:vciv_et_height="58dp"
                 app:vciv_et_inputType="number"
-                app:vciv_et_number="5"
+                app:vciv_et_number="6"
                 app:vciv_et_text_color="@android:color/black"
                 app:vciv_et_text_size="25sp"
                 app:vciv_et_underline_default_color="@color/grey"
