@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -139,13 +140,15 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     } else if ("普通待办".equals(holders.time.getText().toString())) {
                         //不计时：
 //                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
                         new XPopup
                                 .Builder(context)
                                 .asConfirm("","该待办为不计时待办，点击确认完成即可完成一次。\n \n确定要完成一次吗？",
                                         () -> {
-                                            TaskApi.removeTask(task.getTaskId());
-                                            notifyDataSetChanged();
+//                                            Log.e("yes",task.getTaskName());
+//                                            TaskApi.removeTask(task.getTaskId());
+                                            TaskApi.complete(task.getTaskId());//完成任务
+                                            notifyItemChanged(itemListByDay.indexOf(task));
+//
                                         })
                                 .show();
 //                    TextView textView = findViewById(R.id.textView);
