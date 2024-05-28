@@ -8,10 +8,12 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.graphics.translationMatrix
 import net.onest.time.R
 import net.onest.time.adapter.list.ExpandableListAdapter
 import net.onest.time.api.TaskCategoryApi
@@ -41,6 +43,8 @@ class AddTaskCollectionsDialog(
         show()
         window!!.setContentView(dialogView)
         window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        getWindow()?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
 
         findViews(dialogView)
         setListeners()
@@ -121,6 +125,15 @@ class AddTaskCollectionsDialog(
             }
         }
 
+        edit?.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                showKeyboard(v)
+            } else {
+                hideKeyboard(v)
+            }
+        }
+
+
         addYes!!.setOnClickListener { v: View? ->
             val taskCollectionsName = edit!!.text.toString().trim()
 
@@ -156,5 +169,15 @@ class AddTaskCollectionsDialog(
         }
 
         addNo!!.setOnClickListener { dismiss() }
+    }
+
+    private fun showKeyboard(view: View) {
+        val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun hideKeyboard(view: View) {
+        val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

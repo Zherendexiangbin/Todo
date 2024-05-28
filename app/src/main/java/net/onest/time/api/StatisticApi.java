@@ -12,6 +12,9 @@ public class StatisticApi {
     // 每个任务的统计数据
     private final static String STATISTIC_BY_TASK = "/";
 
+    // 每个任务的简化统计数据
+    private final static String SIMPLE_STATISTIC_BY_TASK = "/simple";
+
     public static StatisticVo statistic() {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC)
@@ -22,6 +25,13 @@ public class StatisticApi {
     public static StatisticVo statisticByTask(Long taskId) {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC_BY_TASK + taskId)
+                .get()
+                .buildAndSend(StatisticVo.class);
+    }
+
+    public static StatisticVo simpleStatisticByTask(Long taskId) {
+        return RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + SIMPLE_STATISTIC_BY_TASK + "/" + taskId)
                 .get()
                 .buildAndSend(StatisticVo.class);
     }

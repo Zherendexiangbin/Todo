@@ -6,12 +6,14 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.lxj.xpopup.XPopup;
 
+import net.onest.time.MyTextView;
 import net.onest.time.R;
 import net.onest.time.TimerActivity;
 import net.onest.time.api.TaskApi;
@@ -93,6 +96,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if(holder instanceof MyViewHolder){
             MyViewHolder holders = (MyViewHolder) holder;
             TaskVo task = itemListByDay.get(position);
+
             if(Objects.equals(task.getType(),0)){
                 holders.time.setText(task.getClockDuration()+" 分钟");
             }else if(Objects.equals(task.getType(),1)){
@@ -100,12 +104,21 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }else{
                 holders.time.setText("普通待办");
             }
-            holders.name.setText(task.getTaskName());
+
             if(itemListByDay.get(position).getTaskStatus()==2){
-                holders.name.setPaintFlags(holders.name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                //完成状态==设置删除线:
+                holders.name.setText(task.getTaskName());
+//                holders.name.setDeleteLineColor(Color.parseColor("#0000ff"));//设置删除线的颜色
+                holders.name.setShowDeleteLine(true);//删除线是否显示
+                holders.name.setDeleteLineWidth(context,2);//删除线显示宽度
+//                holders.name.setPaintFlags(holders.name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 //                SpannableString spannableString = new SpannableString(itemListByDay.get(position).getTaskName());
 //                spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }else{
+                holders.name.setText(task.getTaskName());
+                holders.name.setShowDeleteLine(false);
             }
+
             Glide.with(context).asBitmap().load(task.getBackground()).into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
@@ -127,13 +140,15 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     } else if ("普通待办".equals(holders.time.getText().toString())) {
                         //不计时：
 //                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
                         new XPopup
                                 .Builder(context)
                                 .asConfirm("","该待办为不计时待办，点击确认完成即可完成一次。\n \n确定要完成一次吗？",
                                         () -> {
-                                            TaskApi.removeTask(task.getTaskId());
-                                            notifyDataSetChanged();
+//                                            Log.e("yes",task.getTaskName());
+//                                            TaskApi.removeTask(task.getTaskId());
+                                            TaskApi.complete(task.getTaskId());//完成任务
+                                            notifyItemChanged(itemListByDay.indexOf(task));
+//
                                         })
                                 .show();
 //                    TextView textView = findViewById(R.id.textView);
@@ -174,7 +189,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         RelativeLayout statistics;
-        TextView name;
+        MyTextView name;
         TextView time;
         Button btn;
         LinearLayout backGroundLin;

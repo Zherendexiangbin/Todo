@@ -84,10 +84,9 @@ class TodoFragment : Fragment() {
         //此方法在巨大的数据量上不影响遍历性能，推荐使用
         calendarView!!.setSchemeDate(map)
 
+        //绑定适配器:
         val taskVos = dayTaskMap[DateUtil.epochMillisecond()]
-
         taskVos?.let {
-            //绑定适配器:
             todoItemAdapter = TodoItemAdapter(context, taskVos)
         }
 

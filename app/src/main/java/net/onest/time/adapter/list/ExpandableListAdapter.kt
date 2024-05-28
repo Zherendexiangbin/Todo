@@ -6,6 +6,7 @@ import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.text.SpannableString
@@ -24,6 +25,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import net.onest.time.MyTextView
 import net.onest.time.R
 import net.onest.time.TimerActivity
 import net.onest.time.api.vo.TaskVo
@@ -126,7 +128,7 @@ class ExpandableListAdapter(
         val view = LayoutInflater.from(context).inflate(childViewId, parent, false)
 
         val backLin = view.findViewById<LinearLayout>(R.id.list_fragment_item_child_background_lin)
-        val childName = view.findViewById<TextView>(R.id.list_fragment_item_child_txt_name)
+        val childName = view.findViewById<MyTextView>(R.id.list_fragment_item_child_txt_name)
         val childTime = view.findViewById<TextView>(R.id.list_fragment_item_child_txt_time)
         val startBtn = view.findViewById<Button>(R.id.list_fragment_item_child_ry_btn)
         val statistics = view.findViewById<RelativeLayout>(R.id.list_click_statistics)
@@ -145,7 +147,19 @@ class ExpandableListAdapter(
                     }
                 })
         //        backLin.setBackgroundColor(taskVo.getColor());
-        childName.text = taskVo.taskName
+
+         if(taskVo.taskStatus==2) {
+            //2表示未完成
+             childName.text = taskVo.taskName
+             childName.setDeleteLineColor(Color.BLACK)
+             childName.setDeleteLineWidth(context,2)
+             childName.setShowDeleteLine(true)
+        } else {
+            //完成状态
+             childName.text = taskVo.taskName
+             childName.setShowDeleteLine(false)
+        }
+
         when (taskVo.type) {
             0 -> {
                 childTime.text = "${taskVo.clockDuration} 分钟"

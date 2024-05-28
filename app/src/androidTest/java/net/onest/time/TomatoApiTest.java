@@ -57,7 +57,13 @@ public class TomatoApiTest {
     @Test
     public void statisticByHistory() {
         Long taskId = 227L;
-        Map<Long, List<TomatoClockVo>> result = TomatoClockApi.statisticByHistory(taskId);
+        Map<Long, List<TomatoClockVo>> result = TomatoClockApi.statisticHistoryByTask(taskId);
+        System.out.println(result);
+    }
+
+    @Test
+    public void statisticHistoryByUser() {
+        Map<Long, List<TomatoClockVo>> result = TomatoClockApi.statisticHistoryByUser();
         System.out.println(result);
     }
 }

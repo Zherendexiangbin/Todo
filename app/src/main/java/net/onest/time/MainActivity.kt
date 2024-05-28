@@ -3,6 +3,7 @@ package net.onest.time
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         findViews()
+
         Glide.with(this@MainActivity)
             .load(R.mipmap.logo2)
             .transition(DrawableTransitionOptions.withCrossFade(2000))
