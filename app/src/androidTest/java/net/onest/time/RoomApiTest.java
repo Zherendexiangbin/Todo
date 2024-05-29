@@ -90,4 +90,10 @@ public class RoomApiTest {
         Long roomId = 1789951868917055489L;
         RoomApi.deleteRoom(roomId);
     }
+
+    @Test
+    public void getRoomInfo() {
+        RoomVo roomInfo = RoomApi.getRoomInfo();
+        System.out.println(roomInfo);
+    }
 }

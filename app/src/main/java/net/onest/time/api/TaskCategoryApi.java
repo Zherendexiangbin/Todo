@@ -8,6 +8,7 @@ import net.onest.time.api.vo.TaskCategoryVo;
 import net.onest.time.api.vo.TaskVo;
 
 import java.util.List;
+import java.util.Map;
 
 public class TaskCategoryApi {
     private final static String PREFIX = "/category";
@@ -22,6 +23,8 @@ public class TaskCategoryApi {
     private final static String GET_ALL = "/";
     // 查询一个清单的所有任务
     private final static String GET_ALL_TASKS = "/";
+    // 查询所有清单集合及每个清淡下面的所有任务
+    private final static String GET_ALL_CATEGORY_AND_TASKS = "/getAllCategoryAndTasks";
 
 
     public static TaskCategoryVo addTaskCategory(TaskCategoryDto TaskCategoryDto) {
@@ -57,6 +60,13 @@ public class TaskCategoryApi {
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + GET_ALL_TASKS + categoryId)
                 .get()
                 .buildAndSend(new TypeToken<List<TaskVo>>(){});
+    }
+
+    public static Map<TaskCategoryVo, List<TaskVo>> getAllCategoryAndTasks(){
+        return RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + GET_ALL_CATEGORY_AND_TASKS)
+                .get()
+                .buildAndSend(new TypeToken<Map<TaskCategoryVo, List<TaskVo>>>(){});
     }
 
 }

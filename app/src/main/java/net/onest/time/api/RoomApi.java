@@ -52,6 +52,10 @@ public class RoomApi {
     // 管理员查询所有的加入自习室的请求
     private final static String FIND_REQUESTS = "/manager/requests";
 
+    // 查询用户加入的自习室
+    private final static String GET_ROOM_INFO = "/getRoomInfo";
+
+
 
     public static RoomVo createRoom(RoomDto roomDto) {
         return RequestUtil.builder()
@@ -142,6 +146,13 @@ public class RoomApi {
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + FIND_REQUESTS + "?roomId=" + roomId)
                 .get()
                 .buildAndSend(new TypeToken<List<UserVo>>(){});
+    }
+
+    public static RoomVo getRoomInfo() {
+        return RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + GET_ROOM_INFO)
+                .get()
+                .buildAndSend(new TypeToken<RoomVo>(){});
     }
 
 }
