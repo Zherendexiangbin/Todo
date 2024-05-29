@@ -3,8 +3,8 @@ package net.onest.time.navigation.fragment
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.view.DragEvent
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -26,7 +26,6 @@ import net.onest.time.components.holder.AdapterHolder
 import net.onest.time.utils.DateUtil
 import net.onest.time.utils.showToast
 import java.time.Instant
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 
@@ -36,7 +35,7 @@ class TodoFragment : Fragment() {
     private var recyclerView: RecyclerView? = null //待办事项
     private var todoBtn: Button? = null //添加按钮
     private var todayTxt: TextView? = null
-    private var tasks: MutableList<TaskVo> = ArrayList() //待办事项数据源
+    private lateinit var tasks: MutableList<TaskVo> //待办事项数据源
     private lateinit var dayTaskMap: MutableMap<Long, MutableList<TaskVo>>
     private var nullPage: LinearLayout? = null
 
@@ -85,11 +84,9 @@ class TodoFragment : Fragment() {
         calendarView!!.setSchemeDate(map)
 
         //绑定适配器:
-        val taskVos = dayTaskMap[DateUtil.epochMillisecond()]
-        taskVos?.let {
-            todoItemAdapter = TodoItemAdapter(context, taskVos)
-        }
-
+        tasks = dayTaskMap[DateUtil.epochMillisecond()] ?: ArrayList()
+        tasks.sortWith(TaskVo.comparator())
+        todoItemAdapter = TodoItemAdapter(requireContext(), tasks)
         recyclerView?.adapter = todoItemAdapter
         recyclerView?.layoutManager = LinearLayoutManager(context)
     }
@@ -113,6 +110,7 @@ class TodoFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun setListeners() {
+        // 切换月份事件
         calendarView?.setOnMonthChangeListener { year, month ->
             try {
                 dayTaskMap = TaskApi.getTaskDay(DateUtil.epochMillisecond(year, month))
@@ -150,18 +148,12 @@ class TodoFragment : Fragment() {
             override fun onCalendarSelect(calendar: Calendar, isClick: Boolean) {
                 todayTxt?.text = "${calendar.year}年 ${calendar.month}月 ${calendar.day}日"
 
-                try {
-                    tasks = dayTaskMap[DateUtil.epochMillisecond(calendar.timeInMillis)] ?: ArrayList()
-                } catch (e: Exception) {
-                    e.message?.showToast()
-                }
-
+                tasks = dayTaskMap[DateUtil.epochMillisecond(calendar.timeInMillis)] ?: ArrayList()
+                tasks.sortWith(TaskVo.comparator())
                 todoItemAdapter?.itemListByDay = tasks
                 todoItemAdapter?.notifyDataSetChanged()
             }
         })
-
-//        recyclerView?.onDragEvent()
     }
 
     private fun findView(view: View) {

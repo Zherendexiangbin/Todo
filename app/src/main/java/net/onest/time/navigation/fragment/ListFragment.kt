@@ -87,8 +87,8 @@ class ListFragment : Fragment() {
                 //BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
 
                 // 底部弹出的布局
-//                val binding = DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, R.layout.list_fragment_parent_edit, null, false)
-                val bottomView = LayoutInflater.from(requireContext()).inflate(R.layout.list_fragment_parent_edit, null);
+                val bottomView = LayoutInflater.from(requireContext())
+                    .inflate(R.layout.list_fragment_parent_edit, null);
 
                 bottomSheetDialog.setContentView(bottomView)
 
@@ -157,7 +157,7 @@ class ListFragment : Fragment() {
         try {
             val all = TaskCategoryApi.getAll()
             all.forEach { taskCategoryVo ->
-                var allTasks = TaskCategoryApi.getAllTasks(taskCategoryVo.categoryId)
+                val allTasks = TaskCategoryApi.getAllTasks(taskCategoryVo.categoryId)
                 parentMap[taskCategoryVo] = allTasks
             }
 
@@ -176,6 +176,7 @@ class ListFragment : Fragment() {
             taskCollectionsList.add(taskCollections)
         }
 
+//        taskCollectionsList.sortWith(TaskCollections.comparator())
         return taskCollectionsList
     }
 
