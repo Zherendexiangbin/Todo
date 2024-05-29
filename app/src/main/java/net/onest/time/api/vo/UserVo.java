@@ -10,6 +10,8 @@ public class UserVo {
     private String signature;
     private Date createdAt;
 
+    private Long tomatoDuration;
+
     public Long getUserId() {
         return userId;
     }
@@ -50,17 +52,20 @@ public class UserVo {
         this.createdAt = createdAt;
     }
 
+    public Long getTomatoDuration() {
+        return tomatoDuration;
+    }
+
+    public void setTomatoDuration(Long tomatoDuration) {
+        this.tomatoDuration = tomatoDuration;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserVo userVo = (UserVo) o;
-        return Objects.equals(userId, userVo.userId) && Objects.equals(userName, userVo.userName) && Objects.equals(avatar, userVo.avatar) && Objects.equals(signature, userVo.signature);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, userName, avatar, signature);
+        return Objects.equals(userId, userVo.userId) && Objects.equals(userName, userVo.userName) && Objects.equals(avatar, userVo.avatar) && Objects.equals(signature, userVo.signature) && Objects.equals(createdAt, userVo.createdAt) && Objects.equals(tomatoDuration, userVo.tomatoDuration);
     }
 
     @Override
@@ -70,6 +75,14 @@ public class UserVo {
                 ", userName='" + userName + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", signature='" + signature + '\'' +
+                ", createdAt=" + createdAt +
+                ", tomatoDuration=" + tomatoDuration +
                 '}';
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, userName, avatar, signature, createdAt, tomatoDuration);
+    }
+
 }
