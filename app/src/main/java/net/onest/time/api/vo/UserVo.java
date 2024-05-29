@@ -1,5 +1,6 @@
 package net.onest.time.api.vo;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class UserVo {
@@ -7,6 +8,7 @@ public class UserVo {
     private String userName;
     private String avatar;
     private String signature;
+    private Date createdAt;
 
     public Long getUserId() {
         return userId;
@@ -38,6 +40,14 @@ public class UserVo {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override
