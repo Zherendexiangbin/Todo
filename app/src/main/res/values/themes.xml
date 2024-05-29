@@ -15,19 +15,13 @@
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">@color/transparent</item>
+        <item name="android:statusBarColor">@color/wheat</item>
         <item name="android:windowTranslucentNavigation">true</item>
 
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@style/CustomDialogAnimation</item>
     </style>
 
-    <style name="FullScreenThem" parent="Theme.Time">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">@color/wheat</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-    </style>
     <style name="Theme.Time.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

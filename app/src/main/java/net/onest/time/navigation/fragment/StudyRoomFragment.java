@@ -5,7 +5,9 @@ import static android.app.Activity.RESULT_OK;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -75,7 +77,7 @@ public class StudyRoomFragment extends Fragment {
         userVo = UserApi.getUserInfo();
         userVos = new ArrayList<>();
         avatarString = userVo.getAvatar();
-        roomVo = new RoomVo();
+//        roomVo = new RoomVo();
         loadData();
         findViewById(view);
         setListeners();
@@ -86,14 +88,15 @@ public class StudyRoomFragment extends Fragment {
     private void setListeners() {
         //刷新自习室信息
         userRefresh.setOnClickListener(view1 -> {
+            if (roomVo != null ){
+                userVos = RoomApi.listUsers(roomVo.getRoomId());
 
-            userVos = RoomApi.listUsers(roomVo.getRoomId());
-
-            Glide.with(getContext())
-                    .load(roomVo.getRoomAvatar())
-                    .into(roomAvatar);
-            roomName.setText(roomVo.getRoomName());
-            roomManager.setText("管理员：" + userVo.getUserName());
+                Glide.with(getContext())
+                        .load(roomVo.getRoomAvatar())
+                        .into(roomAvatar);
+                roomName.setText(roomVo.getRoomName());
+                roomManager.setText("管理员：" + userVo.getUserName());
+            }
 
             if (userVos != null){
                 itemAdapter.updateData(userVos);
@@ -102,8 +105,8 @@ public class StudyRoomFragment extends Fragment {
 
         btnAdd.setOnClickListener(view -> {
             if(btnAdd.getHint().equals("add")){
-                RoomCodePopWindow chatMenu = new RoomCodePopWindow(getContext());
-                chatMenu.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.TOP, 0, 0);
+                RoomCodePopWindow addMenu = new RoomCodePopWindow(getContext());
+                addMenu.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.TOP, 0, 0);
             } else if (btnAdd.getHint().equals("dissolution")) {
                 //解散自习室
                 new XPopup.Builder(getContext())
@@ -122,7 +125,6 @@ public class StudyRoomFragment extends Fragment {
 
                                         roomName.setText("时光自习室");
                                         roomManager.setVisibility(View.GONE);
-                                        userRefresh.setVisibility(View.GONE);
                                         btnMenu.setVisibility(View.GONE);
                                         Toast.makeText(getContext(), "解散成功！", Toast.LENGTH_SHORT).show();
                                     }
@@ -146,7 +148,6 @@ public class StudyRoomFragment extends Fragment {
 
                                 roomName.setText("时光自习室");
                                 roomManager.setVisibility(View.GONE);
-                                userRefresh.setVisibility(View.GONE);
                                 btnMenu.setVisibility(View.GONE);
                                 Toast.makeText(getContext(), "退出成功！", Toast.LENGTH_SHORT).show();
                             }
@@ -178,7 +179,6 @@ public class StudyRoomFragment extends Fragment {
         roomManager.setVisibility(View.GONE);
 
         userRefresh = view.findViewById(R.id.user_refresh);
-        userRefresh.setVisibility(View.GONE);
 
         recyclerView = view.findViewById(R.id.user_list);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 5, RecyclerView.VERTICAL, false);
@@ -213,8 +213,8 @@ public class StudyRoomFragment extends Fragment {
             //activity的contentView的宽度
             int width = ((Activity) context).findViewById(android.R.id.content).getWidth();
             //其他设置
-            setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);//设置高度
-            setWidth(ViewGroup.LayoutParams.MATCH_PARENT);//设置宽度
+            setWidth(width);//必须设置宽度
+            setHeight(dp2px(280));//必须设置高度
             setFocusable(true);//是否获取焦点
             setOutsideTouchable(true);//是否可以通过点击屏幕外关闭
         }
@@ -223,7 +223,18 @@ public class StudyRoomFragment extends Fragment {
         public void showAtLocation(View parent, int gravity, int x, int y) {
             super.showAtLocation(parent, gravity, x, y);
             //加入动画
-            ObjectAnimator.ofFloat(getContentView(), "translationY", getHeight(), 0).setDuration(200).start();
+            ObjectAnimator.ofFloat(getContentView(), "translationY", -getHeight(), 0).setDuration(300).start();
+        }
+
+        /**
+         * Value of dp to value of px.
+         *
+         * @param dpValue The value of dp.
+         * @return value of px
+         */
+        public int dp2px(final float dpValue) {
+            final float scale = Resources.getSystem().getDisplayMetrics().density;
+            return (int) (dpValue * scale + 0.5f);
         }
 
         private void initView(View view) {
@@ -295,7 +306,6 @@ public class StudyRoomFragment extends Fragment {
                                         roomAvatar.setImageURI(avatarUri);
                                         roomDto.setRoomAvatar(avatarString);
 
-                                        userRefresh.setVisibility(View.VISIBLE);
                                         btnMenu.setVisibility(View.VISIBLE);
                                         btnAdd.setBackgroundResource(R.mipmap.quit);
                                         btnAdd.setHint("dissolution");
@@ -321,6 +331,7 @@ public class StudyRoomFragment extends Fragment {
             findRoom.setOnClickListener(view1 -> {
                 Intent intent = new Intent(getContext(), FindStudyRoomActivity.class);
                 startActivity(intent);
+                dismiss();
             });
 
             //根据邀请码加入自习室
@@ -337,7 +348,7 @@ public class StudyRoomFragment extends Fragment {
                                     RoomApi.acceptInvitation(code);
                                     //获取加入的自习室信息
 
-                                    userRefresh.setVisibility(View.VISIBLE);
+                                    roomVo = RoomApi.getRoomInfo();
                                     dismiss();
                                     Toast.makeText(getContext(), "加入成功！", Toast.LENGTH_SHORT).show();
                                 }
@@ -397,7 +408,6 @@ public class StudyRoomFragment extends Fragment {
             });
 
             //绑定数据
-
             RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
             if(userVos2 != null){
                 //绑定适配器

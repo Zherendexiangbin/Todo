@@ -1,6 +1,8 @@
 package net.onest.time.adapter.studyroom;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,15 +35,18 @@ public class StudyRoomAdapter extends RecyclerView.Adapter<StudyRoomAdapter.View
         Glide.with(context)
                 .load(roomVo.getRoomAvatar())
                 .into(holder.roomAvatar);
-
+//        holder.roomAvatar.setBackgroundResource(R.mipmap.logo);
         holder.roomName.setText(roomVo.getRoomName());
-        holder.roomManager.setText("管理员：" + roomVo.getRoomId());
+
+        holder.enterRoom.setOnClickListener(view -> {
+            ((Activity)view.getContext()).finish();
+        });
     }
 
     @Override
     public int getItemCount() {
         if (roomVos.size()==0){
-            return 1;
+            return 0;
         }else {
             return roomVos.size();
         }
@@ -62,20 +67,18 @@ public class StudyRoomAdapter extends RecyclerView.Adapter<StudyRoomAdapter.View
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public ImageView roomAvatar, enterRoom;
-        public TextView roomName, roomManager;
+        public TextView roomName;
 
         public ViewHolder(View itemView){
             super(itemView);
             roomAvatar = itemView.findViewById(R.id.room_avatar);
             roomName = itemView.findViewById(R.id.room_name);
-            roomManager = itemView.findViewById(R.id.room_manager);
             enterRoom = itemView.findViewById(R.id.enter_room);
         }
     }
 
-    public void updateData(List<RoomVo> roomVos2) {
-        this.roomVos = roomVos2;
-        notifyDataSetChanged(); // 通知适配器数据集已更改，刷新列表
+    public void updateData(List<RoomVo> rooms){
+        this.roomVos = rooms;
+        notifyDataSetChanged();
     }
-
 }
