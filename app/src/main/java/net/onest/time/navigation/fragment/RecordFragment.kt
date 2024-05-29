@@ -237,6 +237,9 @@ class RecordFragment : Fragment() {
         barHor!!.setScaleEnabled(false)
     }
 
+    /**
+     * 设置今日专注的比例
+     */
     private fun setFocusDurationRatio() {
         val pieEntries = statisticsVo!!.ratioByDurationOfDay.map {
             PieEntry(it.ratio.toFloat(), it.taskName)

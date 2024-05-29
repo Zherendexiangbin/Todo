@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="20dp"
+            android:paddingHorizontal="20dp">
+        <TextView
+                android:id="@+id/txt_user_name"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LinFenglong"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                />
+
+        <Button
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:id="@+id/btn_share"
+                android:layout_gravity="center"
+                android:padding="0dp"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:icon="@android:drawable/ic_menu_share"
+                app:iconTint="@color/black"
+                android:backgroundTint="@color/transparent"
+                />
+
+        <Button
+                android:layout_marginEnd="10dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/btn_share"
+                android:id="@+id/btn_save"
+                android:layout_gravity="center"
+                android:padding="0dp"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:icon="@android:drawable/stat_sys_download_done"
+                app:iconTint="@color/black"
+                android:backgroundTint="@color/transparent"
+                />
+
+        <TextView
+                android:id="@+id/txt_daily_check_in"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="每日打卡"
+                android:textAppearance="?attr/textAppearanceTitleSmall"
+                />
+
+        <TextView
+                android:id="@+id/txt_current_datatime"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2050年7月8日 15:30:09"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                />
+
+        <LinearLayout
+                android:id="@+id/cards"
+                app:layout_constraintTop_toBottomOf="@id/txt_user_name"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+            <!-- 当日专注次数 -->
+            <com.google.android.material.card.MaterialCardView
+                    android:layout_marginHorizontal="20dp"
+                    android:id="@+id/card_tomato_times"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                    <TextView
+                            android:layout_marginTop="6dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="专注次数"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"/>
+                    <LinearLayout
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                        <TextView
+                                android:id="@+id/txt_tomato_times_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="18"
+                                android:textSize="32sp"/>
+
+                        <TextView
+                                android:layout_marginBottom="4dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="次"
+                                android:textAppearance="?attr/textAppearanceTitleMedium"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 当日专注时长 -->
+            <com.google.android.material.card.MaterialCardView
+                    android:layout_marginHorizontal="20dp"
+                    android:id="@+id/card_tomato_duration"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                    <TextView
+                            android:layout_marginTop="6dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="专注时长"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"/>
+                    <LinearLayout
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                        <TextView
+                                android:id="@+id/txt_tomato_duration_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="734.5"
+                                android:textSize="32sp"/>
+
+                        <TextView
+                                android:layout_marginBottom="4dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="分"
+                                android:textAppearance="?attr/textAppearanceTitleMedium"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <!-- 时长分布 -->
+        <com.github.mikephil.charting.charts.PieChart
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cards"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/chart_datetime_ratio"
+                android:layout_width="300dp"
+                android:layout_height="260dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="50dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
