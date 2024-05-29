@@ -18,9 +18,17 @@ public class StatisticApiTest {
     }
 
     @Test
+    public void statisticTime() {
+        Long timestamp = 1716190853000L;
+        StatisticVo statisticVo = StatisticApi.statistic(timestamp);
+        System.out.println(statisticVo);
+    }
+
+    @Test
     public void statisticByTask() {
         Long taskId = 122L;
-        StatisticVo statisticVo = StatisticApi.statisticByTask(taskId);
+        Long timestamp = 1716190853000L;
+        StatisticVo statisticVo = StatisticApi.statisticByTask(taskId, timestamp);
         System.out.println(statisticVo);
     }
 

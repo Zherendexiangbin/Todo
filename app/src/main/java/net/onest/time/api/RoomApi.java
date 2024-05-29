@@ -154,5 +154,4 @@ public class RoomApi {
                 .get()
                 .buildAndSend(new TypeToken<RoomVo>(){});
     }
-
 }
