@@ -63,6 +63,9 @@
         <activity
             android:name=".navigation.activity.PersonEditActivity"
             android:exported="false" />
+        <activity
+            android:name=".navigation.activity.FindStudyRoomActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -9,12 +9,12 @@
         android:fitsSystemWindows="true"
         tools:context=".MainActivity">
 
-    <!--    <com.scwang.wave.MultiWaveHeader-->
-    <!--        android:id="@+id/waveHeader"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="300dp"-->
-    <!--        app:mwhCloseColor="@color/wheat"-->
-    <!--        tools:ignore="MissingConstraints" />-->
+        <com.scwang.wave.MultiWaveHeader
+            android:id="@+id/waveHeader"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:mwhCloseColor="@color/wheat"
+            tools:ignore="MissingConstraints" />
 
 
     <ImageView
