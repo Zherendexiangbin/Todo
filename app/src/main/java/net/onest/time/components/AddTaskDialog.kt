@@ -21,7 +21,6 @@ import net.onest.time.components.holder.AdapterHolder
 import net.onest.time.utils.showToast
 import net.onest.time.utils.withCustomAlphaAnimation
 
-
 /**
  * 添加任务 弹窗
  */
@@ -69,8 +68,8 @@ class AddTaskDialog(
         setTimeTwoTxt!!.visibility = View.GONE
         setTimeThreeTxt!!.visibility = View.GONE
 
-        // 文本框获取焦点
-        itemName?.requestFocus()
+//        // 文本框获取焦点
+//        itemName?.requestFocus()
 
         getWindow()?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
     }

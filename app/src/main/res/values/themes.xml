@@ -1,8 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Time" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+    <!-- <style name="Theme.Time" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge"> -->
+    <style name="Theme.Time" parent="Theme.Material3.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
@@ -15,6 +16,9 @@
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:windowTranslucentNavigation">true</item>
+
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/CustomDialogAnimation</item>
     </style>
 
     <style name="FullScreenThem" parent="Theme.Time">
@@ -39,7 +43,7 @@
         <item name="colorControlActivated">@color/orange</item>
     </style>
 
-
+    <!-- 按钮的颜色 -->
     <style name="radiobtn_style">
         <item name="android:textColor">@drawable/radiobtn_textcolor</item>
         <item name="android:background">@drawable/radiobtn_background</item>
@@ -47,6 +51,7 @@
         <item name="android:padding">10dp</item>
     </style>
 
+    <!-- 记录页面专注时长分布的（ 日 周 月 ）选项卡 -->
     <style name="record_fragment_left_radio_btn_style">
         <item name="android:textColor">@drawable/radiobtn_textcolor</item>
         <item name="android:background">@drawable/record_fg_left_radio_btn_style</item>
@@ -75,7 +80,7 @@
         <item name="hintTextColor">@color/blue</item>
     </style>
 
-
+    <!-- Dialog 的样式 -->
     <style name="CustomDialogStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsFloating">true</item>
@@ -88,4 +93,28 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
+    <!-- 底部导航栏 -->
+    <style name="bottomNavigationBar" parent="Theme.Time">
+        <item name="background">@drawable/shape_bottom_ivory</item>
+        <item name="itemIconTint">@drawable/menu_item_selected</item>
+        <item name="itemTextColor">@drawable/menu_item_selected</item>
+        <item name="itemActiveIndicatorStyle">@color/transparent</item>
+    </style>
+
+    <!-- 按钮 -->
+    <style name="buttonBackground" parent="Theme.Time">
+        <item name="background">@drawable/button_wheat</item>
+    </style>
+
+    <style name="editText" parent="Theme.Time">
+        <item name="android:textColorHint">#ff8c00</item>
+        <item name="android:backgroundTint">#ff8c00</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="button" parent="Theme.Time">
+        <item name="android:backgroundTint">@color/wheat</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

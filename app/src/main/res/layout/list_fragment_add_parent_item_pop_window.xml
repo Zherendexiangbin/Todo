@@ -42,16 +42,21 @@
                     android:background="@drawable/close"/>
             </LinearLayout>
         </RelativeLayout>
-        <EditText
-            android:id="@+id/list_fragment_group_edit"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:textColorHint="@color/blue"
-            android:hint="请输入待办集"
-            android:backgroundTint="@color/blue"
-            android:textColor="@color/blue"
-            android:textStyle="bold"
-            android:layout_marginTop="5dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/list_fragment_group_edit_layout"
+                style="?attr/textInputFilledStyle"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="请输入待办集"
+                app:boxBackgroundColor="@color/white"
+                >
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/list_fragment_group_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <RadioGroup
             android:id="@+id/list_fragment_pop_window_group_one"
@@ -65,7 +70,8 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:button="@null"
-                android:background="@color/gray" />
+                android:background="@color/gray"
+                android:checked="true" />
             <RadioButton
                 android:id="@+id/list_fragment_group_one_card_view_pink"
                 android:layout_width="20dp"
