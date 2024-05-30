@@ -13,6 +13,7 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.InputFilter.LengthFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -400,35 +402,51 @@ class RecordFragment : Fragment() {
 
 
     private fun setPieChartData(yVals: List<PieEntry>, colors: List<Int>) {
-        val pieDataSet = PieDataSet(yVals, "")
-        pieDataSet.colors = colors
-        pieChart!!.setEntryLabelColor(Color.parseColor("#ff8c00")) //描述文字的颜色
-        pieDataSet.valueTextSize = 15f //数字大小
-        pieDataSet.valueTextColor = Color.BLACK //数字颜色
-        pieDataSet.valueFormatter = object : ValueFormatter() {
-            @SuppressLint("DefaultLocale")
-            override fun getFormattedValue(value: Float): String {
-                return String.format("%.2f%%", value * 100)
+        if(yVals.isEmpty()){
+            binding.emptyData.visibility = View.VISIBLE
+            pieChart?.visibility = View.INVISIBLE
+        }else{
+            binding.emptyData.visibility = View.INVISIBLE
+            pieChart?.visibility = View.VISIBLE
+
+            val pieDataSet = PieDataSet(yVals, "")
+            pieDataSet.colors = colors
+            pieChart!!.setEntryLabelColor(Color.parseColor("#ff8c00")) //描述文字的颜色
+            pieDataSet.valueTextSize = 15f //数字大小
+            pieDataSet.valueTextColor = Color.BLACK //数字颜色
+            pieDataSet.valueFormatter = object : ValueFormatter() {
+                @SuppressLint("DefaultLocale")
+                override fun getFormattedValue(value: Float): String {
+                    return String.format("%.2f%%", value * 100)
+                }
             }
-        }
 
-        //设置描述的位置
-        pieDataSet.xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-        pieDataSet.valueLinePart1Length = 0.5f //设置描述连接线长度
-        //设置数据的位置
-        pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-        pieDataSet.valueLinePart2Length = 0.6f //设置数据连接线长度
+            //设置描述的位置
+            pieDataSet.xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+            pieDataSet.valueLinePart1Length = 0.5f //设置描述连接线长度
+            //设置数据的位置
+            pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+            pieDataSet.valueLinePart2Length = 0.6f //设置数据连接线长度
 
-        //设置两根连接线的颜色
-        pieDataSet.valueLineColor = Color.BLUE
+            //设置两根连接线的颜色
+            pieDataSet.valueLineColor = Color.BLUE
 
-        val pieData = PieData(pieDataSet)
-        pieChart!!.data = pieData
-        pieChart!!.setExtraOffsets(0f, 32f, 0f, 32f)
-        //动画（如果使用了动画可以则省去更新数据的那一步）
+            val pieData = PieData(pieDataSet)
+            pieChart!!.data = pieData
+            pieChart!!.setExtraOffsets(0f, 16f, 0f, 16f)
+            //动画（如果使用了动画可以则省去更新数据的那一步）
 //        pieChart.animateY(1000); //在Y轴的动画  参数是动画执行时间 毫秒为单位
 //        pieChart.animateX(1000); //X轴动画
-        pieChart!!.animateXY(1000, 1000) //XY两轴混合动画
+            pieChart!!.animateXY(1000, 1000) //XY两轴混合动画
+
+            val legend = pieChart!!.legend
+            legend.xEntrySpace = 20f
+            legend.orientation = Legend.LegendOrientation.HORIZONTAL
+            legend.isWordWrapEnabled = true
+//            legend.formSize = 15f
+//            legend.textSize = 15f
+            legend.textColor=Color.BLACK
+        }
     }
 
     private fun setImageSizeAndDistance(drawable: Drawable): Drawable {
