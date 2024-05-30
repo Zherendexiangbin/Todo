@@ -1,8 +1,10 @@
 package net.onest.time.navigation.fragment
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.usage.UsageStatsManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
 import android.graphics.Bitmap
@@ -14,6 +16,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -40,6 +43,9 @@ import net.onest.time.api.vo.statistic.StatisticVo
 import net.onest.time.databinding.RecordFragmentBinding
 import net.onest.time.utils.ColorUtil
 import net.onest.time.utils.DateUtil
+import net.onest.time.utils.createBitmap
+import net.onest.time.utils.drawUserWatermark
+import net.onest.time.utils.saveBitmapCache
 import net.onest.time.utils.showToast
 import java.util.SortedMap
 import java.util.TreeMap
@@ -105,7 +111,24 @@ class RecordFragment : Fragment() {
 
         // 分享按钮
         binding.focusDurationRatioShare.setOnClickListener {
-
+            val activity = context as Activity
+            binding.layoutTomatoDurationRatio.createBitmap(activity.window) { bitmap, success ->
+                if (success) {
+                    bitmap!!
+                        .drawUserWatermark()
+                        .saveBitmapCache("${activity.externalCacheDir?.path}/tomatoDurationRatio")
+                        .run {
+                            val shareIntent = Intent()
+                            shareIntent.setAction(Intent.ACTION_SEND)
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, this)
+                            // 指定发送内容的类型 (MIME type)
+                            shareIntent.setType("image/png")
+                            activity.startActivity(shareIntent)
+                        }
+                } else {
+                    "分享失败".showToast()
+                }
+            }
         }
 
         // 日 周 月 按钮
@@ -158,7 +181,24 @@ class RecordFragment : Fragment() {
         // App前台使用时长分布
         // 分享按钮
         binding.appUsedTimeShare.setOnClickListener {
-
+            val activity = context as Activity
+            binding.layoutAppUsedTime.createBitmap(activity.window) { bitmap, success ->
+                if (success) {
+                    bitmap!!
+                        .drawUserWatermark()
+                        .saveBitmapCache("${activity.externalCacheDir?.path}/appUsedTime")
+                        .run {
+                            val shareIntent = Intent()
+                            shareIntent.setAction(Intent.ACTION_SEND)
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, this)
+                            // 指定发送内容的类型 (MIME type)
+                            shareIntent.setType("image/p    ng")
+                            activity.startActivity(shareIntent)
+                        }
+                } else {
+                    "分享失败".showToast()
+                }
+            }
         }
     }
 
@@ -422,13 +462,6 @@ class RecordFragment : Fragment() {
         scaledDrawable.setBounds(100, 0, 0, 0)
 
         return scaledDrawable
-    }
-
-    fun setExtraOffsets(left: Float, top: Float, right: Float, bottom: Float) {
-        pieChart!!.extraLeftOffset = left
-        pieChart!!.extraTopOffset = top
-        pieChart!!.extraRightOffset = right
-        pieChart!!.extraBottomOffset = bottom
     }
 
     private fun findViews(view: View) {

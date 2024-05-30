@@ -240,6 +240,7 @@
             </LinearLayout>
 
             <LinearLayout
+                    android:id="@+id/layout_tomato_duration_ratio"
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
                     android:layout_margin="7dp"
@@ -376,6 +377,7 @@
             </LinearLayout>
 
             <LinearLayout
+                    android:id="@+id/layout_app_used_time"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:layout_margin="7dp"

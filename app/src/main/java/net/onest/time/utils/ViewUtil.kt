@@ -3,22 +3,24 @@ package net.onest.time.utils
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Rect
 import android.net.Uri
-import android.os.Build
-import android.os.FileUtils
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
-import android.util.Log
 import android.view.PixelCopy
 import android.view.View
 import android.view.Window
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
+import net.onest.time.api.utils.RequestUtil
+import net.onest.time.api.vo.UserVo
+import net.onest.time.constant.SharedPreferencesConstant
+import net.onest.time.constant.UserInfoConstant
 import java.io.File
 import java.time.LocalDate
-import kotlin.math.log
 
 /**
  * 将View转换成Bitmap
@@ -88,4 +90,22 @@ fun Bitmap.saveBitmapCache(path: String): Uri {
     }
 
     return FileProvider.getUriForFile(applicationContext(), "net.onest.time.fileprovider", file)
+}
+
+fun Bitmap.drawUserWatermark(): Bitmap {
+    val canvas = Canvas(this)
+
+    val paint = Paint()
+    paint.color = Color.GRAY
+    paint.textSize = 64f
+
+    val json = applicationContext()
+        .getSharedPreferences(SharedPreferencesConstant.USER_INFO, Context.MODE_PRIVATE)
+        .getString(UserInfoConstant.USER_INFO, "")
+
+    val userVo = RequestUtil.getGson().fromJson(json, UserVo::class.java)
+
+    canvas.drawText(userVo.userName, this.width - userVo.userName.length * 36 - 10f, this.height - 44f, paint)
+
+    return this
 }
