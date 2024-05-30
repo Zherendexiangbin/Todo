@@ -45,6 +45,7 @@ import com.mut_jaeryo.circletimer.CircleTimer;
 import net.onest.time.api.RandomWordApi;
 import net.onest.time.api.TaskApi;
 import net.onest.time.api.TomatoClockApi;
+import net.onest.time.api.vo.TomatoClockVo;
 import net.onest.time.components.StopClockDialog;
 import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.utils.DrawableUtil;
@@ -87,6 +88,10 @@ public class TimerActivity extends AppCompatActivity {
 
     private StopClockDialog stopClockDialog;
 
+    private long taskId;
+    private String timeStr;//倒计时时间
+    private String str ;//是否开始
+
 
 
     /** 获取屏幕坐标点 **/
@@ -115,7 +120,7 @@ public class TimerActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
                 mCountDownTimer.cancel();
             }else{
-                stopClockDialog = new StopClockDialog(TimerActivity.this);
+                stopClockDialog = new StopClockDialog(TimerActivity.this,intent.getLongExtra("taskId",0L));
             }
         }else{
             int time = Integer.parseInt(intent.getStringExtra("time"));
@@ -133,7 +138,7 @@ public class TimerActivity extends AppCompatActivity {
 //                        NavController navController = Navigation.findNavController(TimerActivity.this, R.id.nav_host_fragments);
 //                        navController.navigate(R.id.action_todo_fragment_to_list_fragment);
             }else{
-                stopClockDialog = new StopClockDialog(TimerActivity.this);
+                stopClockDialog = new StopClockDialog(TimerActivity.this,intent.getLongExtra("taskId",0L));
 
             }
         }
@@ -142,6 +147,7 @@ public class TimerActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -181,15 +187,15 @@ public class TimerActivity extends AppCompatActivity {
                         mCurPosY = event.getY();
                         break;
                     case MotionEvent.ACTION_UP:
-                        if (mCurPosX - mPosX > 45
-                                && (Math.abs(mCurPosX - mPosX) > 45)) {
+                        if (mCurPosX - mPosX > 70
+                                && (Math.abs(mCurPosX - mPosX) > 70)) {
                             //设置停止弹窗:
-                            new StopClockDialog(TimerActivity.this);
+                            new StopClockDialog(TimerActivity.this,intent.getLongExtra("taskId",0L));
                             Toast.makeText(TimerActivity.this, "向右滑动😊", Toast.LENGTH_SHORT).show();
-                        }else if (mCurPosX - mPosX < -45
-                                && (Math.abs(mCurPosX - mPosX) > 45)) {
+                        }else if (mCurPosX - mPosX < -70
+                                && (Math.abs(mCurPosX - mPosX) > 70)) {
                             //设置停止弹窗:
-                            new StopClockDialog(TimerActivity.this);
+                            new StopClockDialog(TimerActivity.this,intent.getLongExtra("taskId",0L));
                             Toast.makeText(TimerActivity.this, "向左滑动😊", Toast.LENGTH_SHORT).show();
                         }
                         break;
@@ -201,13 +207,13 @@ public class TimerActivity extends AppCompatActivity {
 
         intent = getIntent();
         taskName.setText(intent.getStringExtra("name"));
-        String timeStr = intent.getStringExtra("time");
-        String str = intent.getStringExtra("start");
+        timeStr = intent.getStringExtra("time");
+        str = intent.getStringExtra("start");
+        taskId = intent.getLongExtra("taskId",0);
 
 //设置倒计时:
         if("countDown".equals(intent.getStringExtra("method"))){
             timeTxt.setVisibility(View.GONE);
-
 //        circleTimer.setInitPosition(60);
             int time = Integer.parseInt(timeStr);
             circleTimer.setMaximumTime(time*60+1);
@@ -215,12 +221,18 @@ public class TimerActivity extends AppCompatActivity {
 
             if("go".equals(str)){
                 circleTimer.start();
-                // 开始任务:
-//                long taskId = intent.getLongExtra("taskId",0L);
-//                if(taskId!=0L){
-//                    TomatoClockApi.startTomatoClock(taskId);
-//                }
             }
+
+            //对于倒计时:若是超过5秒，添加正向计时的番茄钟
+            if(time*60-circleTimer.getValue()>5){
+                long taskId = intent.getLongExtra("taskId",0L);
+                if(taskId!=0L){
+                    List<TomatoClockVo> tomatoClockVos = TomatoClockApi.addTomatoClock(taskId);
+
+                    Toast.makeText(this, "开始添加番茄钟", Toast.LENGTH_SHORT).show();
+                }
+            }
+
 
             if(pauseTime==0){
                 Toast toast = Toast.makeText(TimerActivity.this, "本次任务的暂停限制时间已用完!", Toast.LENGTH_SHORT);
@@ -354,7 +366,7 @@ public class TimerActivity extends AppCompatActivity {
 //                        NavController navController = Navigation.findNavController(TimerActivity.this, R.id.nav_host_fragments);
 //                        navController.navigate(R.id.action_todo_fragment_to_list_fragment);
                     }else{
-                        stopClockDialog = new StopClockDialog(TimerActivity.this);
+                        stopClockDialog = new StopClockDialog(TimerActivity.this,taskId);
 
                     }
                 }
@@ -364,12 +376,7 @@ public class TimerActivity extends AppCompatActivity {
             circleTimer.setVisibility(View.GONE);
             timeTxt.setText("开始");
 
-            startTimer();
-            //开始任务
-//            long taskId = intent.getLongExtra("taskId",0L);
-//            if(taskId!=0L){
-//                TomatoClockApi.startTomatoClock(taskId);
-//            }
+            startTimer();//开始计时
 
             //打断:
             if(pauseTime==0){
@@ -429,7 +436,6 @@ public class TimerActivity extends AppCompatActivity {
                 });
             }
 
-
             //停止计时/放弃原因:
             stopBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -445,7 +451,7 @@ public class TimerActivity extends AppCompatActivity {
                         overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
                         mCountDownTimer.cancel();
                     }else{
-                        stopClockDialog = new StopClockDialog(TimerActivity.this);
+                        stopClockDialog = new StopClockDialog(TimerActivity.this,taskId);
                     }
                 }
             });
@@ -493,11 +499,13 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void startTimer() {
-        mCountDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
+        mCountDownTimer = new CountDownTimer(Long.MAX_VALUE, 2000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 mTimeLeftInMillis +=1000;
                 updateCountdownText();
+//                Toast.makeText(TimerActivity.this, "开始添加番茄钟"+mTimeLeftInMillis+"finished"+millisUntilFinished, Toast.LENGTH_SHORT).show();
+
             }
             @Override
             public void onFinish() {
@@ -510,6 +518,17 @@ public class TimerActivity extends AppCompatActivity {
 
 
     private void updateCountdownText() {
+        //对于正向计时:若是超过5秒，添加正向计时的番茄钟
+        if(mTimeLeftInMillis/1000 == 5){
+//            long taskId = intent.getLongExtra("taskId",0L);
+
+            if(taskId != 0){
+                TomatoClockApi.addTomatoClock(taskId);
+                Log.e("番茄钟","添加");
+                Toast.makeText(TimerActivity.this, "开始添加番茄钟"+mTimeLeftInMillis, Toast.LENGTH_SHORT).show();
+            }
+        }
+
         int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
         int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
 

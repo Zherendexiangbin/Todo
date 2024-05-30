@@ -26,7 +26,10 @@ import net.onest.time.api.UserApi;
 import net.onest.time.api.vo.UserVo;
 import net.onest.time.navigation.activity.PersonEditActivity;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
@@ -68,7 +71,7 @@ public class PersonFragment extends Fragment {
         UserVo userVo = UserApi.getUserInfo();
 
         //用户头像
-        Glide.with(getContext())
+        Glide.with(requireContext())
                 .load(userVo.getAvatar())
                         .into(userAvatar);
         //用户昵称
@@ -77,7 +80,10 @@ public class PersonFragment extends Fragment {
         userId.setText("UID：" + userVo.getUserId());
 
         //用户创建时间及应用使用时间
-        userCreateAt.setText("2020年4月24日");
+        @SuppressLint("SimpleDateFormat")
+        String format = new SimpleDateFormat("yyyy年MM月dd日").format(userVo.getCreatedAt());
+        userCreateAt.setText(format);
+
         LocalDate localDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年M月d日");
         LocalDate specifiedDate = LocalDate.parse(userCreateAt.getText().toString().trim(), formatter);
