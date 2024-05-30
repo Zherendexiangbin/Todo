@@ -71,7 +71,7 @@ class AddTaskDialog(
 //        // 文本框获取焦点
 //        itemName?.requestFocus()
 
-        getWindow()?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+        window?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
     }
 
     private fun setListeners() {

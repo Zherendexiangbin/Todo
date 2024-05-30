@@ -240,12 +240,13 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:layout_margin="7dp"
-                android:background="@drawable/record_fragment_shape_10dp_all_corners"
-                android:orientation="vertical"
-                android:padding="10dp">
+                    android:id="@+id/layout_tomato_duration_ratio"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_margin="7dp"
+                    android:background="@drawable/record_fragment_shape_10dp_all_corners"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -392,12 +393,13 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_margin="7dp"
-                android:background="@drawable/record_fragment_shape_10dp_all_corners"
-                android:orientation="vertical"
-                android:padding="10dp">
+                    android:id="@+id/layout_app_used_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_margin="7dp"
+                    android:background="@drawable/record_fragment_shape_10dp_all_corners"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"

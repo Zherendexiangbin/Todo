@@ -40,7 +40,7 @@ public class RoomApiTest {
 
     @Test
     public void listUsers() {
-        Long roomId = 1782930102082654209L;
+        Long roomId = 1795745656680820738L;
         List<UserVo> userVoList = RoomApi.listUsers(roomId);
         System.out.println(userVoList);
     }
@@ -89,5 +89,11 @@ public class RoomApiTest {
     public void deleteRoom() {
         Long roomId = 1789951868917055489L;
         RoomApi.deleteRoom(roomId);
+    }
+
+    @Test
+    public void getRoomInfo() {
+        RoomVo roomInfo = RoomApi.getRoomInfo();
+        System.out.println(roomInfo);
     }
 }

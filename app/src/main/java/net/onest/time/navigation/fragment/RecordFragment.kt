@@ -1,52 +1,54 @@
 package net.onest.time.navigation.fragment
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.usage.UsageStatsManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
+import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.AxisBase
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import net.onest.time.MyCounter
-import net.onest.time.MyTextView
 import net.onest.time.R
 import net.onest.time.api.StatisticApi
 import net.onest.time.api.vo.statistic.StatisticVo
 import net.onest.time.databinding.RecordFragmentBinding
 import net.onest.time.utils.ColorUtil
 import net.onest.time.utils.DateUtil
+import net.onest.time.utils.createBitmap
+import net.onest.time.utils.drawUserWatermark
+import net.onest.time.utils.saveBitmapCache
 import net.onest.time.utils.showToast
-import java.io.PipedInputStream
-import java.util.*
-
+import java.util.SortedMap
+import java.util.TreeMap
 
 class RecordFragment : Fragment() {
     private var i = 0
@@ -63,9 +65,6 @@ class RecordFragment : Fragment() {
     private var todayFocus: TextView? = null
     private var dataDateTxt: TextView? = null
     private var appDateTxt: TextView? = null
-
-    private var myCounter:MyCounter?=null
-
 
     //水平柱状图:
     private var barHor: HorizontalBarChart? = null
@@ -95,7 +94,6 @@ class RecordFragment : Fragment() {
 
         findViews(view)
         setListeners()
-
         return view
     }
 
@@ -113,12 +111,25 @@ class RecordFragment : Fragment() {
 
         // 分享按钮
         binding.focusDurationRatioShare.setOnClickListener {
-
+            val activity = context as Activity
+            binding.layoutTomatoDurationRatio.createBitmap(activity.window) { bitmap, success ->
+                if (success) {
+                    bitmap!!
+                        .drawUserWatermark()
+                        .saveBitmapCache("${activity.externalCacheDir?.path}/tomatoDurationRatio")
+                        .run {
+                            val shareIntent = Intent()
+                            shareIntent.setAction(Intent.ACTION_SEND)
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, this)
+                            // 指定发送内容的类型 (MIME type)
+                            shareIntent.setType("image/png")
+                            activity.startActivity(shareIntent)
+                        }
+                } else {
+                    "分享失败".showToast()
+                }
+            }
         }
-
-        myCounter?.setAddCountDownListener { "倒计时结束".showToast() }
-        myCounter?.setCountdownTime(100)
-        myCounter?.startCountDown()
 
         // 日 周 月 按钮
         radioDataGroup!!.setOnCheckedChangeListener { group, checkedId ->
@@ -133,8 +144,6 @@ class RecordFragment : Fragment() {
                     }
 
                     dataDateTxt!!.text = DateUtil.curDay
-
-
                     setPieChartData(pieEntries, colors)
                     pieChart!!.notifyDataSetChanged()
                 }
@@ -172,7 +181,24 @@ class RecordFragment : Fragment() {
         // App前台使用时长分布
         // 分享按钮
         binding.appUsedTimeShare.setOnClickListener {
-
+            val activity = context as Activity
+            binding.layoutAppUsedTime.createBitmap(activity.window) { bitmap, success ->
+                if (success) {
+                    bitmap!!
+                        .drawUserWatermark()
+                        .saveBitmapCache("${activity.externalCacheDir?.path}/appUsedTime")
+                        .run {
+                            val shareIntent = Intent()
+                            shareIntent.setAction(Intent.ACTION_SEND)
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, this)
+                            // 指定发送内容的类型 (MIME type)
+                            shareIntent.setType("image/p    ng")
+                            activity.startActivity(shareIntent)
+                        }
+                } else {
+                    "分享失败".showToast()
+                }
+            }
         }
     }
 
@@ -251,6 +277,9 @@ class RecordFragment : Fragment() {
         barHor!!.setScaleEnabled(false)
     }
 
+    /**
+     * 设置今日专注的比例
+     */
     private fun setFocusDurationRatio() {
         val pieEntries = statisticsVo!!.ratioByDurationOfDay.map {
             PieEntry(it.ratio.toFloat(), it.taskName)
@@ -371,60 +400,35 @@ class RecordFragment : Fragment() {
 
 
     private fun setPieChartData(yVals: List<PieEntry>, colors: List<Int>) {
-            if (yVals.isEmpty()) {
-                binding.emptyData.visibility = View.VISIBLE
-                pieChart?.visibility = View.INVISIBLE
+        val pieDataSet = PieDataSet(yVals, "")
+        pieDataSet.colors = colors
+        pieChart!!.setEntryLabelColor(Color.parseColor("#ff8c00")) //描述文字的颜色
+        pieDataSet.valueTextSize = 15f //数字大小
+        pieDataSet.valueTextColor = Color.BLACK //数字颜色
+        pieDataSet.valueFormatter = object : ValueFormatter() {
+            @SuppressLint("DefaultLocale")
+            override fun getFormattedValue(value: Float): String {
+                return String.format("%.2f%%", value * 100)
+            }
+        }
 
+        //设置描述的位置
+        pieDataSet.xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+        pieDataSet.valueLinePart1Length = 0.5f //设置描述连接线长度
+        //设置数据的位置
+        pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+        pieDataSet.valueLinePart2Length = 0.6f //设置数据连接线长度
 
-            } else {
-                binding.emptyData.visibility = View.INVISIBLE
-                pieChart?.visibility = View.VISIBLE
-//                PieDataSet(yVals, "")
-                val pieDataSet = PieDataSet(yVals, "")
-                pieDataSet.colors = colors
-                pieChart!!.setEntryLabelColor(Color.parseColor("#ff8c00")) //描述文字的颜色
-                pieDataSet.valueTextSize = 15f //数字大小
-                pieDataSet.valueTextColor = Color.BLACK //数字颜色
-                pieDataSet.valueFormatter = object : ValueFormatter() {
-                    @SuppressLint("DefaultLocale")
-                    override fun getFormattedValue(value: Float): String {
-                        return String.format("%.2f%%", value * 100)
-                    }
-                }
+        //设置两根连接线的颜色
+        pieDataSet.valueLineColor = Color.BLUE
 
-                //设置描述的位置
-                pieDataSet.xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-                pieDataSet.valueLinePart1Length = 0.5f //设置描述连接线长度
-                //设置数据的位置
-                pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-                pieDataSet.valueLinePart2Length = 0.6f //设置数据连接线长度
-
-                //设置两根连接线的颜色
-                pieDataSet.valueLineColor = Color.BLUE
-
-                val pieData = PieData(pieDataSet)
-                pieChart!!.data = pieData
-                pieChart!!.setExtraOffsets(0f, 25f, 0f, 25f)
-                //动画（如果使用了动画可以则省去更新数据的那一步）
+        val pieData = PieData(pieDataSet)
+        pieChart!!.data = pieData
+        pieChart!!.setExtraOffsets(0f, 32f, 0f, 32f)
+        //动画（如果使用了动画可以则省去更新数据的那一步）
 //        pieChart.animateY(1000); //在Y轴的动画  参数是动画执行时间 毫秒为单位
 //        pieChart.animateX(1000); //X轴动画
-                pieChart!!.animateXY(1000, 1000) //XY两轴混合动画
-
-                val legend: Legend = pieChart!!.legend
-                legend.setEnabled(true)//是否显示图例，false则以下配置不生效
-//        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);//设置图例和饼状图竖向对齐
-//        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);//设置图例和饼状图横线对齐
-
-                legend.setWordWrapEnabled(true)
-
-                legend.setOrientation(Legend.LegendOrientation.HORIZONTAL)//设置图例的排列走向:vertacal相当于分行
-                legend.setForm(Legend.LegendForm.SQUARE);//设置图例的图形样式,默认为圆形
-                legend.setFormSize(12f);//设置图例的大小
-                legend.setTextSize(12f);//设置图注的字体大小
-//        legend.xEntrySpace=10f
-                legend.setXEntrySpace(15f)//设置图例之间的间隔！
-                legend.setTextColor(getResources().getColor(R.color.black)); //图例的文字颜色
-            }
+        pieChart!!.animateXY(1000, 1000) //XY两轴混合动画
     }
 
     private fun setImageSizeAndDistance(drawable: Drawable): Drawable {
@@ -460,13 +464,6 @@ class RecordFragment : Fragment() {
         return scaledDrawable
     }
 
-    fun setExtraOffsets(left: Float, top: Float, right: Float, bottom: Float) {
-        pieChart!!.extraLeftOffset = left
-        pieChart!!.extraTopOffset = top
-        pieChart!!.extraRightOffset = right
-        pieChart!!.extraBottomOffset = bottom
-    }
-
     private fun findViews(view: View) {
         pieChart = view.findViewById(R.id.record_fragment_pie_chart)
         barHor = view.findViewById(R.id.record_fragment_bar_chart)
@@ -478,7 +475,5 @@ class RecordFragment : Fragment() {
         todayFocus = view.findViewById(R.id.record_fragment_today_focus)
         dataDateTxt = view.findViewById(R.id.record_fragment_time_data_date)
         appDateTxt = view.findViewById(R.id.record_fragment_app_use_time_txt)
-
     }
-
 }

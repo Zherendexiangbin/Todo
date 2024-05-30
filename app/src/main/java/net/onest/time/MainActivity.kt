@@ -15,8 +15,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.textfield.TextInputEditText
 import net.onest.time.api.UserApi
 import net.onest.time.api.dto.UserDto
@@ -53,12 +51,13 @@ class MainActivity : AppCompatActivity() {
             .transition(DrawableTransitionOptions.withCrossFade(2000))
             .into(logo!!)
 
-//        autoLogin()
+        autoLogin()
 
-        loginUser?.setText("2808021998@qq.com");
-        loginPassword?.setText("admin");
-//        loginUser!!.setText("212296944@qq.com")
-//        loginPassword!!.setText("123456")
+//        loginUser?.setText("2808021998@qq.com");
+//        loginPassword?.setText("admin");
+        loginUser!!.setText("212296944@qq.com")
+        loginPassword!!.setText("123456")
+
         setListeners()
         setAnimator()
     }

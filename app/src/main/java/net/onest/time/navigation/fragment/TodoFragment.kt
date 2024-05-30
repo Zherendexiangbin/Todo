@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -19,10 +19,13 @@ import com.haibin.calendarview.CalendarView
 import com.haibin.calendarview.CalendarView.OnCalendarSelectListener
 import net.onest.time.R
 import net.onest.time.adapter.todo.TodoItemAdapter
+import net.onest.time.api.StatisticApi
 import net.onest.time.api.TaskApi
 import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.AddTaskDialog
+import net.onest.time.components.CheckInDialog
 import net.onest.time.components.holder.AdapterHolder
+import net.onest.time.entity.CheckIn
 import net.onest.time.utils.DateUtil
 import net.onest.time.utils.showToast
 import java.time.Instant
@@ -30,6 +33,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 class TodoFragment : Fragment() {
+    private var logo: ImageView? = null
     private var calendarLayout: CalendarLayout? = null
     private var calendarView: CalendarView? = null
     private var recyclerView: RecyclerView? = null //待办事项
@@ -154,9 +158,15 @@ class TodoFragment : Fragment() {
                 todoItemAdapter?.notifyDataSetChanged()
             }
         })
+
+        logo?.setOnClickListener {
+            val checkIn = CheckIn("LingFenglong", 1, 79.2, StatisticApi.statistic().ratioByDurationOfMonth)
+            CheckInDialog(requireContext(), checkIn)
+        }
     }
 
     private fun findView(view: View) {
+        logo = view.findViewById(R.id.logo)
         calendarLayout = view.findViewById(R.id.cancel_button)
         calendarView = view.findViewById(R.id.calendarView)
         recyclerView = view.findViewById(R.id.my_recyclerView)

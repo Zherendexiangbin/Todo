@@ -24,9 +24,16 @@ public class StatisticApi {
                 .buildAndSend(StatisticVo.class);
     }
 
-    public static StatisticVo statisticByTask(Long taskId) {
+    public static StatisticVo statistic(Long timestamp) {
         return RequestUtil.builder()
-                .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC_BY_TASK + "/" + taskId)
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC + timestamp)
+                .get()
+                .buildAndSend(StatisticVo.class);
+    }
+
+    public static StatisticVo statisticByTask(Long taskId, Long timestamp) {
+        return RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC_BY_TASK + "/" + taskId + "/" + timestamp)
                 .get()
                 .buildAndSend(StatisticVo.class);
     }
