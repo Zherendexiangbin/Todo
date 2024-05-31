@@ -9,6 +9,7 @@ import net.onest.time.api.vo.TaskVo;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class TaskApi {
     private final static String PREFIX = "/task";
@@ -55,7 +56,7 @@ public class TaskApi {
      * / Integer again 是否重复  0代表明天继续 1不继续
      * 其他后端有默认值
      */
-    public static TaskVo addTask(TaskDto taskDto){
+    public static TaskVo addTask(TaskDto taskDto) {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + ADD_TASK)
                 .post(taskDto)
@@ -63,15 +64,15 @@ public class TaskApi {
     }
 
     // 删除一项任务
-    public static void removeTask(Long taskId){
+    public static void removeTask(Long taskId) {
         RequestUtil.builder()
-            .url(ServerConstant.HTTP_ADDRESS + PREFIX + REMOVE_TASK + "?taskId=" + taskId)
-            .delete()
-            .buildAndSend();
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + REMOVE_TASK + "?taskId=" + taskId)
+                .delete()
+                .buildAndSend();
     }
 
     // 修改一项任务
-    public static TaskVo updateTask(TaskDto taskDto){
+    public static TaskVo updateTask(TaskDto taskDto) {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + UPDATE_TASK)
                 .put(taskDto)
@@ -79,57 +80,61 @@ public class TaskApi {
     }
 
     // 分页查询任务
-    public static Page<TaskVo> findTaskPage(TaskDto taskDto, int pageNum, int pageSize){
+    public static Page<TaskVo> findTaskPage(TaskDto taskDto, int pageNum, int pageSize) {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + FIND_TASK_PAGE +
                         RequestUtil.parseParams(taskDto,
                                 "pageNum", pageNum,
                                 "pageSize", pageSize))
                 .get()
-                .buildAndSend(new TypeToken<Page<TaskVo>>(){});
+                .buildAndSend(new TypeToken<Page<TaskVo>>() {
+                });
     }
 
-    public static TaskVo findById(Long taskId){
+    public static TaskVo findById(Long taskId) {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + fIND_BY_ID + taskId)
                 .get()
                 .buildAndSend(TaskVo.class);
     }
 
-    public static List<TaskVo> findAll(){
+    public static List<TaskVo> findAll() {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + fIND_ALL)
                 .get()
-                .buildAndSend(new TypeToken<List<TaskVo>>(){});
+                .buildAndSend(new TypeToken<List<TaskVo>>() {
+                });
     }
 
-    public static void complete(Long taskId){
-         RequestUtil.builder()
-            .url(ServerConstant.HTTP_ADDRESS + PREFIX + COMPLETE + "/" + taskId)
-            .put()
-            .buildAndSend();
+    public static void complete(Long taskId) {
+        RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + COMPLETE + "/" + taskId)
+                .put()
+                .buildAndSend();
     }
 
-    public static List<TaskVo> findByCategory(String category){
+    public static List<TaskVo> findByCategory(String category) {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + FIND_BY_CATEGORY + "/" + category)
                 .get()
-                .buildAndSend(new TypeToken<List<TaskVo>>(){});
+                .buildAndSend(new TypeToken<List<TaskVo>>() {
+                });
     }
 
     public static Map<String, List<TaskVo>> allByCategory() {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + ALL_BY_CATEGORY)
                 .get()
-                .buildAndSend(new TypeToken<Map<String, List<TaskVo>>>(){});
+                .buildAndSend(new TypeToken<Map<String, List<TaskVo>>>() {
+                });
     }
 
-    //时间戳以 毫秒 为单位
-    public static List<TaskVo> findByDay(Long timestamp){
-        return RequestUtil.builder()
+    // 时间戳以 毫秒 为单位
+    public static void findByDay(Long timestamp, Consumer<? super TaskVo> consumer) {
+        RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + FIND_BY_DAY + "?timestamp=" + timestamp)
                 .get()
-                .buildAndSend(new TypeToken<List<TaskVo>>(){});
+                .submit(TaskVo.class, consumer);
     }
 
     public static Map<Long, List<TaskVo>> getTaskDay(Long timestamp) {
