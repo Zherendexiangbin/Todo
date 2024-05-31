@@ -131,6 +131,6 @@ public class TaskApi {
         RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + FIND_BY_DAY + "?timestamp=" + timestamp)
                 .get()
-                .buildAndSendAndConsume(consumer);
+                .submit(TaskVo.class, consumer);
     }
 }

@@ -174,20 +174,60 @@ public class RequestUtil {
         send();
     }
 
-    public <T> void buildAndSendAndConsume(Consumer<? super T> consumer) {
-        TypeToken<T> typeToken = new TypeToken<T>() {};
+    public <T> void submit(
+            TypeToken<T> typeToken,
+            Consumer<? super T> consumer) {
         sendAndConsume((jsonElement -> {
             T t = gson.fromJson(jsonElement, typeToken);
             consumer.accept(t);
-        }));
+        }), null);
     }
 
-    private void sendAndConsume(Consumer<? super JsonElement> consumer) {
+    public <T> void submit(
+            TypeToken<T> typeToken,
+            Consumer<? super T> consumer,
+            Consumer<ResponseErrorException> exceptionHandler) {
+        try {
+            sendAndConsume((jsonElement -> {
+                T t = gson.fromJson(jsonElement, typeToken);
+                consumer.accept(t);
+            }), exceptionHandler);
+        } catch (ResponseErrorException e) {
+            exceptionHandler.accept(e);
+        }
+    }
+
+    public <T> void submit(
+            Class<T> clazz,
+            Consumer<? super T> consumer,
+            Consumer<ResponseErrorException> exceptionHandler) {
+        try {
+            sendAndConsume((jsonElement -> {
+                T t = gson.fromJson(jsonElement, clazz);
+                consumer.accept(t);
+            }), exceptionHandler);
+        } catch (ResponseErrorException e) {
+            exceptionHandler.accept(e);
+        }
+    }
+
+    public <T> void submit(
+            Class<T> clazz,
+            Consumer<? super T> consumer) {
+        sendAndConsume((jsonElement -> {
+            T t = gson.fromJson(jsonElement, clazz);
+            consumer.accept(t);
+        }), null);
+    }
+
+    private void sendAndConsume(
+            Consumer<? super JsonElement> action,
+            Consumer<ResponseErrorException> exceptionHandler) {
         CompletableFuture.supplyAsync(
                 () -> {
                     Request request = requestBuilder.build();
                     Call call = httpClient.newCall(request);
-                    call.timeout().timeout(15, TimeUnit.SECONDS);
+                    call.timeout().timeout(3, TimeUnit.SECONDS);
 
                     try (Response response = call.execute()) {
                         String body = response.body().string();
@@ -195,11 +235,14 @@ public class RequestUtil {
                         checkResult(result);
                         return gson.fromJson(body, JsonObject.class).get("data");
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        throw new ResponseErrorException("444", e.getMessage());
+                    } catch (ResponseErrorException e) {
+                        exceptionHandler.accept(e);
                     }
+                    return null;
                 },
                 executorService
-        ).thenAccept(consumer);
+        ).thenAccept(action);
     }
 
     private JsonElement send() {
@@ -214,7 +257,7 @@ public class RequestUtil {
                 checkResult(result);
                 return gson.fromJson(body, JsonObject.class).get("data");
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ResponseErrorException("444", e.getMessage());
             }
         });
 
@@ -227,9 +270,9 @@ public class RequestUtil {
 
     private void checkResult(Result<?> result) {
         if (result == null) {
-            throw new RuntimeException("Result is null");
+            throw new ResponseErrorException("444", "Result is null");
         } else if (!result.getCode().equals("200")) {
-            throw new RuntimeException(result.getMsg());
+            throw new ResponseErrorException(result.getCode(), result.getMsg());
         }
     }
 

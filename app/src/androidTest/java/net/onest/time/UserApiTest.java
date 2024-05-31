@@ -110,7 +110,7 @@ public class UserApiTest {
                 .url(ServerConstant.HTTP_ADDRESS + "/user" + "/getUserInfo")
                 .get()
 //            .buildAndSendAndConsume<TaskVo>(::println)
-                .buildAndSendAndConsume((taskVo) -> System.out.println(taskVo));
+                .submit(TaskVo.class , (taskVo) -> System.out.println(taskVo));
         System.out.println("after");
 
         try { Thread.sleep(500); } catch (InterruptedException e) { throw new RuntimeException(e); }
