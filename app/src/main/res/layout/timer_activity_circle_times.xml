@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="40dp"
                 android:layout_marginRight="20dp">
-                <Button
+                <android.widget.Button
                     android:id="@+id/circle_forever"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="40dp"
                 android:layout_marginRight="20dp">
-                <Button
+                <android.widget.Button
                     android:id="@+id/circle_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="40dp">
-                <Button
+                <android.widget.Button
                     android:id="@+id/circle_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

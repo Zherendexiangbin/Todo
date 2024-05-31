@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -54,6 +55,7 @@ import net.onest.time.utils.DrawableUtil;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -92,11 +94,15 @@ public class TimerActivity extends AppCompatActivity {
     private long taskId;
     private String timeStr;//倒计时时间
     private String str ;//是否开始
+    private String name;//任务名
 
     //震动提醒
     private Vibrator mVibrator;
     //记录时钟数:
-    private int num=0;
+    private int num=1;//点击开始，即占用一个番茄钟
+    //要循环的番茄钟数:
+    private List<TomatoClockVo> tomatoClockVos = new ArrayList<>();
+
 
     /** 获取屏幕坐标点 **/
     Point startPoint;// 起始点
@@ -162,6 +168,7 @@ public class TimerActivity extends AppCompatActivity {
         //每日一句:
         text.setText("”"+RandomWordApi.getRandomWord()+"“");
 
+
         pauseTime = 180000;
 //        btn.setVisibility(View.GONE);
         //调转屏幕
@@ -210,33 +217,33 @@ public class TimerActivity extends AppCompatActivity {
 
 
         intent = getIntent();
-        taskName.setText(intent.getStringExtra("name"));
+        name = intent.getStringExtra("name");
         timeStr = intent.getStringExtra("time");
         str = intent.getStringExtra("start");
         taskId = intent.getLongExtra("taskId",0);
+
+        taskName.setText(name);
 
 //设置倒计时:
         if("countDown".equals(intent.getStringExtra("method"))){
             timeTxt.setVisibility(View.GONE);
 //        circleTimer.setInitPosition(60);
             int time = Integer.parseInt(timeStr);
-            circleTimer.setMaximumTime(time*60+1);
+            circleTimer.setMaximumTime(time*60);
             circleTimer.setInitPosition(time*60+1);
 
             if("go".equals(str)){
                 circleTimer.start();
             }
 
-            //对于倒计时:若是超过5秒，添加正向计时的番茄钟
+            //对于倒计时:若是超过5秒，添加倒计时的番茄钟
             if(time*60-circleTimer.getValue()>5){
                 long taskId = intent.getLongExtra("taskId",0L);
                 if(taskId!=0L){
-                    List<TomatoClockVo> tomatoClockVos = TomatoClockApi.addTomatoClock(taskId);
-
+                    tomatoClockVos = TomatoClockApi.addTomatoClock(taskId);
                     Toast.makeText(this, "开始添加番茄钟", Toast.LENGTH_SHORT).show();
                 }
             }
-
 
             if(pauseTime==0){
                 Toast toast = Toast.makeText(TimerActivity.this, "本次任务的暂停限制时间已用完!", Toast.LENGTH_SHORT);
@@ -294,7 +301,7 @@ public class TimerActivity extends AppCompatActivity {
                 });
             }
 
-
+            //循环次数:
             circleBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -302,7 +309,7 @@ public class TimerActivity extends AppCompatActivity {
                         Toast toast = Toast.makeText(TimerActivity.this, "关闭无限循环模式!", Toast.LENGTH_SHORT);
                         toast.setGravity(Gravity.TOP,0,0);
                         toast.show();
-                        taskName.setText(intent.getStringExtra("name"));
+                        taskName.setText(name);
                     }else{
 //                        Toast.makeText(TimerActivity.this, "现在的时间是"+circleTimer.getValue(), Toast.LENGTH_SHORT).show();
 //                        circleTimer.reset();
@@ -322,7 +329,7 @@ public class TimerActivity extends AppCompatActivity {
 
                         forever.setOnClickListener(view->{
                             Toast.makeText(TimerActivity.this, "你选择了无限循环模式!", Toast.LENGTH_SHORT).show();
-                            taskName.setText(intent.getStringExtra("name")+ "    无限循环中");
+                            taskName.setText(name+ "    无限循环中");
                             dialog.dismiss();
                         });
 
@@ -349,17 +356,66 @@ public class TimerActivity extends AppCompatActivity {
             circleTimer.setBaseTimerEndedListener(new CircleTimer.baseTimerEndedListener() {
                 @Override
                 public void OnEnded() {
-                    Toast.makeText(TimerActivity.this, "6666666", Toast.LENGTH_SHORT).show();
+                    Log.e("circleTimer.getText",circleTimer.getTextFont()+"");
+
                     // 震动效果的系统服务
                     mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
                     long[] pattern = {200, 200 };
                     mVibrator.vibrate(pattern, -1);
 
-                    // todo 番茄钟循环！
-                    taskName.setText("休息中~");
-                    circleTimer.setMaximumTime(5*60);
-                    circleTimer.setInitPosition(5*60);
-                    circleTimer.start();
+                    //休息时间:
+                    int rest = 5*60;//五分钟
+                    //番茄钟数:
+                    int clock = tomatoClockVos.get(0).getClockDuration()*60;
+
+                    //无限循环状态:
+                    if(taskName.getText().toString().contains("无限循环中")){
+                        if(num/2==0 && num == tomatoClockVos.size()){
+                            taskName.setText(name);
+                            circleTimer.setMaximumTime(clock);
+                            circleTimer.setInitPosition(clock + 1);
+                            circleTimer.setTextFont(Typeface.SERIF);
+                            circleTimer.start();
+                            num++;
+                        }else {
+                            taskName.setText("休息中~");
+                            circleTimer.setMaximumTime(rest);
+                            circleTimer.setInitPosition(rest+1);
+                            circleTimer.start();
+                            num++;
+                            circleTimer.setTextFont(Typeface.SERIF);
+                        }
+                    }
+
+                    //普通状态:
+                    if(num/2==0 && num == tomatoClockVos.size()){
+                        taskName.setText(name);
+                        circleTimer.setMaximumTime(clock);
+                        circleTimer.setInitPosition(clock + 1);
+                        circleTimer.start();
+                        num++;
+                        circleTimer.setTextFont(Typeface.SERIF);
+                    }else {
+                        if(num==tomatoClockVos.size()+2){
+                            num=1;// todo 要不要置为1
+                            circleTimer.setInitPosition(0);
+                            circleTimer.setMaximumTime(0);
+//                            circleTimer.setValue(10);//设置时钟的值
+                            Toast.makeText(TimerActivity.this, "任务完成☺", Toast.LENGTH_SHORT).show();
+                            Intent intent2 = new Intent();
+                            intent2.setClass(TimerActivity.this, NavigationActivity.class);
+                            intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
+                            startActivity(intent2);
+                            overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
+                            //todo 并将该任务添加删除线
+                        }
+                        taskName.setText("休息中~");
+                        circleTimer.setMaximumTime(rest);
+                        circleTimer.setInitPosition(rest + 1);
+                        circleTimer.start();
+                        num++;
+                        circleTimer.setTextFont(Typeface.SERIF);
+                    }
                 }
             });
 
@@ -514,7 +570,7 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void startTimer() {
-        mCountDownTimer = new CountDownTimer(Long.MAX_VALUE, 2000) {
+        mCountDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 mTimeLeftInMillis +=1000;
@@ -535,7 +591,6 @@ public class TimerActivity extends AppCompatActivity {
             }
         }.start();
     }
-
 
 
     private void updateCountdownText() {
@@ -569,6 +624,7 @@ public class TimerActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
+
 }
 
 
