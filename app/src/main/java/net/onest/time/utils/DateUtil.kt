@@ -1,7 +1,9 @@
 package net.onest.time.utils
 
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.Calendar
 import java.util.Date
@@ -178,4 +180,28 @@ fun LocalDateTime.monthString(): String {
     val endDateMonth = dateFormatMonth.format(calendarMonth.time)
 
     return "$startDateMonth ~ $endDateMonth"
+}
+
+fun defaultZoneOffset(): ZoneOffset = ZoneOffset.of("+8")
+fun defaultZoneId(): ZoneId = ZoneId.of("UTC+8")
+
+fun LocalDateTime.toDate(): Date {
+    return Date(this.toInstant(defaultZoneOffset()).toEpochMilli())
+}
+
+fun LocalDate.toDate(): Date {
+    return this.atStartOfDay().toDate()
+}
+
+fun Date.toLocalDateTime(): LocalDateTime {
+    return LocalDateTime.ofInstant(this.toInstant(), defaultZoneId())
+}
+
+fun Date.toLocalDate(): LocalDate {
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = time
+    return LocalDate.of(
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH) + 1,
+        calendar.get(Calendar.DAY_OF_MONTH))
 }
