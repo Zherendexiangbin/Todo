@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -41,6 +42,8 @@ public class StopClockDialog extends AlertDialog {
     private TextView advance;
     private TextView cancel;
     private long taskId;
+
+    private CountDownTimer countDownTimer;
 
 //    public StopClockDialog(@NonNull Context context) {
 //        super(context);
@@ -184,6 +187,17 @@ public class StopClockDialog extends AlertDialog {
         advance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                countDownTimer = new CountDownTimer(5*60*1000,1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+                };
 
             }
         });
