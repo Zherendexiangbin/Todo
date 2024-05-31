@@ -101,9 +101,9 @@ public class TaskApiTest {
     @Test
     public void findByDay() {
         Long timestamp = 1715588988000L;
-        List<TaskVo> taskVoList = TaskApi.findByDay(timestamp);
-        Assert.assertNotNull(taskVoList);
-        taskVoList.forEach(System.out::println);
+        TaskApi.findByDay(timestamp, System.out::println);
+        // Assert.assertNotNull(taskVoList);
+        // taskVoList.forEach(System.out::println);
 //        System.out.println(taskVoList);
     }
 
