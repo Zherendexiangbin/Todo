@@ -14,6 +14,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -92,7 +93,10 @@ public class TimerActivity extends AppCompatActivity {
     private String timeStr;//倒计时时间
     private String str ;//是否开始
 
-
+    //震动提醒
+    private Vibrator mVibrator;
+    //记录时钟数:
+    private int num=0;
 
     /** 获取屏幕坐标点 **/
     Point startPoint;// 起始点
@@ -341,12 +345,23 @@ public class TimerActivity extends AppCompatActivity {
                 }
             });
 
-//            circleTimer.setBaseTimerEndedListener(new CircleTimer.baseTimerEndedListener() {
-//                @Override
-//                public void OnEnded() {
-//
-//                }
-//            });
+            //时钟结束时调用:
+            circleTimer.setBaseTimerEndedListener(new CircleTimer.baseTimerEndedListener() {
+                @Override
+                public void OnEnded() {
+                    Toast.makeText(TimerActivity.this, "6666666", Toast.LENGTH_SHORT).show();
+                    // 震动效果的系统服务
+                    mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                    long[] pattern = {200, 200 };
+                    mVibrator.vibrate(pattern, -1);
+
+                    // todo 番茄钟循环！
+                    taskName.setText("休息中~");
+                    circleTimer.setMaximumTime(5*60);
+                    circleTimer.setInitPosition(5*60);
+                    circleTimer.start();
+                }
+            });
 
             //暂停，停止
             stopBtn.setOnClickListener(new View.OnClickListener() {
@@ -504,8 +519,14 @@ public class TimerActivity extends AppCompatActivity {
             public void onTick(long millisUntilFinished) {
                 mTimeLeftInMillis +=1000;
                 updateCountdownText();
-//                Toast.makeText(TimerActivity.this, "开始添加番茄钟"+mTimeLeftInMillis+"finished"+millisUntilFinished, Toast.LENGTH_SHORT).show();
-
+                //对于正向计时:若是超过5秒，添加正向计时的番茄钟
+                if(mTimeLeftInMillis/1000 == 5){
+                    if(taskId != 0){
+                        TomatoClockApi.addTomatoClock(taskId);
+                        Log.e("番茄钟","添加");
+                        Toast.makeText(TimerActivity.this, "开始添加番茄钟"+mTimeLeftInMillis, Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
             @Override
             public void onFinish() {
@@ -518,16 +539,6 @@ public class TimerActivity extends AppCompatActivity {
 
 
     private void updateCountdownText() {
-        //对于正向计时:若是超过5秒，添加正向计时的番茄钟
-        if(mTimeLeftInMillis/1000 == 5){
-//            long taskId = intent.getLongExtra("taskId",0L);
-
-            if(taskId != 0){
-                TomatoClockApi.addTomatoClock(taskId);
-                Log.e("番茄钟","添加");
-                Toast.makeText(TimerActivity.this, "开始添加番茄钟"+mTimeLeftInMillis, Toast.LENGTH_SHORT).show();
-            }
-        }
 
         int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
         int seconds = (int) (mTimeLeftInMillis / 1000) % 60;

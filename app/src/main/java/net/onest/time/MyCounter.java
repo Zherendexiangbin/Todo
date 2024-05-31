@@ -11,11 +11,13 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 public class MyCounter extends View {
     //圆轮颜色
@@ -34,16 +36,15 @@ public class MyCounter extends View {
     private Paint paintNormal;
     //圆环的矩形区域
     private RectF mRectF;
-
-    private String text;
-
-    private CountDownTimer countDownTimer;
     //
     private int mProgressTextColor;
     private int mCountdownTime;
     private float mCurrentProgress;
     private OnCountDownFinishListener mListener;
     private ValueAnimator valueAnimator ;
+
+    private CountDownTimer countDownTimer;
+    private String text;
 
     public MyCounter(Context context) {
         this(context, null);
@@ -56,12 +57,12 @@ public class MyCounter extends View {
     public MyCounter(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CountDownView);
-        mRingColor = a.getColor(R.styleable.CountDownView_ringColor, Color.BLACK);
+        mRingColor = a.getColor(R.styleable.CountDownView_ringColor, getResources().getColor(R.color.red));
         mRingWidth = a.getFloat(R.styleable.CountDownView_ringWidth, 8);
         mRingProgressTextSize = a.getDimensionPixelSize(R.styleable.CountDownView_progressTextSize, dip2px(context, 12));
         mProgressTextColor = a.getColor(R.styleable.CountDownView_progressTextColor, Color.BLUE);
         mCountdownTime = a.getInteger(R.styleable.CountDownView_countdownTime, 60);
-        mRingNormalColor = a.getColor(R.styleable.CountDownView_ringColor, Color.RED);
+        mRingNormalColor = a.getColor(R.styleable.CountDownView_ringColor, getResources().getColor(R.color.lightgray));
         a.recycle();
         paintNormal = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintNormal.setAntiAlias(true);
@@ -70,7 +71,6 @@ public class MyCounter extends View {
         this.setWillNotDraw(false);
     }
 
-    //设置初始倒计时数
     public void setCountdownTime(int mCountdownTime) {
         this.mCountdownTime = mCountdownTime;
     }
@@ -112,12 +112,8 @@ public class MyCounter extends View {
         textPaint.setAntiAlias(true);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
-//        //转换格式: 00:00
-//        NumberFormat f = new DecimalFormat("00");
-//        int minute = (mCountdownTime - (int) (mCurrentProgress / 360f * mCountdownTime)/60)/60;
-//        int secend = (mCountdownTime - (int) (mCurrentProgress / 360f * mCountdownTime)/60)%60;
-//        String text =f.format(minute)+":"+f.format(secend);
 
+        String text = mCountdownTime - (int) (mCurrentProgress / 360f * mCountdownTime) + "";
 
         textPaint.setTextSize(mRingProgressTextSize);
         textPaint.setColor(mProgressTextColor);
@@ -128,7 +124,6 @@ public class MyCounter extends View {
         canvas.drawText(text, mRectF.centerX(), baseline, textPaint);
     }
 
-    //设置动画【圆环的倒计时时间】
     private ValueAnimator getValA(long countdownTime) {
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 100);
         valueAnimator.setDuration(countdownTime);
@@ -147,7 +142,6 @@ public class MyCounter extends View {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float i = Float.valueOf(String.valueOf(animation.getAnimatedValue()));
                 mCurrentProgress = (int) (360 * (i / 100f));
-                setTextFromAngle(mCurrentProgress);
                 invalidate();
             }
         });
@@ -162,46 +156,17 @@ public class MyCounter extends View {
                 }
                 setClickable(true);
             }
+
         });
     }
-
-    //倒计时结束，调用接口
     public void setAddCountDownListener(OnCountDownFinishListener mListener) {
         this.mListener = mListener;
     }
     public interface OnCountDownFinishListener {
         void countDownFinished();
     }
-
-    //停止计时
     public void stopCountDown(){
         valueAnimator.end();
-    }
-
-    //设置文本格式,并且进行倒计时:
-    private void setTextFromAngle(float i) {
-        countDownTimer = new CountDownTimer(60000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        };
-
-//        int temp = angleValue / 60;
-//        String minute = temp >= 10 ? String.valueOf(temp) : "0" + temp;
-//
-//        temp = angleValue % (60);
-//        String second = temp >= 10 ? String.valueOf(temp) : "0" + temp;
-//        this.text = minute + ":" + second;
-        NumberFormat f = new DecimalFormat("00");
-        int minute = (mCountdownTime - (int) (i / 360f * mCountdownTime)/60)/60;
-        int secend = (mCountdownTime - (int) (i / 360f * mCountdownTime)/60)%60;
-        this.text =f.format(minute)+":"+f.format(secend);
     }
 
     public static int dip2px(Context context, float dpValue) {
@@ -209,5 +174,26 @@ public class MyCounter extends View {
         return (int) (dpValue * scale + 0.5f);
     }
 
+
+    //设置倒计时格式: 00 : 00
+    private void setTextFromAngle(int angleValue) { //화면 중앙의 Text 값을 표시하는 곳
+
+        mCountdownTime = angleValue;
+        if (mCountdownTime < 0) {
+            mCountdownTime = 0;
+        }
+//        int temp = angleValue / 60;
+//        String minute = temp >= 10 ? String.valueOf(temp) : "0" + temp;
+//
+//        temp = angleValue % (60);
+//        String second = temp >= 10 ? String.valueOf(temp) : "0" + temp;
+
+
+        int minutes = (angleValue / 1000) / 60;
+        int seconds = (angleValue / 1000) % 60;
+
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        this.text = timeLeftFormatted;
+    }
 
 }
