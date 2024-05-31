@@ -133,4 +133,9 @@ public class MyTextView extends TextView {
         return (int) (dpValue * scale + 0.5f);
     }
 
+    public static float dip2pxx(Context context, float dpValue) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (dpValue * scale + 0.5f);
+    }
+
 }

@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import net.onest.time.R;
 import net.onest.time.TimerActivity;
+import net.onest.time.api.TomatoClockApi;
 import net.onest.time.navigation.activity.NavigationActivity;
 
 import java.util.ArrayList;
@@ -39,10 +41,30 @@ public class StopClockDialog extends AlertDialog {
     private TextView abandon;
     private TextView advance;
     private TextView cancel;
+    private long taskId;
 
-    public StopClockDialog(@NonNull Context context) {
+    private CountDownTimer countDownTimer;
+
+//    public StopClockDialog(@NonNull Context context) {
+//        super(context);
+//
+//        View view = LayoutInflater.from(context).inflate(R.layout.timer_activity_stop_pop,null);
+//
+//        abandon = view.findViewById(R.id.abandon_btn);
+//        advance = view.findViewById(R.id.advance_btn);
+//        cancel = view.findViewById(R.id.cancel_btn);
+//
+//        setListeners();
+//
+//        show();
+//        getWindow().setContentView(view);
+//        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//
+//    }
+
+    public StopClockDialog(@NonNull Context context,long taskId){
         super(context);
-
+        this.taskId = taskId;
         View view = LayoutInflater.from(context).inflate(R.layout.timer_activity_stop_pop,null);
 
         abandon = view.findViewById(R.id.abandon_btn);
@@ -54,7 +76,6 @@ public class StopClockDialog extends AlertDialog {
         show();
         getWindow().setContentView(view);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
     }
 
     private void setListeners() {
@@ -102,12 +123,13 @@ public class StopClockDialog extends AlertDialog {
 
                 //设置图例:
                 Legend legend = abandonReasonChart.getLegend();
-                legend.setEnabled(false);
-//                            legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-//                            legend.setFormSize(12f);
-//                            legend.setFormToTextSpace(10f);//设置图形与文本之间的间隔
-//                            legend.setXEntrySpace(10f);//设置X轴上条目的间隔
-//                            legend.setMaxSizePercent(100);
+                legend.setWordWrapEnabled(true);
+                legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);//设置图例的排列走向:vertacal相当于分行
+                legend.setForm(Legend.LegendForm.SQUARE);//设置图例的图形样式,默认为圆形
+                legend.setFormSize(12f);//设置图例的大小
+                legend.setTextSize(12f);//设置图注的字体大小
+                legend.setXEntrySpace(15f);//设置图例之间的间隔！
+                legend.setTextColor(getContext().getResources().getColor(R.color.black)); //图例的文字颜色
 
 
                 //设置数据源
@@ -123,21 +145,29 @@ public class StopClockDialog extends AlertDialog {
                 colors.add(Color.parseColor("#adff2f"));
                 setPieChartData(abandonReasonChart,yVals,colors);
 
-                //获取放弃原因!
-                String reason = abandonReason.getText().toString().trim();
+
 
                 abandonYes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //获取放弃原因!
+                        String reason = abandonReason.getText().toString().trim();
+
                         if(abandonReason.getText().toString().isEmpty()){
                             Toast.makeText(getContext(), "请输入打断的原因", Toast.LENGTH_SHORT).show();
 
                         }else{
+                            try {
+                                TomatoClockApi.stopTomatoClock(taskId,reason);
+                            } catch (RuntimeException e) {
+                                Toast.makeText(getContext(),"番茄钟放弃失败", Toast.LENGTH_SHORT).show();
+                            }
                             dialogAban.dismiss();
                             Intent intent2 = new Intent();
                             intent2.setClass(getContext(), NavigationActivity.class);
                             intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
                             getContext().startActivity(intent2);
+
 //                            overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
                         }
                     }
@@ -157,6 +187,17 @@ public class StopClockDialog extends AlertDialog {
         advance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                countDownTimer = new CountDownTimer(5*60*1000,1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+                };
 
             }
         });

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <root-path path="/storage/emulated/0/Android/data/net.onest.time/cache/checkin" name="check_in_path" />
+    <root-path path="/storage/emulated/0/Android/data/net.onest.time/cache/tomatoDurationRatio" name="tomato_duration_ratio_path" />
+    <root-path path="/storage/emulated/0/Android/data/net.onest.time/cache/appUsedTime" name="app_used_time_path" />
+</paths>
