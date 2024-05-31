@@ -40,7 +40,7 @@ class TaskDto {
         userId = null
         taskName = ""
         type = 0
-        clockDuration = 1
+        clockDuration = 0
         remark = ""
         estimate = ArrayList()
         restTime = 5

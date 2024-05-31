@@ -49,11 +49,11 @@
             android:id="@+id/timer_forward"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="00:00"
             android:gravity="center"
-            android:textSize="50dp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFFFF"/>
+            android:text="00:00"
+            android:textColor="#FFFFFFFF"
+            android:textSize="80dp"
+            android:textStyle="bold" />
         <TextView
             android:id="@+id/timer_name"
             android:layout_marginTop="70dp"

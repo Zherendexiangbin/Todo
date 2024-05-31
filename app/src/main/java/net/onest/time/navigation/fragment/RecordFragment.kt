@@ -1,8 +1,10 @@
 package net.onest.time.navigation.fragment
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.usage.UsageStatsManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
 import android.graphics.Bitmap
@@ -11,9 +13,11 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.InputFilter.LengthFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -23,6 +27,7 @@ import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -38,9 +43,9 @@ import net.onest.time.R
 import net.onest.time.api.StatisticApi
 import net.onest.time.api.vo.statistic.StatisticVo
 import net.onest.time.databinding.RecordFragmentBinding
-import net.onest.time.utils.ColorUtil
-import net.onest.time.utils.DateUtil
-import net.onest.time.utils.showToast
+import net.onest.time.utils.*
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.SortedMap
 import java.util.TreeMap
 
@@ -67,12 +72,20 @@ class RecordFragment : Fragment() {
     private lateinit var binding: RecordFragmentBinding
 
     private var statisticsVo: StatisticVo? = null
+    private var statisticsVoWeek: StatisticVo? = null
+    private var statisticsVoMonth: StatisticVo? = null
+
+    private var dateTimeDay: LocalDateTime = LocalDateTime.now()
+    private var dateTimeWeek: LocalDateTime = LocalDateTime.now()
+    private var dateTimeMonth: LocalDateTime = LocalDateTime.now()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         try {
             statisticsVo = StatisticApi.statistic()
+            statisticsVoWeek = statisticsVo
+            statisticsVoMonth = statisticsVo
         } catch (e: RuntimeException) {
             e.message?.showToast()
         }
@@ -91,66 +104,135 @@ class RecordFragment : Fragment() {
         return view
     }
 
+    private fun day(statisticsVo : StatisticVo, dateTimeDay : LocalDateTime) {
+        val pieEntries = statisticsVo.ratioByDurationOfDay.map {
+            PieEntry(it.ratio.toFloat(), it.taskName)
+        }
+
+        val colors = statisticsVo.ratioByDurationOfDay.map {
+            ColorUtil.getColorByRgb(null)
+        }
+
+        dataDateTxt!!.text = dateTimeDay.localFormat()
+        setPieChartData(pieEntries, colors)
+        pieChart!!.notifyDataSetChanged()
+    }
+
+    private fun week(statisticsVo : StatisticVo, dateTimeDay : LocalDateTime) {
+        val pieEntries = statisticsVo.ratioByDurationOfWeek.map {
+            PieEntry(it.ratio.toFloat(), it.taskName)
+        }
+
+        val colors = statisticsVo.ratioByDurationOfWeek.map {
+            ColorUtil.getColorByRgb(null)
+        }
+
+        dataDateTxt!!.text = dateTimeDay.weekString()
+        setPieChartData(pieEntries, colors)
+        pieChart!!.notifyDataSetChanged()
+    }
+
+    private fun month(statisticsVo : StatisticVo, dateTimeDay : LocalDateTime) {
+        val pieEntries = statisticsVo.ratioByDurationOfMonth.map {
+            PieEntry(it.ratio.toFloat(), it.taskName)
+        }
+
+        val colors = statisticsVo.ratioByDurationOfMonth.map {
+            ColorUtil.getColorByRgb(null)
+        }
+
+        dataDateTxt!!.text = dateTimeDay.monthString()
+        setPieChartData(pieEntries, colors)
+        pieChart!!.notifyDataSetChanged()
+    }
+
+
+
     private fun setListeners() {
         // 专注时长分布
         // 左按钮
-        binding.focusDurationRatioRight.setOnClickListener {
-
+        binding.focusDurationRatioLeft.setOnClickListener {
+            when(radioDataGroup?.checkedRadioButtonId){
+                R.id.record_fragment_time_data_day -> {
+                    val epochMillisecond = 1000 * dateTimeDay.minusDays(1).toEpochSecond(ZoneOffset.of("+8"))
+                    dateTimeDay = dateTimeDay.minusDays(1)
+                    statisticsVo = StatisticApi.statistic(epochMillisecond)
+                    day(statisticsVo!!, dateTimeDay)
+                }
+                R.id.record_fragment_time_data_week -> {
+                    val epochMillisecond = 1000 * dateTimeWeek.minusWeeks(1).toEpochSecond(ZoneOffset.of("+8"))
+                    dateTimeWeek = dateTimeWeek.minusWeeks(1)
+                    statisticsVoWeek = StatisticApi.statistic(epochMillisecond)
+                    week(statisticsVoWeek!!, dateTimeWeek)
+                }
+                R.id.record_fragment_time_data_month -> {
+                    val epochMillisecond = 1000 * dateTimeMonth.minusMonths(1).toEpochSecond(ZoneOffset.of("+8"))
+                    dateTimeMonth = dateTimeMonth.minusMonths(1)
+                    statisticsVoMonth = StatisticApi.statistic(epochMillisecond)
+                    month(statisticsVoMonth!!, dateTimeMonth)
+                }
+            }
         }
 
         // 右按钮
         binding.focusDurationRatioRight.setOnClickListener {
-
+            when(radioDataGroup?.checkedRadioButtonId){
+                R.id.record_fragment_time_data_day -> {
+                    val epochMillisecond = 1000 * dateTimeDay.plusDays(1).toEpochSecond(ZoneOffset.of("+8"))
+                    dateTimeDay = dateTimeDay.plusDays(1)
+                    statisticsVo = StatisticApi.statistic(epochMillisecond)
+                    day(statisticsVo!!, dateTimeDay)
+                }
+                R.id.record_fragment_time_data_week -> {
+                    val epochMillisecond = 1000 * dateTimeWeek.plusWeeks(1).toEpochSecond(ZoneOffset.of("+8"))
+                    dateTimeWeek = dateTimeWeek.plusWeeks(1)
+                    statisticsVoWeek = StatisticApi.statistic(epochMillisecond)
+                    week(statisticsVoWeek!!, dateTimeWeek)
+                }
+                R.id.record_fragment_time_data_month -> {
+                    val epochMillisecond = 1000 * dateTimeMonth.plusMonths(1).toEpochSecond(ZoneOffset.of("+8"))
+                    dateTimeMonth = dateTimeMonth.plusMonths(1)
+                    statisticsVoMonth = StatisticApi.statistic(epochMillisecond)
+                    month(statisticsVoMonth!!, dateTimeMonth)
+                }
+            }
         }
 
         // 分享按钮
         binding.focusDurationRatioShare.setOnClickListener {
-
+            val activity = context as Activity
+            binding.layoutTomatoDurationRatio.createBitmap(activity.window) { bitmap, success ->
+                if (success) {
+                    bitmap!!
+                        .drawUserWatermark()
+                        .saveBitmapCache("${activity.externalCacheDir?.path}/tomatoDurationRatio")
+                        .run {
+                            val shareIntent = Intent()
+                            shareIntent.setAction(Intent.ACTION_SEND)
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, this)
+                            // 指定发送内容的类型 (MIME type)
+                            shareIntent.setType("image/png")
+                            activity.startActivity(shareIntent)
+                        }
+                } else {
+                    "分享失败".showToast()
+                }
+            }
         }
 
         // 日 周 月 按钮
         radioDataGroup!!.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.record_fragment_time_data_day -> {
-                    val pieEntries = statisticsVo!!.ratioByDurationOfDay.map {
-                        PieEntry(it.ratio.toFloat(), it.taskName)
-                    }
-
-                    val colors = statisticsVo!!.ratioByDurationOfDay.map {
-                        ColorUtil.getColorByRgb(null)
-                    }
-
-                    dataDateTxt!!.text = DateUtil.curDay
-                    setPieChartData(pieEntries, colors)
-                    pieChart!!.notifyDataSetChanged()
+                    day(statisticsVo!!, dateTimeDay)
                 }
 
                 R.id.record_fragment_time_data_week -> {
-                    val pieEntries = statisticsVo!!.ratioByDurationOfWeek.map {
-                        PieEntry(it.ratio.toFloat(), it.taskName)
-                    }
-
-                    val colors = statisticsVo!!.ratioByDurationOfWeek.map {
-                        ColorUtil.getColorByRgb(null)
-                    }
-
-                    dataDateTxt!!.text = DateUtil.curWeek
-                    setPieChartData(pieEntries, colors)
-                    pieChart!!.notifyDataSetChanged()
+                    week(statisticsVoWeek!!, dateTimeWeek)
                 }
 
                 R.id.record_fragment_time_data_month -> {
-                    val pieEntries = statisticsVo!!.ratioByDurationOfMonth.map {
-                        PieEntry(it.ratio.toFloat(), it.taskName)
-                    }
-
-                    val colors = statisticsVo!!.ratioByDurationOfMonth.map {
-                        ColorUtil.getColorByRgb(null)
-                    }
-
-                    dataDateTxt!!.text = DateUtil.curMonth
-                    setPieChartData(pieEntries, colors)
-                    pieChart!!.notifyDataSetChanged()
+                    month(statisticsVoMonth!!, dateTimeMonth)
                 }
             }
         }
@@ -158,7 +240,24 @@ class RecordFragment : Fragment() {
         // App前台使用时长分布
         // 分享按钮
         binding.appUsedTimeShare.setOnClickListener {
-
+            val activity = context as Activity
+            binding.layoutAppUsedTime.createBitmap(activity.window) { bitmap, success ->
+                if (success) {
+                    bitmap!!
+                        .drawUserWatermark()
+                        .saveBitmapCache("${activity.externalCacheDir?.path}/appUsedTime")
+                        .run {
+                            val shareIntent = Intent()
+                            shareIntent.setAction(Intent.ACTION_SEND)
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, this)
+                            // 指定发送内容的类型 (MIME type)
+                            shareIntent.setType("image/p    ng")
+                            activity.startActivity(shareIntent)
+                        }
+                } else {
+                    "分享失败".showToast()
+                }
+            }
         }
     }
 
@@ -360,35 +459,51 @@ class RecordFragment : Fragment() {
 
 
     private fun setPieChartData(yVals: List<PieEntry>, colors: List<Int>) {
-        val pieDataSet = PieDataSet(yVals, "")
-        pieDataSet.colors = colors
-        pieChart!!.setEntryLabelColor(Color.parseColor("#ff8c00")) //描述文字的颜色
-        pieDataSet.valueTextSize = 15f //数字大小
-        pieDataSet.valueTextColor = Color.BLACK //数字颜色
-        pieDataSet.valueFormatter = object : ValueFormatter() {
-            @SuppressLint("DefaultLocale")
-            override fun getFormattedValue(value: Float): String {
-                return String.format("%.2f%%", value * 100)
+        if(yVals.isEmpty()){
+            binding.emptyData.visibility = View.VISIBLE
+            pieChart?.visibility = View.INVISIBLE
+        }else{
+            binding.emptyData.visibility = View.INVISIBLE
+            pieChart?.visibility = View.VISIBLE
+
+            val pieDataSet = PieDataSet(yVals, "")
+            pieDataSet.colors = colors
+            pieChart!!.setEntryLabelColor(Color.parseColor("#ff8c00")) //描述文字的颜色
+            pieDataSet.valueTextSize = 15f //数字大小
+            pieDataSet.valueTextColor = Color.BLACK //数字颜色
+            pieDataSet.valueFormatter = object : ValueFormatter() {
+                @SuppressLint("DefaultLocale")
+                override fun getFormattedValue(value: Float): String {
+                    return String.format("%.2f%%", value * 100)
+                }
             }
-        }
 
-        //设置描述的位置
-        pieDataSet.xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-        pieDataSet.valueLinePart1Length = 0.5f //设置描述连接线长度
-        //设置数据的位置
-        pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-        pieDataSet.valueLinePart2Length = 0.6f //设置数据连接线长度
+            //设置描述的位置
+            pieDataSet.xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+            pieDataSet.valueLinePart1Length = 0.5f //设置描述连接线长度
+            //设置数据的位置
+            pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+            pieDataSet.valueLinePart2Length = 0.6f //设置数据连接线长度
 
-        //设置两根连接线的颜色
-        pieDataSet.valueLineColor = Color.BLUE
+            //设置两根连接线的颜色
+            pieDataSet.valueLineColor = Color.BLUE
 
-        val pieData = PieData(pieDataSet)
-        pieChart!!.data = pieData
-        pieChart!!.setExtraOffsets(0f, 32f, 0f, 32f)
-        //动画（如果使用了动画可以则省去更新数据的那一步）
+            val pieData = PieData(pieDataSet)
+            pieChart!!.data = pieData
+            pieChart!!.setExtraOffsets(0f, 16f, 0f, 16f)
+            //动画（如果使用了动画可以则省去更新数据的那一步）
 //        pieChart.animateY(1000); //在Y轴的动画  参数是动画执行时间 毫秒为单位
 //        pieChart.animateX(1000); //X轴动画
-        pieChart!!.animateXY(1000, 1000) //XY两轴混合动画
+            pieChart!!.animateXY(1000, 1000) //XY两轴混合动画
+
+            val legend = pieChart!!.legend
+            legend.xEntrySpace = 20f
+            legend.orientation = Legend.LegendOrientation.HORIZONTAL
+            legend.isWordWrapEnabled = true
+//            legend.formSize = 15f
+//            legend.textSize = 15f
+            legend.textColor=Color.BLACK
+        }
     }
 
     private fun setImageSizeAndDistance(drawable: Drawable): Drawable {
@@ -422,13 +537,6 @@ class RecordFragment : Fragment() {
         scaledDrawable.setBounds(100, 0, 0, 0)
 
         return scaledDrawable
-    }
-
-    fun setExtraOffsets(left: Float, top: Float, right: Float, bottom: Float) {
-        pieChart!!.extraLeftOffset = left
-        pieChart!!.extraTopOffset = top
-        pieChart!!.extraRightOffset = right
-        pieChart!!.extraBottomOffset = bottom
     }
 
     private fun findViews(view: View) {

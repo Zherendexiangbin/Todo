@@ -15,6 +15,8 @@ public class StatisticApi {
     // 每个任务的简化统计数据
     private final static String SIMPLE_STATISTIC_BY_TASK = "/simple";
 
+
+
     public static StatisticVo statistic() {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC)

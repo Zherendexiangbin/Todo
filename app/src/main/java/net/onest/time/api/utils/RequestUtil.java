@@ -26,12 +26,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -172,6 +174,77 @@ public class RequestUtil {
         send();
     }
 
+    public <T> void submit(
+            TypeToken<T> typeToken,
+            Consumer<? super T> consumer) {
+        sendAndConsume((jsonElement -> {
+            T t = gson.fromJson(jsonElement, typeToken);
+            consumer.accept(t);
+        }), null);
+    }
+
+    public <T> void submit(
+            TypeToken<T> typeToken,
+            Consumer<? super T> consumer,
+            Consumer<ResponseErrorException> exceptionHandler) {
+        try {
+            sendAndConsume((jsonElement -> {
+                T t = gson.fromJson(jsonElement, typeToken);
+                consumer.accept(t);
+            }), exceptionHandler);
+        } catch (ResponseErrorException e) {
+            exceptionHandler.accept(e);
+        }
+    }
+
+    public <T> void submit(
+            Class<T> clazz,
+            Consumer<? super T> consumer,
+            Consumer<ResponseErrorException> exceptionHandler) {
+        try {
+            sendAndConsume((jsonElement -> {
+                T t = gson.fromJson(jsonElement, clazz);
+                consumer.accept(t);
+            }), exceptionHandler);
+        } catch (ResponseErrorException e) {
+            exceptionHandler.accept(e);
+        }
+    }
+
+    public <T> void submit(
+            Class<T> clazz,
+            Consumer<? super T> consumer) {
+        sendAndConsume((jsonElement -> {
+            T t = gson.fromJson(jsonElement, clazz);
+            consumer.accept(t);
+        }), null);
+    }
+
+    private void sendAndConsume(
+            Consumer<? super JsonElement> action,
+            Consumer<ResponseErrorException> exceptionHandler) {
+        CompletableFuture.supplyAsync(
+                () -> {
+                    Request request = requestBuilder.build();
+                    Call call = httpClient.newCall(request);
+                    call.timeout().timeout(3, TimeUnit.SECONDS);
+
+                    try (Response response = call.execute()) {
+                        String body = response.body().string();
+                        Result<?> result = gson.fromJson(body, Result.class);
+                        checkResult(result);
+                        return gson.fromJson(body, JsonObject.class).get("data");
+                    } catch (IOException e) {
+                        throw new ResponseErrorException("444", e.getMessage());
+                    } catch (ResponseErrorException e) {
+                        exceptionHandler.accept(e);
+                    }
+                    return null;
+                },
+                executorService
+        ).thenAccept(action);
+    }
+
     private JsonElement send() {
         Future<JsonElement> future = executorService.submit(() -> {
             Request request = requestBuilder.build();
@@ -184,7 +257,7 @@ public class RequestUtil {
                 checkResult(result);
                 return gson.fromJson(body, JsonObject.class).get("data");
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ResponseErrorException("444", e.getMessage());
             }
         });
 
@@ -197,9 +270,9 @@ public class RequestUtil {
 
     private void checkResult(Result<?> result) {
         if (result == null) {
-            throw new RuntimeException("Result is null");
+            throw new ResponseErrorException("444", "Result is null");
         } else if (!result.getCode().equals("200")) {
-            throw new RuntimeException(result.getMsg());
+            throw new ResponseErrorException(result.getCode(), result.getMsg());
         }
     }
 

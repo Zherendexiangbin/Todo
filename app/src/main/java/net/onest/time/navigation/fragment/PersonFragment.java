@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,13 +21,19 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 
+import net.onest.time.MainActivity;
 import net.onest.time.R;
+import net.onest.time.TimerActivity;
 import net.onest.time.api.ServerConstant;
 import net.onest.time.api.UserApi;
 import net.onest.time.api.vo.UserVo;
+import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.navigation.activity.PersonEditActivity;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
@@ -36,6 +43,8 @@ public class PersonFragment extends Fragment {
     private LinearLayout userEdit;
     private TextView userName, userId, userCreateAt, userTotalDay;
     private TextView userTodayComplete, userTotalComplete;
+    private Button change,exit;
+
     private static final int INTENT_CODE = 1;
     @Nullable
     @Override
@@ -53,6 +62,27 @@ public class PersonFragment extends Fragment {
             Intent intent = new Intent(getContext(), PersonEditActivity.class);
             startActivityForResult(intent, INTENT_CODE);
         });
+
+        //切换账号:
+        change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(requireContext(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
+                requireContext().startActivity(intent);
+            }
+        });
+        //退出登录:
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(requireContext(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
+                requireContext().startActivity(intent);
+            }
+        });
     }
 
     //处理页面跳转返回结果
@@ -68,7 +98,7 @@ public class PersonFragment extends Fragment {
         UserVo userVo = UserApi.getUserInfo();
 
         //用户头像
-        Glide.with(getContext())
+        Glide.with(requireContext())
                 .load(userVo.getAvatar())
                         .into(userAvatar);
         //用户昵称
@@ -77,7 +107,10 @@ public class PersonFragment extends Fragment {
         userId.setText("UID：" + userVo.getUserId());
 
         //用户创建时间及应用使用时间
-        userCreateAt.setText("2020年4月24日");
+        @SuppressLint("SimpleDateFormat")
+        String format = new SimpleDateFormat("yyyy年MM月dd日").format(userVo.getCreatedAt());
+        userCreateAt.setText(format);
+
         LocalDate localDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年M月d日");
         LocalDate specifiedDate = LocalDate.parse(userCreateAt.getText().toString().trim(), formatter);
@@ -97,5 +130,8 @@ public class PersonFragment extends Fragment {
         userTotalDay = view.findViewById(R.id.user_total_day);
         userTodayComplete = view.findViewById(R.id.user_today_complete);
         userTotalComplete = view.findViewById(R.id.user_total_complete);
+
+        change = view.findViewById(R.id.btn_change);
+        exit = view.findViewById(R.id.btn_exit);
     }
 }

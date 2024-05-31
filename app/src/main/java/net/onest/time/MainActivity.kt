@@ -3,7 +3,6 @@ package net.onest.time
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -53,10 +52,10 @@ class MainActivity : AppCompatActivity() {
 
         autoLogin()
 
-//        loginUser?.setText("2808021998@qq.com");
-//        loginPassword?.setText("admin");
-        loginUser!!.setText("212296944@qq.com")
-        loginPassword!!.setText("123456")
+        loginUser?.setText("2808021998@qq.com");
+        loginPassword?.setText("admin");
+//        loginUser!!.setText("212296944@qq.com")
+//        loginPassword!!.setText("123456")
 
         setListeners()
         setAnimator()
@@ -86,6 +85,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setListeners() {
+
         //登录
         btnLogin!!.setOnClickListener { view: View? ->
             val account = loginUser!!.text.toString().trim()

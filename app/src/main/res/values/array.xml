@@ -13,7 +13,7 @@
         <item>每月</item>
     </string-array>
 
-<!--    MyTextView-->
+<!--    MyTextView:-->
     <declare-styleable name="DeleteLineTextView">
         <attr name="showDeleteLine">
             <enum name="show" value="0" />
@@ -22,4 +22,19 @@
         <attr name="deleteLineColor" format="color|reference" />
         <attr name="deleteLineWidth" format="dimension" />
     </declare-styleable>
+
+<!--    MyCounter:-->
+    <declare-styleable name="CountDownView">
+        <!--颜色-->
+        <attr name="ringColor" format="color" />
+        <!-- 进度文本的字体大小 -->
+        <attr name="progressTextSize" format="dimension" />
+        <!-- 圆环宽度 -->
+        <attr name="ringWidth" format="float" />
+        <!--进度文本颜色-->
+        <attr name="progressTextColor" format="color"/>
+        <!--倒计时-->
+        <attr name="countdownTime" format="integer"/>
+    </declare-styleable>
+
 </resources>

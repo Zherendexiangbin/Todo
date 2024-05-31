@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             app:cardCornerRadius="20dp">
-            <Button
+            <android.widget.Button
                 android:id="@+id/continue_btn"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
