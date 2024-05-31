@@ -5,9 +5,12 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
+import java.util.concurrent.TimeUnit
+import kotlin.properties.Delegates
 
 class DateUtil {
     private val currentDateTime: LocalDateTime = LocalDateTime.now()
@@ -32,6 +35,9 @@ class DateUtil {
 
 
     companion object {
+        val LOCAL_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val LOCAL_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+
         val curDay: String
             //获取当前日期
             get() {
@@ -204,4 +210,30 @@ fun Date.toLocalDate(): LocalDate {
         calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH) + 1,
         calendar.get(Calendar.DAY_OF_MONTH))
+}
+enum class DateTimeUnit {
+    YEAR, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND;
+    var value by Delegates.notNull<Long>()
+}
+
+fun LocalDateTime.localFormat() = this.format(DateUtil.LOCAL_DATE_FORMAT)
+
+fun LocalDateTime.plus(value: Long, timeUnit: DateTimeUnit): LocalDateTime? {
+    return when(timeUnit) {
+        DateTimeUnit.YEAR -> this.plusYears(value)
+        DateTimeUnit.MONTH -> this.plusMonths(value)
+        DateTimeUnit.WEEK -> this.plusWeeks(value)
+        DateTimeUnit.DAY -> this.plusDays(value)
+        else -> null
+    }
+}
+
+fun LocalDateTime.minus(value: Long, timeUnit: DateTimeUnit): LocalDateTime? {
+    return when(timeUnit) {
+        DateTimeUnit.YEAR -> this.minusYears(value)
+        DateTimeUnit.MONTH -> this.minusMonths(value)
+        DateTimeUnit.WEEK -> this.minusWeeks(value)
+        DateTimeUnit.DAY -> this.minusDays(value)
+        else -> null
+    }
 }

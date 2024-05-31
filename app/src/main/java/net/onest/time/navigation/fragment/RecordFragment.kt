@@ -43,12 +43,9 @@ import net.onest.time.R
 import net.onest.time.api.StatisticApi
 import net.onest.time.api.vo.statistic.StatisticVo
 import net.onest.time.databinding.RecordFragmentBinding
-import net.onest.time.utils.ColorUtil
-import net.onest.time.utils.DateUtil
-import net.onest.time.utils.createBitmap
-import net.onest.time.utils.drawUserWatermark
-import net.onest.time.utils.saveBitmapCache
-import net.onest.time.utils.showToast
+import net.onest.time.utils.*
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.SortedMap
 import java.util.TreeMap
 
@@ -75,12 +72,20 @@ class RecordFragment : Fragment() {
     private lateinit var binding: RecordFragmentBinding
 
     private var statisticsVo: StatisticVo? = null
+    private var statisticsVoWeek: StatisticVo? = null
+    private var statisticsVoMonth: StatisticVo? = null
+
+    private var dateTimeDay: LocalDateTime = LocalDateTime.now()
+    private var dateTimeWeek: LocalDateTime = LocalDateTime.now()
+    private var dateTimeMonth: LocalDateTime = LocalDateTime.now()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         try {
             statisticsVo = StatisticApi.statistic()
+            statisticsVoWeek = statisticsVo
+            statisticsVoMonth = statisticsVo
         } catch (e: RuntimeException) {
             e.message?.showToast()
         }
@@ -99,16 +104,98 @@ class RecordFragment : Fragment() {
         return view
     }
 
+    private fun day(statisticsVo : StatisticVo, dateTimeDay : LocalDateTime) {
+        val pieEntries = statisticsVo.ratioByDurationOfDay.map {
+            PieEntry(it.ratio.toFloat(), it.taskName)
+        }
+
+        val colors = statisticsVo.ratioByDurationOfDay.map {
+            ColorUtil.getColorByRgb(null)
+        }
+
+        dataDateTxt!!.text = dateTimeDay.localFormat()
+        setPieChartData(pieEntries, colors)
+        pieChart!!.notifyDataSetChanged()
+    }
+
+    private fun week(statisticsVo : StatisticVo, dateTimeDay : LocalDateTime) {
+        val pieEntries = statisticsVo.ratioByDurationOfWeek.map {
+            PieEntry(it.ratio.toFloat(), it.taskName)
+        }
+
+        val colors = statisticsVo.ratioByDurationOfWeek.map {
+            ColorUtil.getColorByRgb(null)
+        }
+
+        dataDateTxt!!.text = dateTimeDay.weekString()
+        setPieChartData(pieEntries, colors)
+        pieChart!!.notifyDataSetChanged()
+    }
+
+    private fun month(statisticsVo : StatisticVo, dateTimeDay : LocalDateTime) {
+        val pieEntries = statisticsVo.ratioByDurationOfMonth.map {
+            PieEntry(it.ratio.toFloat(), it.taskName)
+        }
+
+        val colors = statisticsVo.ratioByDurationOfMonth.map {
+            ColorUtil.getColorByRgb(null)
+        }
+
+        dataDateTxt!!.text = dateTimeDay.monthString()
+        setPieChartData(pieEntries, colors)
+        pieChart!!.notifyDataSetChanged()
+    }
+
+
+
     private fun setListeners() {
         // 专注时长分布
         // 左按钮
-        binding.focusDurationRatioRight.setOnClickListener {
-
+        binding.focusDurationRatioLeft.setOnClickListener {
+            when(radioDataGroup?.checkedRadioButtonId){
+                R.id.record_fragment_time_data_day -> {
+                    val epochMillisecond = 1000 * dateTimeDay.minusDays(1).toEpochSecond(ZoneOffset.of("+8"))
+                    dateTimeDay = dateTimeDay.minusDays(1)
+                    statisticsVo = StatisticApi.statistic(epochMillisecond)
+                    day(statisticsVo!!, dateTimeDay)
+                }
+                R.id.record_fragment_time_data_week -> {
+                    val epochMillisecond = 1000 * dateTimeWeek.minusWeeks(1).toEpochSecond(ZoneOffset.of("+8"))
+                    dateTimeWeek = dateTimeWeek.minusWeeks(1)
+                    statisticsVoWeek = StatisticApi.statistic(epochMillisecond)
+                    week(statisticsVoWeek!!, dateTimeWeek)
+                }
+                R.id.record_fragment_time_data_month -> {
+                    val epochMillisecond = 1000 * dateTimeMonth.minusMonths(1).toEpochSecond(ZoneOffset.of("+8"))
+                    dateTimeMonth = dateTimeMonth.minusMonths(1)
+                    statisticsVoMonth = StatisticApi.statistic(epochMillisecond)
+                    month(statisticsVoMonth!!, dateTimeMonth)
+                }
+            }
         }
 
         // 右按钮
         binding.focusDurationRatioRight.setOnClickListener {
-
+            when(radioDataGroup?.checkedRadioButtonId){
+                R.id.record_fragment_time_data_day -> {
+                    val epochMillisecond = 1000 * dateTimeDay.plusDays(1).toEpochSecond(ZoneOffset.of("+8"))
+                    dateTimeDay = dateTimeDay.plusDays(1)
+                    statisticsVo = StatisticApi.statistic(epochMillisecond)
+                    day(statisticsVo!!, dateTimeDay)
+                }
+                R.id.record_fragment_time_data_week -> {
+                    val epochMillisecond = 1000 * dateTimeWeek.plusWeeks(1).toEpochSecond(ZoneOffset.of("+8"))
+                    dateTimeWeek = dateTimeWeek.plusWeeks(1)
+                    statisticsVoWeek = StatisticApi.statistic(epochMillisecond)
+                    week(statisticsVoWeek!!, dateTimeWeek)
+                }
+                R.id.record_fragment_time_data_month -> {
+                    val epochMillisecond = 1000 * dateTimeMonth.plusMonths(1).toEpochSecond(ZoneOffset.of("+8"))
+                    dateTimeMonth = dateTimeMonth.plusMonths(1)
+                    statisticsVoMonth = StatisticApi.statistic(epochMillisecond)
+                    month(statisticsVoMonth!!, dateTimeMonth)
+                }
+            }
         }
 
         // 分享按钮
@@ -137,45 +224,15 @@ class RecordFragment : Fragment() {
         radioDataGroup!!.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.record_fragment_time_data_day -> {
-                    val pieEntries = statisticsVo!!.ratioByDurationOfDay.map {
-                        PieEntry(it.ratio.toFloat(), it.taskName)
-                    }
-
-                    val colors = statisticsVo!!.ratioByDurationOfDay.map {
-                        ColorUtil.getColorByRgb(null)
-                    }
-
-                    dataDateTxt!!.text = DateUtil.curDay
-                    setPieChartData(pieEntries, colors)
-                    pieChart!!.notifyDataSetChanged()
+                    day(statisticsVo!!, dateTimeDay)
                 }
 
                 R.id.record_fragment_time_data_week -> {
-                    val pieEntries = statisticsVo!!.ratioByDurationOfWeek.map {
-                        PieEntry(it.ratio.toFloat(), it.taskName)
-                    }
-
-                    val colors = statisticsVo!!.ratioByDurationOfWeek.map {
-                        ColorUtil.getColorByRgb(null)
-                    }
-
-                    dataDateTxt!!.text = DateUtil.curWeek
-                    setPieChartData(pieEntries, colors)
-                    pieChart!!.notifyDataSetChanged()
+                    week(statisticsVoWeek!!, dateTimeWeek)
                 }
 
                 R.id.record_fragment_time_data_month -> {
-                    val pieEntries = statisticsVo!!.ratioByDurationOfMonth.map {
-                        PieEntry(it.ratio.toFloat(), it.taskName)
-                    }
-
-                    val colors = statisticsVo!!.ratioByDurationOfMonth.map {
-                        ColorUtil.getColorByRgb(null)
-                    }
-
-                    dataDateTxt!!.text = DateUtil.curMonth
-                    setPieChartData(pieEntries, colors)
-                    pieChart!!.notifyDataSetChanged()
+                    month(statisticsVoMonth!!, dateTimeMonth)
                 }
             }
         }
