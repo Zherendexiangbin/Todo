@@ -1,22 +1,31 @@
 package net.onest.time.navigation.activity;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
+
 import net.onest.time.R;
-import net.onest.time.adapter.studyroom.StudyRoomAdapter;
 import net.onest.time.api.RoomApi;
-import net.onest.time.api.dto.RoomDto;
 import net.onest.time.api.vo.Page;
 import net.onest.time.api.vo.RoomVo;
 
@@ -30,6 +39,7 @@ public class FindStudyRoomActivity extends AppCompatActivity {
     private StudyRoomAdapter filteredItemAdapter;//用于模糊查询
     private List<RoomVo> roomVos = new ArrayList<>();
     private List<RoomVo> filteredData;//用于模糊查询
+    private static final int INTENT_CODE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,15 +119,6 @@ public class FindStudyRoomActivity extends AppCompatActivity {
         roomVoList = RoomApi.findRooms(null, 1, 10);
         roomVos = roomVoList.getRecords();
 
-
-//        for (int i=0; i<20; i++){
-//            RoomVo roomVo = new RoomVo();
-//            roomVo.setRoomName("Room--" + i);
-//            roomVo.setRoomId(Long.parseLong("111"));
-//            roomVo.setRoomAvatar("");
-//            roomVos.add(roomVo);
-//        }
-
         RecyclerView.LayoutManager manager = new LinearLayoutManager(FindStudyRoomActivity.this);
         if (roomVos != null){
             studyRoomAdapter = new StudyRoomAdapter(FindStudyRoomActivity.this, roomVos);
@@ -134,6 +135,86 @@ public class FindStudyRoomActivity extends AppCompatActivity {
             if (imm != null) {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
+        }
+    }
+
+    private class StudyRoomAdapter extends RecyclerView.Adapter<StudyRoomAdapter.ViewHolder>{
+        private List<RoomVo> roomVos;
+        private Context context;
+        private Boolean isFinish = false;
+
+        public StudyRoomAdapter(Context context, List<RoomVo> roomVos) {
+            this.context = context;
+            this.roomVos = roomVos;
+        }
+
+
+        @Override
+        public void onBindViewHolder(StudyRoomAdapter.ViewHolder holder, int position){
+            RoomVo roomVo = roomVos.get(position);
+
+
+            Glide.with(context)
+                    .load(roomVo.getRoomAvatar())
+                    .into(holder.roomAvatar);
+//        holder.roomAvatar.setBackgroundResource(R.mipmap.logo);
+            holder.roomName.setText(roomVo.getRoomName());
+
+            holder.enterRoom.setOnClickListener(view -> {
+                new XPopup.Builder(context)
+                        .dismissOnTouchOutside(false)
+                        .asConfirm("确认加入", roomVo.getRoomName().toString(),
+                                new OnConfirmListener() {
+                                    @Override
+                                    public void onConfirm() {
+                                        RoomApi.requestJoin(roomVo.getRoomId());
+                                        Intent resultIntent = new Intent();
+                                        resultIntent.putExtra("request", "send");
+                                        setResult(INTENT_CODE, resultIntent);
+                                        finish();
+                                    }
+                                })
+                        .show();
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            if (roomVos.size()==0){
+                return 0;
+            }else {
+                return roomVos.size();
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+
+        @NonNull
+        @Override
+        public StudyRoomAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+            context = parent.getContext();
+            View view  = LayoutInflater.from(context).inflate(R.layout.studyroom_item, parent, false);
+            return new StudyRoomAdapter.ViewHolder(view);
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder{
+            public ImageView roomAvatar, enterRoom;
+            public TextView roomName;
+
+            public ViewHolder(View itemView){
+                super(itemView);
+                roomAvatar = itemView.findViewById(R.id.room_avatar);
+                roomName = itemView.findViewById(R.id.room_name);
+                enterRoom = itemView.findViewById(R.id.enter_room);
+            }
+        }
+
+        public void updateData(List<RoomVo> rooms){
+            this.roomVos = rooms;
+            notifyDataSetChanged();
         }
     }
 }

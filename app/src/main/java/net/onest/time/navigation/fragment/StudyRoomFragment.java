@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.util.Pair;
 import android.view.Gravity;
@@ -48,8 +49,13 @@ import net.onest.time.api.vo.RoomVo;
 import net.onest.time.api.vo.UserVo;
 import net.onest.time.navigation.activity.FindStudyRoomActivity;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class StudyRoomFragment extends Fragment {
     private RoomDto roomDto;
@@ -60,10 +66,14 @@ public class StudyRoomFragment extends Fragment {
     private TextView roomName, roomManager;
     private String roomId;
     private StudyRoomUserItemAdapter itemAdapter;
+    private RoomCodePopWindow addMenu;//创建、加入自习室弹框
+    private MenuPopWindow menuPopWindow;//管理员查看自习室信息
     private List<UserVo> userVos;
     private RecyclerView recyclerView;
     private Button btnMenu, btnAdd;
     private Boolean isMaster;//是否为房间创建者
+    private static final int REQUEST_CODE = 1;
+    private static final int INTENT_CODE = 1;
 
     //调用相册
     private String avatarString = "null";
@@ -77,10 +87,35 @@ public class StudyRoomFragment extends Fragment {
         userVo = UserApi.getUserInfo();
         userVos = new ArrayList<>();
         avatarString = userVo.getAvatar();
-//        roomVo = new RoomVo();
+
         loadData();
         findViewById(view);
         setListeners();
+
+        try {
+            roomVo = RoomApi.getRoomInfo();
+            if (roomVo != null){
+                userVos.clear();
+                userVos = RoomApi.listUsers(roomVo.getRoomId());
+
+                Glide.with(getContext())
+                        .load(roomVo.getRoomAvatar())
+                        .into(roomAvatar);
+                roomName.setText(roomVo.getRoomName());
+                btnMenu.setVisibility(View.VISIBLE);
+                roomManager.setVisibility(View.VISIBLE);
+                roomManager.setText("管理员：" + userVo.getUserName());
+
+                itemAdapter.updateData(userVos);
+
+                btnAdd.setHint("dissolution");
+                btnAdd.setBackgroundResource(R.mipmap.quit);
+            }
+        }catch (Exception e){
+
+        }
+//        roomVo = new RoomVo();
+//        loadData();
 
         return view;
     }
@@ -94,6 +129,7 @@ public class StudyRoomFragment extends Fragment {
                 Glide.with(getContext())
                         .load(roomVo.getRoomAvatar())
                         .into(roomAvatar);
+
                 roomName.setText(roomVo.getRoomName());
                 roomManager.setText("管理员：" + userVo.getUserName());
             }
@@ -105,7 +141,7 @@ public class StudyRoomFragment extends Fragment {
 
         btnAdd.setOnClickListener(view -> {
             if(btnAdd.getHint().equals("add")){
-                RoomCodePopWindow addMenu = new RoomCodePopWindow(getContext());
+                addMenu = new RoomCodePopWindow(getContext());
                 addMenu.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.TOP, 0, 0);
             } else if (btnAdd.getHint().equals("dissolution")) {
                 //解散自习室
@@ -120,9 +156,11 @@ public class StudyRoomFragment extends Fragment {
 
                                         RoomApi.deleteRoom(roomVo.getRoomId());
                                         userVos.clear();
+
                                         loadData();
                                         itemAdapter.updateData(userVos);
 
+                                        roomAvatar.setImageResource(R.mipmap.logo);
                                         roomName.setText("时光自习室");
                                         roomManager.setVisibility(View.GONE);
                                         btnMenu.setVisibility(View.GONE);
@@ -158,18 +196,22 @@ public class StudyRoomFragment extends Fragment {
 
         //管理员 菜单查看邀请码、房间加入申请
         btnMenu.setOnClickListener(view -> {
-            MenuPopWindow menuPopWindow = new MenuPopWindow(getContext());
+            menuPopWindow = new MenuPopWindow(getContext());
             menuPopWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
         });
     }
 
     private void loadData() {
-        UserVo user = new UserVo();
-        user.setUserId(userVo.getUserId());
-        user.setUserName(userVo.getUserName());
-        user.setAvatar(userVo.getAvatar());
-        user.setSignature(userVo.getSignature());
-        userVos.add(user);
+
+        for (int i=20; i>0; i--){
+            UserVo user = new UserVo();
+            user.setUserId(userVo.getUserId());
+            user.setUserName("用户--"+ i);
+            user.setAvatar(userVo.getAvatar());
+            user.setSignature(userVo.getSignature());
+            user.setCreatedAt(new Date(System.currentTimeMillis()));
+            userVos.add(user);
+        }
     }
 
     private void findViewById(View view) {
@@ -181,8 +223,8 @@ public class StudyRoomFragment extends Fragment {
         userRefresh = view.findViewById(R.id.user_refresh);
 
         recyclerView = view.findViewById(R.id.user_list);
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 5, RecyclerView.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(manager);
         itemAdapter = new StudyRoomUserItemAdapter(getContext(), userVos);
         recyclerView.setAdapter(itemAdapter);
 
@@ -223,7 +265,7 @@ public class StudyRoomFragment extends Fragment {
         public void showAtLocation(View parent, int gravity, int x, int y) {
             super.showAtLocation(parent, gravity, x, y);
             //加入动画
-            ObjectAnimator.ofFloat(getContentView(), "translationY", -getHeight(), 0).setDuration(300).start();
+            ObjectAnimator.ofFloat(getContentView(), "translationY", -getHeight(), 0).setDuration(200).start();
         }
 
         /**
@@ -303,7 +345,10 @@ public class StudyRoomFragment extends Fragment {
                                         roomManager.setVisibility(View.VISIBLE);
                                         roomManager.setText("管理员：" + userVo.getUserName());
                                         //设置自习室头像
-                                        roomAvatar.setImageURI(avatarUri);
+
+                                        Glide.with(getContext())
+                                                .load(avatarString)
+                                                .into(roomAvatar);
                                         roomDto.setRoomAvatar(avatarString);
 
                                         btnMenu.setVisibility(View.VISIBLE);
@@ -330,8 +375,7 @@ public class StudyRoomFragment extends Fragment {
             //查找自习室加入(页面跳转)
             findRoom.setOnClickListener(view1 -> {
                 Intent intent = new Intent(getContext(), FindStudyRoomActivity.class);
-                startActivity(intent);
-                dismiss();
+                startActivityForResult(intent, REQUEST_CODE);
             });
 
             //根据邀请码加入自习室
@@ -349,6 +393,7 @@ public class StudyRoomFragment extends Fragment {
                                     //获取加入的自习室信息
 
                                     roomVo = RoomApi.getRoomInfo();
+                                    btnMenu.setVisibility(View.VISIBLE);
                                     dismiss();
                                     Toast.makeText(getContext(), "加入成功！", Toast.LENGTH_SHORT).show();
                                 }
@@ -364,7 +409,7 @@ public class StudyRoomFragment extends Fragment {
     }
 
     //查看邀请码、加入房间申请
-    private  class MenuPopWindow extends PopupWindow{
+    private class MenuPopWindow extends PopupWindow{
         private TextView applicationCode;
         private ImageView refresh;
         private RecyclerView applicationList;
@@ -377,9 +422,11 @@ public class StudyRoomFragment extends Fragment {
             View view2 = inflater.inflate((R.layout.acticity_room_menu), null);
             setContentView(view2);
             initView(view2);//获取控件、初始化控件
-            //activity的contentView的高度、宽度
-            setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-            setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+            //activity的contentView的宽度
+            int width = ((Activity) context).findViewById(android.R.id.content).getWidth();
+            //其他设置
+            setWidth(width);//必须设置宽度
+            setHeight(dp2px(300));//必须设置高度
             setFocusable(false);//是否获取焦点
             setOutsideTouchable(true);//是否可以通过点击屏幕外关闭
         }
@@ -389,6 +436,17 @@ public class StudyRoomFragment extends Fragment {
             super.showAtLocation(parent, gravity, x, y);
             //加入动画
             ObjectAnimator.ofFloat(getContentView(), "translationY", getHeight(), 0).setDuration(200).start();
+        }
+
+        /**
+         * Value of dp to value of px.
+         *
+         * @param dpValue The value of dp.
+         * @return value of px
+         */
+        public int dp2px(final float dpValue) {
+            final float scale = Resources.getSystem().getDisplayMetrics().density;
+            return (int) (dpValue * scale + 0.5f);
         }
 
         private void initView(View view2) {
@@ -418,10 +476,10 @@ public class StudyRoomFragment extends Fragment {
         }
     }
 
-    //调用本地相册
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //调用本地相册
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
             try {
@@ -431,7 +489,12 @@ public class StudyRoomFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (requestCode == REQUEST_CODE && resultCode == INTENT_CODE && data != null) {
+            //处理页面跳转结果
+            addMenu.dismiss();
+            afterRequest();
         }
+
     }
 
 
@@ -456,5 +519,52 @@ public class StudyRoomFragment extends Fragment {
         } else {
             return null;
         }
+    }
+
+    public void afterRequest(){
+        new CountDownTimer(15*1000, 1000){
+            @Override
+            public void onTick(long l) {
+                int seconds = (int) TimeUnit.MILLISECONDS.toSeconds(l);
+                //查看管理员是否同意加入请求
+                try {
+                    roomVo = RoomApi.getRoomInfo();
+                    if (roomVo != null){
+                        afterManager();
+                        cancel();
+                    }
+                }catch (Exception e){
+                    Toast.makeText(getContext(), "等待管理员同意：" + seconds + "s", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                try {
+                    roomVo = RoomApi.getRoomInfo();
+                    if (roomVo != null) {
+                        afterManager();
+                    }
+                }catch (Exception e){
+                    Toast.makeText(getContext(), "管理员未同意", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }.start();
+    }
+
+    //管理员同意加入请求
+    private void afterManager(){
+        userVos = RoomApi.listUsers(roomVo.getRoomId());
+
+        Glide.with(getContext())
+                .load(roomVo.getRoomAvatar())
+                .into(roomAvatar);
+        roomName.setText(roomVo.getRoomName());
+        roomManager.setText("管理员：" + userVo.getUserName());
+
+        btnAdd.setBackgroundResource(R.mipmap.add3);
+        btnAdd.setHint("add");
+
+        Toast.makeText(getContext(), "加入成功", Toast.LENGTH_SHORT).show();
     }
 }

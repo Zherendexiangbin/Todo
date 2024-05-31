@@ -56,7 +56,6 @@ public class RoomApi {
     private final static String GET_ROOM_INFO = "/getRoomInfo";
 
 
-
     public static RoomVo createRoom(RoomDto roomDto) {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + CREATE)

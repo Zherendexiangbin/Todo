@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +15,9 @@ import com.bumptech.glide.Glide;
 import net.onest.time.R;
 import net.onest.time.api.vo.UserVo;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class StudyRoomUserItemAdapter extends RecyclerView.Adapter<StudyRoomUserItemAdapter.ViewHolder> {
     private List<UserVo> userVoList;
@@ -22,7 +25,9 @@ public class StudyRoomUserItemAdapter extends RecyclerView.Adapter<StudyRoomUser
 
     public StudyRoomUserItemAdapter(Context context, List<UserVo> userVoList) {
         this.context = context;
-        this.userVoList = userVoList;
+        this.userVoList = userVoList.stream()
+                .sorted(Comparator.comparing(UserVo :: getCreatedAt))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -31,18 +36,18 @@ public class StudyRoomUserItemAdapter extends RecyclerView.Adapter<StudyRoomUser
 
         Glide.with(context)
                         .load(userVo.getAvatar())
-                                .into(holder.avatar);
+                                .into(holder.userAvatar);
 
-//        holder.avatar.setOnClickListener(view -> {
-//                notifyDataSetChanged();
-//        });
+        holder.userName.setText(userVo.getUserName());
+        holder.userRank.setText("" + (position+1));
+        holder.userrTime.setText("" + userVo.getCreatedAt());
 
     }
 
     @Override
     public int getItemCount() {
         if (userVoList.size()==0){
-            return 1;
+            return 0;
         }else {
             return userVoList.size();
         }
@@ -62,11 +67,15 @@ public class StudyRoomUserItemAdapter extends RecyclerView.Adapter<StudyRoomUser
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        public ImageView avatar;
+        public ImageView userAvatar;
+        public TextView userRank, userName, userrTime;
 
         public ViewHolder(View itemView){
             super(itemView);
-            avatar = itemView.findViewById(R.id.user_avatar);
+            userAvatar = itemView.findViewById(R.id.user_avatar);
+            userRank = itemView.findViewById(R.id.user_rank);
+            userName = itemView.findViewById(R.id.user_name);
+            userrTime = itemView.findViewById(R.id.user_time);
         }
     }
 
