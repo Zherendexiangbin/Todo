@@ -14,6 +14,23 @@ public class TomatoClockVo implements Serializable {
     private String stopReason;
     private Date startedAt;
     private Date completedAt;
+    private String taskName;
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 
     public Integer getClockDuration() {
         return clockDuration;
@@ -81,14 +98,6 @@ public class TomatoClockVo implements Serializable {
 
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TomatoClockVo that = (TomatoClockVo) o;
-        return Objects.equals(clockId, that.clockId) && Objects.equals(taskId, that.taskId) && Objects.equals(parentId, that.parentId) && Objects.equals(sequence, that.sequence) && Objects.equals(clockDuration, that.clockDuration) && Objects.equals(clockStatus, that.clockStatus) && Objects.equals(stopReason, that.stopReason) && Objects.equals(startedAt, that.startedAt) && Objects.equals(completedAt, that.completedAt);
-    }
-
-    @Override
     public String toString() {
         return "TomatoClockVo{" +
                 "clockId=" + clockId +
@@ -100,12 +109,8 @@ public class TomatoClockVo implements Serializable {
                 ", stopReason='" + stopReason + '\'' +
                 ", startedAt=" + startedAt +
                 ", completedAt=" + completedAt +
+                ", taskName='" + taskName + '\'' +
                 '}';
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(clockId, taskId, parentId, sequence, clockDuration, clockStatus, stopReason, startedAt, completedAt);
     }
 
     public static TomatoClockVo.Status of(Integer code) {
