@@ -129,6 +129,53 @@ class DateUtil {
             calendar[Calendar.MILLISECOND] = 0
             return calendar.toInstant().epochSecond * 1000
         }
-
     }
+}
+
+fun LocalDateTime.dayString(): String {
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = this.toEpochSecond(ZoneOffset.of("+8")) * 1000
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+    val currentDate = dateFormat.format(calendar.time)
+    return currentDate
+}
+
+fun LocalDateTime.weekString(): String {
+    val calendarWeek = Calendar.getInstance()
+    calendarWeek.timeInMillis = this.toEpochSecond(ZoneOffset.of("+8")) * 1000
+    val dateFormatWeek = SimpleDateFormat("yyyy-MM-dd")
+
+    // 设置一周的第一天为周一
+    calendarWeek[Calendar.DAY_OF_WEEK] = Calendar.MONDAY
+    val startDate = dateFormatWeek.format(calendarWeek.time)
+
+    // 获取本周的最后一天（星期日）
+    calendarWeek.add(Calendar.DATE, 6)
+
+    // 判断是否已经是月末，如果是，则将结束日期设置为当月最后一天
+    if (calendarWeek[Calendar.DAY_OF_MONTH] == calendarWeek.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+        calendarWeek[Calendar.DAY_OF_MONTH] =
+            calendarWeek.getActualMaximum(Calendar.DAY_OF_MONTH)
+    } else {
+        // 如果不是月末，则继续获取本周的结束日期
+        calendarWeek[Calendar.DAY_OF_WEEK] = Calendar.SUNDAY
+    }
+
+    val endDate = dateFormatWeek.format(calendarWeek.time)
+    return "$startDate ~ $endDate"
+}
+
+fun LocalDateTime.monthString(): String {
+    val calendarMonth = Calendar.getInstance()
+    calendarMonth.timeInMillis = this.toEpochSecond(ZoneOffset.of("+8")) * 1000
+    val dateFormatMonth = SimpleDateFormat("yyyy-MM-dd")
+    // 获取当月的第一天
+    calendarMonth[Calendar.DAY_OF_MONTH] = 1
+    val startDateMonth = dateFormatMonth.format(calendarMonth.time)
+    // 获取当月的最后一天
+    calendarMonth[Calendar.DAY_OF_MONTH] =
+        calendarMonth.getActualMaximum(Calendar.DAY_OF_MONTH)
+    val endDateMonth = dateFormatMonth.format(calendarMonth.time)
+
+    return "$startDateMonth ~ $endDateMonth"
 }
