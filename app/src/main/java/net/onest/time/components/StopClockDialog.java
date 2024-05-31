@@ -28,10 +28,12 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.textfield.TextInputEditText;
+import com.mut_jaeryo.circletimer.CircleTimer;
 
 import net.onest.time.R;
 import net.onest.time.TimerActivity;
 import net.onest.time.api.TomatoClockApi;
+import net.onest.time.api.vo.TaskVo;
 import net.onest.time.navigation.activity.NavigationActivity;
 
 import java.util.ArrayList;
@@ -41,9 +43,10 @@ public class StopClockDialog extends AlertDialog {
     private TextView abandon;
     private TextView advance;
     private TextView cancel;
-    private long taskId;
+    private TaskVo taskVo;
 
     private CountDownTimer countDownTimer;
+    private CircleTimer circleTimer;
 
 //    public StopClockDialog(@NonNull Context context) {
 //        super(context);
@@ -62,9 +65,26 @@ public class StopClockDialog extends AlertDialog {
 //
 //    }
 
-    public StopClockDialog(@NonNull Context context,long taskId){
+    public StopClockDialog(@NonNull Context context,TaskVo taskVo,CircleTimer circleTimer){
         super(context);
-        this.taskId = taskId;
+        this.taskVo = taskVo;
+        this.circleTimer = circleTimer;
+        View view = LayoutInflater.from(context).inflate(R.layout.timer_activity_stop_pop,null);
+
+        abandon = view.findViewById(R.id.abandon_btn);
+        advance = view.findViewById(R.id.advance_btn);
+        cancel = view.findViewById(R.id.cancel_btn);
+
+        setListeners();
+
+        show();
+        getWindow().setContentView(view);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    }
+
+    public StopClockDialog(@NonNull Context context, TaskVo taskVo){
+        super(context);
+        this.taskVo = taskVo;
         View view = LayoutInflater.from(context).inflate(R.layout.timer_activity_stop_pop,null);
 
         abandon = view.findViewById(R.id.abandon_btn);
@@ -146,7 +166,6 @@ public class StopClockDialog extends AlertDialog {
                 setPieChartData(abandonReasonChart,yVals,colors);
 
 
-
                 abandonYes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -158,7 +177,7 @@ public class StopClockDialog extends AlertDialog {
 
                         }else{
                             try {
-                                TomatoClockApi.stopTomatoClock(taskId,reason);
+                                TomatoClockApi.stopTomatoClock(taskVo.getTaskId(),reason);
                             } catch (RuntimeException e) {
                                 Toast.makeText(getContext(),"番茄钟放弃失败", Toast.LENGTH_SHORT).show();
                             }
@@ -187,18 +206,10 @@ public class StopClockDialog extends AlertDialog {
         advance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                countDownTimer = new CountDownTimer(5*60*1000,1000) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
+                //提前完成之正向计时:
 
-                    }
-
-                    @Override
-                    public void onFinish() {
-
-                    }
-                };
-
+                //提前完成之倒计时:
+                circleTimer.setValue(0);
             }
         });
         //取消

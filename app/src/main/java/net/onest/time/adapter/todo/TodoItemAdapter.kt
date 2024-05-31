@@ -138,6 +138,9 @@ class TodoItemAdapter(private val context: Context, itemListByDay: List<TaskVo>)
                         .toTypedArray()
                     val num = parts[0]
                     //                int num = Integer.parseInt(parts[0]);
+                    intent?.run {
+                        putExtra("task",task)
+                    }
                     intent!!.putExtra("time", num)
                     intent!!.putExtra("method", "countDown")
                     intent!!.putExtra("name", itemListByDay[position].taskName)

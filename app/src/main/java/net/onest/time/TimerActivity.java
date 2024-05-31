@@ -47,6 +47,8 @@ import com.mut_jaeryo.circletimer.CircleTimer;
 import net.onest.time.api.RandomWordApi;
 import net.onest.time.api.TaskApi;
 import net.onest.time.api.TomatoClockApi;
+import net.onest.time.api.dto.TaskDto;
+import net.onest.time.api.vo.TaskVo;
 import net.onest.time.api.vo.TomatoClockVo;
 import net.onest.time.components.StopClockDialog;
 import net.onest.time.navigation.activity.NavigationActivity;
@@ -59,6 +61,7 @@ import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
 
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -99,9 +102,13 @@ public class TimerActivity extends AppCompatActivity {
     //震动提醒
     private Vibrator mVibrator;
     //记录时钟数:
-    private int num=1;//点击开始，即占用一个番茄钟
+    private int num=0;//点击开始，即占用一个番茄钟
     //要循环的番茄钟数:
     private List<TomatoClockVo> tomatoClockVos = new ArrayList<>();
+    private int rest;//休息时间
+    private int loopTimes;//循环次数
+    
+    private TaskVo taskVo;
 
 
     /** 获取屏幕坐标点 **/
@@ -130,7 +137,7 @@ public class TimerActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
                 mCountDownTimer.cancel();
             }else{
-                stopClockDialog = new StopClockDialog(TimerActivity.this,intent.getLongExtra("taskId",0L));
+                stopClockDialog = new StopClockDialog(TimerActivity.this,taskVo);
             }
         }else{
             int time = Integer.parseInt(intent.getStringExtra("time"));
@@ -148,7 +155,7 @@ public class TimerActivity extends AppCompatActivity {
 //                        NavController navController = Navigation.findNavController(TimerActivity.this, R.id.nav_host_fragments);
 //                        navController.navigate(R.id.action_todo_fragment_to_list_fragment);
             }else{
-                stopClockDialog = new StopClockDialog(TimerActivity.this,intent.getLongExtra("taskId",0L));
+                stopClockDialog = new StopClockDialog(TimerActivity.this,taskVo);
 
             }
         }
@@ -201,12 +208,12 @@ public class TimerActivity extends AppCompatActivity {
                         if (mCurPosX - mPosX > 70
                                 && (Math.abs(mCurPosX - mPosX) > 70)) {
                             //设置停止弹窗:
-                            new StopClockDialog(TimerActivity.this,intent.getLongExtra("taskId",0L));
+                            new StopClockDialog(TimerActivity.this,taskVo);
                             Toast.makeText(TimerActivity.this, "向右滑动😊", Toast.LENGTH_SHORT).show();
                         }else if (mCurPosX - mPosX < -70
                                 && (Math.abs(mCurPosX - mPosX) > 70)) {
                             //设置停止弹窗:
-                            new StopClockDialog(TimerActivity.this,intent.getLongExtra("taskId",0L));
+                            new StopClockDialog(TimerActivity.this,taskVo);
                             Toast.makeText(TimerActivity.this, "向左滑动😊", Toast.LENGTH_SHORT).show();
                         }
                         break;
@@ -221,6 +228,10 @@ public class TimerActivity extends AppCompatActivity {
         timeStr = intent.getStringExtra("time");
         str = intent.getStringExtra("start");
         taskId = intent.getLongExtra("taskId",0);
+        taskVo = (TaskVo) intent.getSerializableExtra("task");
+
+        rest = taskVo.getRestTime();//休息时间  min
+        loopTimes = taskVo.getEstimate().get(0);//循环次数
 
         taskName.setText(name);
 
@@ -237,13 +248,14 @@ public class TimerActivity extends AppCompatActivity {
             }
 
             //对于倒计时:若是超过5秒，添加倒计时的番茄钟
-            if(time*60-circleTimer.getValue()>5){
-                long taskId = intent.getLongExtra("taskId",0L);
-                if(taskId!=0L){
-                    tomatoClockVos = TomatoClockApi.addTomatoClock(taskId);
-                    Toast.makeText(this, "开始添加番茄钟", Toast.LENGTH_SHORT).show();
-                }
+            long taskId = taskVo.getTaskId();
+            if(taskId!=0L){
+                tomatoClockVos = TomatoClockApi.addTomatoClock(taskId);
+                Toast.makeText(this, "开始添加番茄钟", Toast.LENGTH_SHORT).show();
             }
+//            if(time*60-circleTimer.getValue()>5){
+//
+//            }
 
             if(pauseTime==0){
                 Toast toast = Toast.makeText(TimerActivity.this, "本次任务的暂停限制时间已用完!", Toast.LENGTH_SHORT);
@@ -321,8 +333,8 @@ public class TimerActivity extends AppCompatActivity {
                         dialog.getWindow().setContentView(dialogView);
                         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                        EditText timers = dialogView.findViewById(R.id.circle_timers);
-                        EditText rest = dialogView.findViewById(R.id.per_circle_rest);
+                        EditText timersEdit = dialogView.findViewById(R.id.circle_timers);
+                        EditText restEdit = dialogView.findViewById(R.id.per_circle_rest);
                         Button forever = dialogView.findViewById(R.id.circle_forever);
                         Button circleYes = dialogView.findViewById(R.id.circle_yes);
                         Button circleNo = dialogView.findViewById(R.id.circle_no);
@@ -337,6 +349,14 @@ public class TimerActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 //获取文本框的值
+                                rest = Integer.valueOf(restEdit.getText().toString().trim());
+                                loopTimes = Integer.valueOf(timersEdit.getText().toString().trim());
+
+                                taskVo.setRestTime(rest);
+                                taskVo.getEstimate().add(loopTimes);
+
+                                TaskDto taskDto = new TaskDto().withTaskVo(taskVo);
+                                TaskApi.updateTask(taskDto);
 
                                 dialog.dismiss();
                             }
@@ -356,64 +376,67 @@ public class TimerActivity extends AppCompatActivity {
             circleTimer.setBaseTimerEndedListener(new CircleTimer.baseTimerEndedListener() {
                 @Override
                 public void OnEnded() {
-                    Log.e("circleTimer.getText",circleTimer.getTextFont()+"");
+                    ++num;
+                    Log.e("目前num:",num +"");
+                    Log.e("目前任务名:",name +"实际上:" + taskName.getText().toString());
 
                     // 震动效果的系统服务
                     mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
                     long[] pattern = {200, 200 };
                     mVibrator.vibrate(pattern, -1);
 
+                    //执行完休息时间，即可退出！！！
+                    if(num == loopTimes * 2 + 2){
+                        circleTimer.setInitPosition(0);
+                        circleTimer.setMaximumTime(0);
+
+                        TaskApi.complete(taskVo.getTaskId());
+
+//                            circleTimer.setValue(10);//设置时钟的值
+                        Toast.makeText(TimerActivity.this, "任务完成☺", Toast.LENGTH_SHORT).show();
+                        Intent intent2 = new Intent();
+                        intent2.setClass(TimerActivity.this, NavigationActivity.class);
+                        intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
+                        startActivity(intent2);
+                        overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
+                    }
+
                     //休息时间:
-                    int rest = 5*60;//五分钟
+//                    int rest = 5*60;//五分钟
                     //番茄钟数:
                     int clock = tomatoClockVos.get(0).getClockDuration()*60;
 
                     //无限循环状态:
                     if(taskName.getText().toString().contains("无限循环中")){
-                        if(num/2==0 && num == tomatoClockVos.size()){
-                            taskName.setText(name);
+                        if(num % 2==0 || num == loopTimes){
+                            taskName.setText(taskVo.getTaskName());
                             circleTimer.setMaximumTime(clock);
                             circleTimer.setInitPosition(clock + 1);
                             circleTimer.setTextFont(Typeface.SERIF);
                             circleTimer.start();
-                            num++;
+
                         }else {
                             taskName.setText("休息中~");
-                            circleTimer.setMaximumTime(rest);
-                            circleTimer.setInitPosition(rest+1);
+                            circleTimer.setMaximumTime(rest * 60);
+                            circleTimer.setInitPosition(rest * 60 + 1);
                             circleTimer.start();
-                            num++;
                             circleTimer.setTextFont(Typeface.SERIF);
                         }
                     }
 
                     //普通状态:
-                    if(num/2==0 && num == tomatoClockVos.size()){
+                    if(num % 2 == 0 || num == loopTimes*2){
                         taskName.setText(name);
                         circleTimer.setMaximumTime(clock);
                         circleTimer.setInitPosition(clock + 1);
                         circleTimer.start();
-                        num++;
                         circleTimer.setTextFont(Typeface.SERIF);
                     }else {
-                        if(num==tomatoClockVos.size()+2){
-                            num=1;// todo 要不要置为1
-                            circleTimer.setInitPosition(0);
-                            circleTimer.setMaximumTime(0);
-//                            circleTimer.setValue(10);//设置时钟的值
-                            Toast.makeText(TimerActivity.this, "任务完成☺", Toast.LENGTH_SHORT).show();
-                            Intent intent2 = new Intent();
-                            intent2.setClass(TimerActivity.this, NavigationActivity.class);
-                            intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
-                            startActivity(intent2);
-                            overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
-                            //todo 并将该任务添加删除线
-                        }
                         taskName.setText("休息中~");
-                        circleTimer.setMaximumTime(rest);
-                        circleTimer.setInitPosition(rest + 1);
+                        circleTimer.setMaximumTime(rest * 60);
+                        circleTimer.setInitPosition(rest * 60 + 1);
                         circleTimer.start();
-                        num++;
+
                         circleTimer.setTextFont(Typeface.SERIF);
                     }
                 }
@@ -437,8 +460,7 @@ public class TimerActivity extends AppCompatActivity {
 //                        NavController navController = Navigation.findNavController(TimerActivity.this, R.id.nav_host_fragments);
 //                        navController.navigate(R.id.action_todo_fragment_to_list_fragment);
                     }else{
-                        stopClockDialog = new StopClockDialog(TimerActivity.this,taskId);
-
+                        stopClockDialog = new StopClockDialog(TimerActivity.this,taskVo,circleTimer);
                     }
                 }
             });
@@ -522,7 +544,7 @@ public class TimerActivity extends AppCompatActivity {
                         overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
                         mCountDownTimer.cancel();
                     }else{
-                        stopClockDialog = new StopClockDialog(TimerActivity.this,taskId);
+                        stopClockDialog = new StopClockDialog(TimerActivity.this,taskVo);
                     }
                 }
             });
