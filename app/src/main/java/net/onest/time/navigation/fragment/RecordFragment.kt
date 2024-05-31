@@ -27,6 +27,7 @@ import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -42,13 +43,7 @@ import net.onest.time.R
 import net.onest.time.api.StatisticApi
 import net.onest.time.api.vo.statistic.StatisticVo
 import net.onest.time.databinding.RecordFragmentBinding
-import net.onest.time.utils.ColorUtil
-import net.onest.time.utils.DateUtil
-import net.onest.time.utils.createBitmap
-import net.onest.time.utils.drawUserWatermark
-import net.onest.time.utils.saveBitmapCache
-import net.onest.time.utils.localFormat
-import net.onest.time.utils.showToast
+import net.onest.time.utils.*
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.SortedMap
@@ -132,7 +127,7 @@ class RecordFragment : Fragment() {
             ColorUtil.getColorByRgb(null)
         }
 
-        dataDateTxt!!.text = dateTimeDay.localFormat()
+        dataDateTxt!!.text = dateTimeDay.weekString()
         setPieChartData(pieEntries, colors)
         pieChart!!.notifyDataSetChanged()
     }
@@ -146,7 +141,7 @@ class RecordFragment : Fragment() {
             ColorUtil.getColorByRgb(null)
         }
 
-        dataDateTxt!!.text = dateTimeDay.localFormat()
+        dataDateTxt!!.text = dateTimeDay.monthString()
         setPieChartData(pieEntries, colors)
         pieChart!!.notifyDataSetChanged()
     }
