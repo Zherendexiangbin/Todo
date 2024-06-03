@@ -51,7 +51,7 @@ public class TaskCategoryApiTest {
 
     @Test
     public void getAllCategoryAndTasks() {
-        Map<TaskCategoryVo, List<TaskVo>> allCategoryAndTasks = TaskCategoryApi.getAllCategoryAndTasks();
+        List<TaskCategoryVo> allCategoryAndTasks = TaskCategoryApi.getAllCategoryAndTasks();
         System.out.println(allCategoryAndTasks);
     }
 }

@@ -30,11 +30,11 @@
                 android:layout_height="30dp"
                 android:background="@drawable/trophy1" />
 
-            <Button
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/menu1" />
+            <!-- <Button -->
+            <!--     android:layout_width="30dp" -->
+            <!--     android:layout_height="30dp" -->
+            <!--     android:layout_marginLeft="10dp" -->
+            <!--     android:background="@drawable/menu1" /> -->
         </LinearLayout>
     </RelativeLayout>
 
