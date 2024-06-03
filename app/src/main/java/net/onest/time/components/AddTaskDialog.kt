@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
@@ -227,5 +228,9 @@ class AddTaskDialog(
     private fun hideKeyboard(view: View) {
         val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    fun setTaskName(taskName: String) {
+        itemName?.setText(taskName)
     }
 }

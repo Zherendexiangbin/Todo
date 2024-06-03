@@ -104,8 +104,9 @@ fun Bitmap.drawUserWatermark(): Bitmap {
         .getString(UserInfoConstant.USER_INFO, "")
 
     val userVo = RequestUtil.getGson().fromJson(json, UserVo::class.java)
+    val username = "@${userVo.userName}"
 
-    canvas.drawText(userVo.userName, this.width - userVo.userName.length * 36 - 10f, this.height - 44f, paint)
+    canvas.drawText(username, this.width - username.length * 36 - 44f, this.height - 44f, paint)
 
     return this
 }

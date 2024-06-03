@@ -93,6 +93,14 @@ class TodoFragment : Fragment() {
         todoItemAdapter = TodoItemAdapter(requireContext(), tasks)
         recyclerView?.adapter = todoItemAdapter
         recyclerView?.layoutManager = LinearLayoutManager(context)
+
+        arguments?.run {
+            getString("taskName")?.run {
+                val addTaskDialog =
+                    AddTaskDialog(requireContext(), tasks, AdapterHolder(todoItemAdapter))
+                addTaskDialog.setTaskName(this)
+            }
+        }
     }
 
     private fun getSchemeCalendar(
@@ -158,11 +166,6 @@ class TodoFragment : Fragment() {
                 todoItemAdapter?.notifyDataSetChanged()
             }
         })
-
-        logo?.setOnClickListener {
-            val checkIn = CheckIn("LingFenglong", 1, 79.2, StatisticApi.statistic().ratioByDurationOfMonth)
-            CheckInDialog(requireContext(), checkIn)
-        }
     }
 
     private fun findView(view: View) {
