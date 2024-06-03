@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-<!--    以下是日历属性：-->
+    <!--    以下是日历属性：-->
     <string name="app_name">Time</string>
     <string-array name="english_week_string_array">
         <item>Sun</item>
@@ -300,7 +300,7 @@
 
     </string-array>
 
-<!--    以下是图标属性：-->
+    <!--    以下是图标属性：-->
 
     <string name="viewGithub">View on GitHub</string>
     <string name="reportProblem">Problem Report</string>
