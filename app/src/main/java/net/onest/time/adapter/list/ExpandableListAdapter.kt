@@ -189,6 +189,7 @@ class ExpandableListAdapter(
                 intent = Intent()
                 intent!!.setClass(context, TimerActivity::class.java)
                 intent!!.putExtra("method", "forWard")
+                intent!!.putExtra("task", taskCollectionsList[groupPosition].tasks[childPosition])
                 intent!!.putExtra("name", taskCollectionsList[groupPosition].tasks[childPosition].taskName)
                 context.startActivity(
                         intent, ActivityOptions.makeSceneTransitionAnimation(
@@ -226,6 +227,7 @@ class ExpandableListAdapter(
                 intent!!.putExtra("name", taskCollectionsList[groupPosition].tasks[childPosition].taskName)
                 intent!!.putExtra("taskId", taskCollectionsList[groupPosition].tasks[childPosition].taskId)
                 intent!!.putExtra("start", "go")
+                intent!!.putExtra("task", taskCollectionsList[groupPosition].tasks[childPosition])
                 intent!!.setClass(context, TimerActivity::class.java)
                 context.startActivity(
                         intent, ActivityOptions.makeSceneTransitionAnimation(

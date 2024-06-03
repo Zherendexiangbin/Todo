@@ -47,6 +47,9 @@ dependencies {
     implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper:3.0.14"
 //    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
 
+    //可扩展列表:
+//    implementation 'com.thoughtbot:expandablerecyclerview:1.4'
+    implementation 'com.hgDendi:expandable-recyclerview-adapter:1.0.1'
 
     //权限加载：
     implementation 'com.github.getActivity:XXPermissions:18.63'

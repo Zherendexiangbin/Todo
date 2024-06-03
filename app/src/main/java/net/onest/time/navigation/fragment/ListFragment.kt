@@ -1,6 +1,7 @@
 package net.onest.time.navigation.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,6 +66,7 @@ class ListFragment : Fragment() {
             if (groupExpanded) {
                 v.findViewById<View>(R.id.list_fragment_parent_arrow)
                     .setBackgroundResource(R.drawable.arrow_right2)
+                Log.e("s","${groupPosition}")
             } else {
                 v.findViewById<View>(R.id.list_fragment_parent_arrow)
                     .setBackgroundResource(R.drawable.arrow_down2)
@@ -154,14 +156,20 @@ class ListFragment : Fragment() {
     }
 
     private fun init(): List<TaskCollections> {
-        try {
-            val all = TaskCategoryApi.getAll()
-            all.forEach { taskCategoryVo ->
-                val allTasks = TaskCategoryApi.getAllTasks(taskCategoryVo.categoryId)
-                parentMap[taskCategoryVo] = allTasks
-            }
+//        try {
+//            val all = TaskCategoryApi.getAll()
+//            all.forEach { taskCategoryVo ->
+//                val allTasks = TaskCategoryApi.getAllTasks(taskCategoryVo.categoryId)
+//                parentMap[taskCategoryVo] = allTasks
+//            }
+//
+//        } catch (e: RuntimeException) {
+//            e.message?.showToast()
+//        }
 
-        } catch (e: RuntimeException) {
+        try {
+            taskCollectionsList = TaskCategoryApi.getAllCategoryAndTasks()
+        }catch (e:RuntimeException) {
             e.message?.showToast()
         }
 
