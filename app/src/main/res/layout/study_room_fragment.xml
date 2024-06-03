@@ -43,6 +43,7 @@
         android:text="管理员:"
         android:textSize="15sp"
         android:textColor="@color/black"/>
+
     <ImageView
         android:id="@+id/user_refresh"
         android:layout_width="wrap_content"
@@ -51,6 +52,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/room_name"
         app:layout_constraintRight_toRightOf="parent"
         android:src="@mipmap/refresh"/>
+
+    <ImageView
+        android:id="@+id/room_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/room_name"
+        app:layout_constraintBottom_toBottomOf="@+id/room_name"
+        app:layout_constraintRight_toLeftOf="@+id/user_refresh"
+        android:layout_marginRight="10dp"
+        android:src="@mipmap/chat"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -68,7 +79,7 @@
             android:background="@color/transparent"/>
     </LinearLayout>
 
-    <Button
+    <android.widget.Button
         android:id="@+id/btn_add"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -78,7 +89,7 @@
         android:background="@mipmap/add3"
         android:textColorHint="@color/transparent"/>
 
-    <Button
+    <android.widget.Button
         android:id="@+id/btn_room_menu"
         android:layout_width="50dp"
         android:layout_height="50dp"

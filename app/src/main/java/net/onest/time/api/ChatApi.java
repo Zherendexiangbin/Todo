@@ -6,6 +6,7 @@ import net.onest.time.api.dto.MessageDto;
 import net.onest.time.api.utils.MessageListener;
 import net.onest.time.api.utils.RequestUtil;
 import net.onest.time.api.vo.Message;
+import net.onest.time.api.vo.MessageVo;
 import net.onest.time.api.vo.Page;
 
 import java.util.List;
@@ -23,35 +24,35 @@ public class ChatApi {
     private final static String CONNECT_ROOM = "/roomchat";
     private final static String CONNECT_USER = "/roomuser";
 
-    public static List<Message> receiveRoomMessage(Long roomId) {
+    public static List<MessageVo> receiveRoomMessage(Long roomId) {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + CHAT_ROOM_PREFIX + RECEIVE_MESSAGE + "?roomId=" + roomId)
                 .get()
-                .buildAndSend(new TypeToken<List<Message>>() {
+                .buildAndSend(new TypeToken<List<MessageVo>>() {
                 });
     }
 
-    public static Page<Message> findRoomMessagePage(Integer pageNum, Integer pageSize, Long roomId, Long beforeDateTime) {
+    public static Page<MessageVo> findRoomMessagePage(Integer pageNum, Integer pageSize, Long roomId, Long beforeDateTime) {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + CHAT_ROOM_PREFIX + FIND_MESSAGE_PAGE + roomId + "/" + pageNum + "/" + pageSize + "?beforeDateTime=" + beforeDateTime)
                 .get()
-                .buildAndSend(new TypeToken<Page<Message>>() {
+                .buildAndSend(new TypeToken<Page<MessageVo>>() {
                 });
     }
 
-    public static List<Message> receiveUserMessage(Long fromUserId) {
+    public static List<MessageVo> receiveUserMessage(Long fromUserId) {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + CHAT_USER_PREFIX + RECEIVE_MESSAGE + "?fromUserId=" + fromUserId)
                 .get()
-                .buildAndSend(new TypeToken<List<Message>>() {
+                .buildAndSend(new TypeToken<List<MessageVo>>() {
                 });
     }
 
-    public static Page<Message> findUserMessagePage(Integer pageNum, Integer pageSize, Long userId, Long beforeDateTime) {
+    public static Page<MessageVo> findUserMessagePage(Integer pageNum, Integer pageSize, Long userId, Long beforeDateTime) {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + CHAT_USER_PREFIX + FIND_MESSAGE_PAGE + userId + "/" + pageNum + "/" + pageSize + "?beforeDateTime=" + beforeDateTime)
                 .get()
-                .buildAndSend(new TypeToken<Page<Message>>() {
+                .buildAndSend(new TypeToken<Page<MessageVo>>() {
                 });
     }
 

@@ -11,6 +11,7 @@ import net.onest.time.api.dto.MessageDto;
 import net.onest.time.api.dto.UserDto;
 import net.onest.time.api.utils.MessageListener;
 import net.onest.time.api.vo.Message;
+import net.onest.time.api.vo.MessageVo;
 import net.onest.time.api.vo.Page;
 import net.onest.time.application.TimeApplication;
 import net.onest.time.constant.SharedPreferencesConstant;
@@ -77,7 +78,7 @@ public class ChatApiTest {
         sendRoomMessage();
         login18();
         Long roomId = 1782930828125134849L;
-        List<Message> messages = ChatApi.receiveRoomMessage(roomId);
+        List<MessageVo> messages = ChatApi.receiveRoomMessage(roomId);
         System.out.println(messages);
     }
 
@@ -87,7 +88,7 @@ public class ChatApiTest {
         Integer pageSize = 20;
         Long roomId = 1782930828125134849L;
         Long beforeDateTime = 1715607032000L;
-        Page<Message> roomMessagePage = ChatApi.findRoomMessagePage(pageNum, pageSize, roomId, beforeDateTime);
+        Page<MessageVo> roomMessagePage = ChatApi.findRoomMessagePage(pageNum, pageSize, roomId, beforeDateTime);
         System.out.println(roomMessagePage);
     }
 
@@ -117,7 +118,7 @@ public class ChatApiTest {
     @Test
     public void receiveUserMessage() {
         Long fromUserId = 2L;
-        List<Message> messages = ChatApi.receiveUserMessage(fromUserId);
+        List<MessageVo> messages = ChatApi.receiveUserMessage(fromUserId);
 
     }
 
@@ -127,7 +128,7 @@ public class ChatApiTest {
         Integer pageSize = 20;
         Long fromUserId = 2L;
         Long beforeDateTime = 1715607032000L;
-        Page<Message> userMessagePage = ChatApi.findUserMessagePage(pageNum, pageSize, fromUserId, beforeDateTime);
+        Page<MessageVo> userMessagePage = ChatApi.findUserMessagePage(pageNum, pageSize, fromUserId, beforeDateTime);
         Assert.assertNotNull(userMessagePage);
         Assert.assertFalse(userMessagePage.getRecords().isEmpty());
     }

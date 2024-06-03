@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    //下拉刷新
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     //RecyclerViewHelper!
 //    implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.4"

@@ -68,5 +68,4 @@ public class TaskCategoryApi {
                 .get()
                 .buildAndSend(new TypeToken<List<TaskCategoryVo>>(){});
     }
-
 }

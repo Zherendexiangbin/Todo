@@ -46,10 +46,12 @@ import net.onest.time.api.dto.RoomDto;
 import net.onest.time.api.vo.RoomVo;
 import net.onest.time.api.vo.UserVo;
 import net.onest.time.navigation.activity.FindStudyRoomActivity;
+import net.onest.time.navigation.activity.StudyRoomChatActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class StudyRoomFragment extends Fragment {
@@ -57,7 +59,7 @@ public class StudyRoomFragment extends Fragment {
     private RoomVo roomVo;
     private UserVo userVo;
     private View view;
-    private ImageView roomAvatar, userRefresh;
+    private ImageView roomAvatar, roomChat, userRefresh;
     private TextView roomName, roomManager;
     private String roomId;
     private StudyRoomUserItemAdapter itemAdapter;
@@ -66,7 +68,7 @@ public class StudyRoomFragment extends Fragment {
     private List<UserVo> userVos;
     private RecyclerView recyclerView;
     private Button btnMenu, btnAdd;
-    private Boolean isMaster;//是否为房间创建者
+    private Boolean isMaster = false;//是否为房间创建者
     private static final int REQUEST_CODE = 1;
     private static final int INTENT_CODE = 1;
 
@@ -82,6 +84,8 @@ public class StudyRoomFragment extends Fragment {
         userVo = UserApi.getUserInfo();
         userVos = new ArrayList<>();
         avatarString = userVo.getAvatar();
+
+        //根据加入自习室的方式判断是否为管理员
 
         loadData();
         findViewById(view);
@@ -103,6 +107,10 @@ public class StudyRoomFragment extends Fragment {
 
                 itemAdapter.updateData(userVos);
 
+                if (!isMaster){
+                    btnMenu.setVisibility(View.GONE);
+                }
+
                 btnAdd.setHint("dissolution");
                 btnAdd.setBackgroundResource(R.mipmap.quit);
             }
@@ -116,6 +124,12 @@ public class StudyRoomFragment extends Fragment {
     }
 
     private void setListeners() {
+        //跳转至聊天
+        roomChat.setOnClickListener(view1 -> {
+            Intent intent = new Intent(getActivity(), StudyRoomChatActivity.class);
+            intent.putExtra("roomId", "1111");
+            startActivity(intent);
+        });
         //刷新自习室信息
         userRefresh.setOnClickListener(view1 -> {
             if (roomVo != null ){
@@ -204,7 +218,23 @@ public class StudyRoomFragment extends Fragment {
             user.setUserName("用户--"+ i);
             user.setAvatar(userVo.getAvatar());
             user.setSignature(userVo.getSignature());
-            user.setCreatedAt(new Date(System.currentTimeMillis()));
+//            user.setCreatedAt(new Date(System.currentTimeMillis()));
+
+            // 创建一个Random对象
+            Random random = new Random();
+
+            // 生成随机的年份、月份、日期、小时、分钟和秒数
+            int year = 2024; // 假设生成的年份范围为1920-2020
+            int month = 6; // 月份范围为1-12
+            int day = 1; // 假设每个月都有28天
+            int hour = random.nextInt(24); // 小时范围为0-23
+            int minute = random.nextInt(60); // 分钟范围为0-59
+            int second = random.nextInt(60); // 秒数范围为0-59
+
+            // 使用Date类的构造函数创建一个新的Date对象
+            Date randomDate = new Date(year-1900, month, day, hour, minute, second);
+
+            user.setCreatedAt(randomDate);
             userVos.add(user);
         }
     }
@@ -215,6 +245,7 @@ public class StudyRoomFragment extends Fragment {
         roomManager = view.findViewById(R.id.room_manager);
         roomManager.setVisibility(View.GONE);
 
+        roomChat = view.findViewById(R.id.room_chat);
         userRefresh = view.findViewById(R.id.user_refresh);
 
         recyclerView = view.findViewById(R.id.user_list);
@@ -414,7 +445,7 @@ public class StudyRoomFragment extends Fragment {
         public MenuPopWindow(Context context){
             //设置view
             LayoutInflater inflater = LayoutInflater.from(context);
-            View view2 = inflater.inflate((R.layout.acticity_room_menu), null);
+            View view2 = inflater.inflate((R.layout.activity_room_menu), null);
             setContentView(view2);
             initView(view2);//获取控件、初始化控件
             //activity的contentView的宽度
