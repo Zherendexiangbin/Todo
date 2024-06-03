@@ -68,7 +68,7 @@ public class StudyRoomFragment extends Fragment {
     private List<UserVo> userVos;
     private RecyclerView recyclerView;
     private Button btnMenu, btnAdd;
-    private Boolean isMaster;//是否为房间创建者
+    private Boolean isMaster = false;//是否为房间创建者
     private static final int REQUEST_CODE = 1;
     private static final int INTENT_CODE = 1;
 
@@ -106,6 +106,10 @@ public class StudyRoomFragment extends Fragment {
                 roomManager.setText("管理员：" + userVo.getUserName());
 
                 itemAdapter.updateData(userVos);
+
+                if (!isMaster){
+                    btnMenu.setVisibility(View.GONE);
+                }
 
                 btnAdd.setHint("dissolution");
                 btnAdd.setBackgroundResource(R.mipmap.quit);
