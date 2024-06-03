@@ -21,14 +21,15 @@ class RankingListActivity : AppCompatActivity() {
         binding = ActivityRankingListBinding.inflate(LayoutInflater.from(this), null, false)
         setContentView(binding.root)
 
+        val rankingAdapter = RankingAdapter(this, rankingList)
+        val linearLayoutManager = LinearLayoutManager(this)
+        binding.rankingList.run {
+            layoutManager = linearLayoutManager
+            adapter = rankingAdapter
+        }
+
         StatisticApi.rankingList({
             rankingList = it as ArrayList<UserVo>
-            val rankingAdapter = RankingAdapter(this, rankingList)
-            val linearLayoutManager = LinearLayoutManager(this)
-            binding.rankingList.run {
-                layoutManager = linearLayoutManager
-                adapter = rankingAdapter
-            }
             Log.i(TAG, "onCreate: 数据加载成功")
         }, {
             Log.e(TAG, "onCreate: ${it.code} ${it.message}")
