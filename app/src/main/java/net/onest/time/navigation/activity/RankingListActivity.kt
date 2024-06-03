@@ -10,6 +10,7 @@ import net.onest.time.api.StatisticApi
 import net.onest.time.api.vo.UserVo
 import net.onest.time.components.LoadingView
 import net.onest.time.databinding.ActivityRankingListBinding
+import net.onest.time.utils.showToast
 
 class RankingListActivity : AppCompatActivity() {
     private val TAG = javaClass.name
@@ -41,6 +42,10 @@ class RankingListActivity : AppCompatActivity() {
             Log.i(TAG, "onCreate: 数据加载成功")
         }, {
             Log.e(TAG, "onCreate: ${it.code} ${it.message}")
+            runOnUiThread {
+                loadingView.dismiss()
+                "网络异常".showToast()
+            }
         })
     }
 

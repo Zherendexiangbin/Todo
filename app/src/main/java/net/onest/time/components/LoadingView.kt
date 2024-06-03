@@ -12,7 +12,8 @@ class LoadingView(
 
     init {
         loadingView = XPopup.Builder(context)
-            .asLoading()
+            .isDestroyOnDismiss(false)
+            .asLoading("加载中...")
 //            .asCustom(CustomLoadingPopupView())
                 as LoadingPopupView
     }

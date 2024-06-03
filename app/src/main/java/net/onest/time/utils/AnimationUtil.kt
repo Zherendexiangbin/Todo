@@ -48,14 +48,14 @@ fun View.doShakeAnimation(rotation: Float = 15f, duration: Long = 500) {
     }
 }
 
-fun View.doSpinCircleAnimation(duration: Long = 2000) {
+fun View.doSpinCircleAnimation(duration: Long = 500) {
     var animator: ViewPropertyAnimator? = null
 
     animator = this.animate()
-        .rotation(360f)
+        .rotation(90f)
     animator.duration = duration
     animator.withEndAction {
-        animator.rotation(-360f)
+        animator.rotation(0f)
         animator.duration = 0
     }
 }

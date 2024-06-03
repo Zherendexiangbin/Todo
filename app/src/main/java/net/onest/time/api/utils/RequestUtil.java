@@ -1,6 +1,9 @@
 package net.onest.time.api.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 
@@ -189,6 +192,10 @@ public class RequestUtil {
             Consumer<ResponseErrorException> exceptionHandler) {
         try {
             sendAndConsume((jsonElement -> {
+                if (jsonElement == null) {
+                    throw new ResponseErrorException("444", "Result is null");
+                }
+
                 T t = gson.fromJson(jsonElement, typeToken);
                 consumer.accept(t);
             }), exceptionHandler);
@@ -203,6 +210,10 @@ public class RequestUtil {
             Consumer<ResponseErrorException> exceptionHandler) {
         try {
             sendAndConsume((jsonElement -> {
+                if (jsonElement == null) {
+                    throw new ResponseErrorException("444", "Result is null");
+                }
+
                 T t = gson.fromJson(jsonElement, clazz);
                 consumer.accept(t);
             }), exceptionHandler);
@@ -227,7 +238,7 @@ public class RequestUtil {
                 () -> {
                     Request request = requestBuilder.build();
                     Call call = httpClient.newCall(request);
-                    call.timeout().timeout(3, TimeUnit.SECONDS);
+                    call.timeout().timeout(15, TimeUnit.SECONDS);
 
                     try (Response response = call.execute()) {
                         String body = response.body().string();
@@ -235,7 +246,7 @@ public class RequestUtil {
                         checkResult(result);
                         return gson.fromJson(body, JsonObject.class).get("data");
                     } catch (IOException e) {
-                        throw new ResponseErrorException("444", e.getMessage());
+                        exceptionHandler.accept(new ResponseErrorException("444", e.getMessage()));
                     } catch (ResponseErrorException e) {
                         exceptionHandler.accept(e);
                     }
