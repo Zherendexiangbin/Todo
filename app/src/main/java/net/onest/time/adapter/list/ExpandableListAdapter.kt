@@ -29,6 +29,7 @@ import com.bumptech.glide.request.transition.Transition
 import net.onest.time.MyTextView
 import net.onest.time.R
 import net.onest.time.TimerActivity
+import net.onest.time.api.vo.TaskCategoryVo
 import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.AddTaskMoreDialog
 import net.onest.time.components.TaskInfoDialog
@@ -42,7 +43,7 @@ class ExpandableListAdapter(
         val itemViewId: Int,
         val childViewId: Int,
         val context: Context,
-        var taskCollectionsList: List<TaskCollections>
+        var taskCollectionsList: List<TaskCategoryVo>
 
 ) : BaseExpandableListAdapter() {
     private var intent: Intent? = null
@@ -52,13 +53,13 @@ class ExpandableListAdapter(
     override fun getGroupCount() = taskCollectionsList.size
 
     //返回子列表项数量
-    override fun getChildrenCount(groupPosition: Int) = taskCollectionsList[groupPosition].tasks.size
+    override fun getChildrenCount(groupPosition: Int) = taskCollectionsList[groupPosition].taskVos!!.size
 
     //获得指定列表项数据
     override fun getGroup(groupPosition: Int) = taskCollectionsList[groupPosition]
 
     //获得指定子列表项数据
-    override fun getChild(groupPosition: Int, childPosition: Int): TaskVo = taskCollectionsList[groupPosition].tasks[childPosition]
+    override fun getChild(groupPosition: Int, childPosition: Int): TaskVo = taskCollectionsList[groupPosition].taskVos!![childPosition]
 
     //获得父列表id
     override fun getGroupId(groupPosition: Int): Long = groupPosition.toLong()
@@ -88,8 +89,8 @@ class ExpandableListAdapter(
         val addBtn = view.findViewById<Button>(R.id.list_fragment_parent_add)
 
         val taskCollections = taskCollectionsList[groupPosition]
-        val tasks: List<TaskVo> = taskCollections.tasks
-        val category: String = taskCollections.taskCollectionsName
+        val tasks: List<TaskVo>? = taskCollections.taskVos
+//        val category: String = taskCollections.categoryName!!
 
         // 设置为不可点击，将事件传递给父组件
         expandBtn.isClickable = false
@@ -103,15 +104,17 @@ class ExpandableListAdapter(
 
         // 添加任务按钮
         addBtn.setOnClickListener { v: View? ->
-            AddTaskMoreDialog(
-                    context, taskCollections.taskCollectionsId, tasks as MutableList<TaskVo>, AdapterHolder(
-                    this@ExpandableListAdapter
+            taskCollections.categoryId?.let {
+                AddTaskMoreDialog(
+                    context, it, tasks as MutableList<TaskVo>, AdapterHolder(
+                        this@ExpandableListAdapter
+                    )
                 )
-            )
+            }
         }
 
-        backView.setBackgroundColor(taskCollectionsList[groupPosition].taskCollectionsColor)
-        textView.text = taskCollectionsList[groupPosition].taskCollectionsName
+        backView.setBackgroundColor(taskCollectionsList[groupPosition].color!!)
+        textView.text = taskCollectionsList[groupPosition].categoryName
         return view
     }
 
@@ -125,7 +128,7 @@ class ExpandableListAdapter(
             parent: ViewGroup
     ): View {
 
-        Log.i("tag", "($groupPosition, $childPosition) ${taskCollectionsList[groupPosition].tasks[childPosition].taskName}")
+        Log.i("tag", "($groupPosition, $childPosition) ${taskCollectionsList[groupPosition].taskVos!![childPosition].taskName}")
         if (convertView != null) return convertView
         val view = LayoutInflater.from(context).inflate(childViewId, parent, false)
 
@@ -135,7 +138,7 @@ class ExpandableListAdapter(
         val startBtn = view.findViewById<Button>(R.id.list_fragment_item_child_ry_btn)
         val statistics = view.findViewById<RelativeLayout>(R.id.list_click_statistics)
 
-        val tasks: List<TaskVo> = taskCollectionsList[groupPosition].tasks
+        val tasks: List<TaskVo> = taskCollectionsList[groupPosition].taskVos!!
         val taskVo = tasks[childPosition]
 
         Glide.with(context).asBitmap().load(taskVo.background)
@@ -184,23 +187,23 @@ class ExpandableListAdapter(
 
 
         startBtn.setOnClickListener {
-            if (taskCollectionsList[groupPosition].tasks[childPosition].type == 1) {
+            if (taskCollectionsList[groupPosition].taskVos!![childPosition].type == 1) {
                 // 正向计时
                 intent = Intent()
                 intent!!.setClass(context, TimerActivity::class.java)
                 intent!!.putExtra("method", "forWard")
-                intent!!.putExtra("task", taskCollectionsList[groupPosition].tasks[childPosition])
-                intent!!.putExtra("name", taskCollectionsList[groupPosition].tasks[childPosition].taskName)
+                intent!!.putExtra("task", taskCollectionsList[groupPosition].taskVos!![childPosition])
+                intent!!.putExtra("name", taskCollectionsList[groupPosition].taskVos!![childPosition].taskName)
                 context.startActivity(
                         intent, ActivityOptions.makeSceneTransitionAnimation(
                         context as Activity, startBtn, "fab"
                 ).toBundle()
                 )
-            } else if (taskCollectionsList[groupPosition].tasks[childPosition].type == 2) {
+            } else if (taskCollectionsList[groupPosition].taskVos!![childPosition].type == 2) {
                 // 普通待办 不计时
 //                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 val spannableString = SpannableString(
-                        taskCollectionsList[groupPosition].tasks.get(childPosition)
+                        taskCollectionsList[groupPosition].taskVos!![childPosition]
                                 .taskName
                 )
                 spannableString.setSpan(
@@ -210,7 +213,7 @@ class ExpandableListAdapter(
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
 
-                taskCollectionsList[groupPosition].tasks.get(childPosition)
+                taskCollectionsList[groupPosition].taskVos!![childPosition]
                         .taskName = spannableString.toString()
                 //                    TextView textView = findViewById(R.id.textView);
 //                    textView.setText(spannableString);
@@ -224,10 +227,10 @@ class ExpandableListAdapter(
                 //                int num = Integer.parseInt(parts[0]);
                 intent!!.putExtra("time", num)
                 intent!!.putExtra("method", "countDown")
-                intent!!.putExtra("name", taskCollectionsList[groupPosition].tasks[childPosition].taskName)
-                intent!!.putExtra("taskId", taskCollectionsList[groupPosition].tasks[childPosition].taskId)
+                intent!!.putExtra("name", taskCollectionsList[groupPosition].taskVos!![childPosition].taskName)
+                intent!!.putExtra("taskId", taskCollectionsList[groupPosition].taskVos!![childPosition].taskId)
                 intent!!.putExtra("start", "go")
-                intent!!.putExtra("task", taskCollectionsList[groupPosition].tasks[childPosition])
+                intent!!.putExtra("task", taskCollectionsList[groupPosition].taskVos!![childPosition])
                 intent!!.setClass(context, TimerActivity::class.java)
                 context.startActivity(
                         intent, ActivityOptions.makeSceneTransitionAnimation(

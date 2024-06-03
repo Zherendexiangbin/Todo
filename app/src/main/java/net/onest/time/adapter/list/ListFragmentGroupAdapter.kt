@@ -1,98 +1,143 @@
-package net.onest.time.adapter.list;
+package net.onest.time.adapter.list
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
+import com.hgdendi.expandablerecycleradapter.BaseExpandableRecyclerViewAdapter
+import net.onest.time.adapter.list.ListFragmentGroupAdapter.ChildVH
+import net.onest.time.adapter.list.ListFragmentGroupAdapter.GroupVH
+import net.onest.time.api.vo.TaskCategoryVo
+import net.onest.time.api.vo.TaskVo
+import net.onest.time.databinding.ListFragmentExpandableChildListBinding
+import net.onest.time.databinding.ListFragmentExpandableParentListBinding
 
-import androidx.recyclerview.widget.RecyclerView;
+class ListFragmentGroupAdapter(
+    var context: Context,
+    taskCategoryList: MutableList<TaskCategoryVo>,
+) : BaseExpandableRecyclerViewAdapter<
+        ListFragmentGroupAdapter.TaskCategoryGroupBean,
+        TaskVo?,
+        GroupVH?,
+        ChildVH?>() {
+    private var taskCategoryGroupBeanList: MutableList<TaskCategoryGroupBean>
+    lateinit var parentBinding: ListFragmentExpandableParentListBinding
+    lateinit var childBinding: ListFragmentExpandableChildListBinding
 
-import com.hgdendi.expandablerecycleradapter.BaseExpandableRecyclerViewAdapter;
-
-import net.onest.time.api.vo.TaskCategoryVo;
-import net.onest.time.api.vo.TaskVo;
-import net.onest.time.entity.list.TaskCollections;
-
-import java.util.List;
-
-public class ListFragmentGroupAdapter extends BaseExpandableRecyclerViewAdapter
-        <TaskCollections, TaskVo, ListFragmentGroupAdapter.GroupVH, ListFragmentGroupAdapter.ChildVH>{
-
-    private Context context;
-    private int groupViewId;
-    private int childViewId;
-    private List<TaskCollections> taskCollectionsList;
-
-
-    public ListFragmentGroupAdapter(Context context, int groupViewId, int childViewId, List<TaskCollections> taskCollectionsList) {
-        this.context = context;
-        this.groupViewId = groupViewId;
-        this.childViewId = childViewId;
-        this.taskCollectionsList = taskCollectionsList;
+    init {
+        taskCategoryGroupBeanList =
+            taskCategoryList.map {
+                TaskCategoryGroupBean(it.taskVos!!, it.categoryId!!, it.categoryName!!, it.color!!)
+            }.toMutableList()
     }
 
-    public List<TaskCollections> getTaskCollectionsList() {
-        return taskCollectionsList;
+    override fun getGroupCount() = taskCategoryGroupBeanList.size
+
+    override fun getGroupItem(groupIndex: Int) = taskCategoryGroupBeanList[groupIndex]
+
+    override fun onCreateGroupViewHolder(parent: ViewGroup, groupViewType: Int): GroupVH {
+        parentBinding = ListFragmentExpandableParentListBinding
+            .inflate(LayoutInflater.from(context), parent, false)
+        return GroupVH(parentBinding.root)
     }
 
-    public void setTaskCollectionsList(List<TaskCollections> taskCollectionsList) {
-        this.taskCollectionsList = taskCollectionsList;
+    override fun onBindGroupViewHolder(
+        holder: GroupVH?,
+        groupBean: TaskCategoryGroupBean,
+        isExpand: Boolean
+    ) {
+        holder?.run {
+            nameTv.text = groupBean.categoryName
+            addBtn.setOnClickListener {
+                TODO("添加item")
+            }
+            dataBtn.setOnClickListener {
+                TODO("数据展示")
+            }
+            color.setBackgroundColor(groupBean.color)
+        }
     }
 
-    @Override
-    public int getGroupCount() {
-        return taskCollectionsList.size();
+    override fun onCreateChildViewHolder(parent: ViewGroup, childViewType: Int): ChildVH {
+        childBinding = ListFragmentExpandableChildListBinding
+            .inflate(LayoutInflater.from(context), parent, false)
+        return ChildVH(childBinding.root)
     }
 
-    @Override
-    public TaskCollections getGroupItem(int groupIndex) {
-        return taskCollectionsList.get(groupIndex);
-    }
+    override fun onBindChildViewHolder(
+        childVH: ChildVH?,
+        groupBean: TaskCategoryGroupBean,
+        taskVo: TaskVo?
+    ) {
+        childVH?.run {
+            nameTv.text = taskVo?.taskName
+            timeTv.text = "${taskVo?.clockDuration} 分钟"
 
-    @Override
-    public GroupVH onCreateGroupViewHolder(ViewGroup parent, int groupViewType) {
-        return new GroupVH(LayoutInflater.from(context).inflate(groupViewId,parent,false));
-    }
+            Glide.with(context).asBitmap().load(taskVo?.background)
+                .into(object : SimpleTarget<Bitmap?>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap?>?
+                    ) {
+                        val drawable: Drawable = BitmapDrawable(resource)
+                        childVH.background.background = drawable
+                    }
 
-    @Override
-    public void onBindGroupViewHolder(GroupVH holder, TaskCollections groupBean, boolean isExpand) {
-
-    }
-
-    @Override
-    public ChildVH onCreateChildViewHolder(ViewGroup parent, int childViewType) {
-        return new ChildVH(LayoutInflater.from(context).inflate(childViewId,parent,false));
-    }
-
-    @Override
-    public void onBindChildViewHolder(ChildVH childVH, TaskCollections groupBean, TaskVo taskVo) {
-
-    }
-
-    static class GroupVH extends BaseExpandableRecyclerViewAdapter.BaseGroupViewHolder {
-        ImageView foldIv;
-        TextView nameTv;
-
-        GroupVH(View itemView) {
-            super(itemView);
-//            foldIv = (ImageView) itemView.findViewById(R.id.group_item_indicator);
-//            nameTv = (TextView) itemView.findViewById(R.id.group_item_name);
+                })
+            startBtn.setOnClickListener {
+                TODO("点击跳转时钟")
+            }
         }
 
-        @Override
-        protected void onExpandStatusChanged(RecyclerView.Adapter relatedAdapter, boolean isExpanding) {
+    }
+
+    inner class GroupVH(itemView: View?) : BaseGroupViewHolder(itemView) {
+        val nameTv = parentBinding.listFragmentParentItemName
+        val addBtn = parentBinding.listFragmentParentAdd
+        val dataBtn = parentBinding.listFragmentParentData
+        val color = parentBinding.listFragmentParentItemColor
+
+        override fun onExpandStatusChanged(
+            relatedAdapter: RecyclerView.Adapter<*>?,
+            isExpanding: Boolean
+        ) {
 //            foldIv.setImageResource(isExpanding ? R.drawable.ic_arrow_expanding : R.drawable.ic_arrow_folding);
         }
     }
 
-    static class ChildVH extends RecyclerView.ViewHolder {
-        TextView nameTv;
+    inner class ChildVH(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
+        val nameTv = childBinding.listFragmentItemChildTxtName
+        val startBtn = childBinding.listFragmentItemChildRyBtn
+        val background = childBinding.listFragmentItemChildBackgroundLin
+        val timeTv = childBinding.listFragmentItemChildTxtTime
 
-        ChildVH(View itemView) {
-            super(itemView);
-//            nameTv = (TextView) itemView.findViewById(R.id.child_item_name);
-        }
+
+
+    }
+
+
+    inner class TaskCategoryGroupBean(
+        var taskVos: List<TaskVo>,
+        var categoryId: Long,
+        var categoryName: String,
+        var color: Int
+    ) : BaseGroupBean<TaskVo?> {
+
+
+        override fun getChildCount() = taskVos.size
+
+        override fun getChildAt(childIndex: Int) = taskVos[childIndex]
+
+        override fun isExpandable() = childCount > 0
+
     }
 }

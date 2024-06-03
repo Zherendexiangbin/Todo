@@ -18,6 +18,7 @@ import net.onest.time.R
 import net.onest.time.adapter.list.ExpandableListAdapter
 import net.onest.time.api.TaskCategoryApi
 import net.onest.time.api.dto.TaskCategoryDto
+import net.onest.time.api.vo.TaskCategoryVo
 import net.onest.time.entity.list.TaskCollections
 import net.onest.time.utils.makeToast
 import net.onest.time.utils.showToast
@@ -28,7 +29,7 @@ import net.onest.time.utils.showToast
 class AddTaskCollectionsDialog(
     context: Context,
     private val expandableListAdapter: ExpandableListAdapter,
-    private val taskCollectionsList: MutableList<TaskCollections>
+    private val taskCollectionsList: MutableList<TaskCategoryVo>
 ) : AlertDialog(context) {
     private var addYes: Button? = null
     private var addNo: Button? = null
@@ -134,25 +135,31 @@ class AddTaskCollectionsDialog(
 
             val taskCollectionsColor = editLayout!!.boxStrokeColor
 
-            val taskCollections = TaskCollections(
-                    null,
-                taskCollectionsName,
-                taskCollectionsColor,
-                ArrayList()
-            )
+//            val taskCollections = TaskCollections(
+//                    null,
+//                taskCollectionsName,
+//                taskCollectionsColor,
+//                ArrayList()
+//            )
+
+            val taskCollections2 = TaskCategoryVo()
+            taskCollections2.categoryName = taskCollectionsName
+            taskCollections2.color = taskCollectionsColor
+            taskCollections2.taskVos = ArrayList()
 
             val taskCategoryDto = TaskCategoryDto()
-            taskCategoryDto.categoryName=taskCollections.taskCollectionsName
-            taskCategoryDto.color=taskCollections.taskCollectionsColor
+            taskCategoryDto.categoryName=taskCollections2.categoryName
+            taskCategoryDto.color=taskCollections2.color
+
             try {
                 val taskCategory = TaskCategoryApi.addTaskCategory(taskCategoryDto)
-                taskCollections.taskCollectionsId = taskCategory.categoryId
+                taskCollections2.categoryId = taskCategory.categoryId
             } catch (e: RuntimeException) {
                 e.message?.showToast()
             }
 
             // TODO: 换组件，受不了了！！！！！！！！！！！！！！！！！
-            taskCollectionsList.add(taskCollections)
+            taskCollectionsList.add(taskCollections2)
             expandableListAdapter.notifyDataSetChanged()
             dismiss()
         }
