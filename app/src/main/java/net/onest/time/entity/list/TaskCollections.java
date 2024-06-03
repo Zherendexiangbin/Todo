@@ -1,11 +1,13 @@
 package net.onest.time.entity.list;
 
+import com.hgdendi.expandablerecycleradapter.BaseExpandableRecyclerViewAdapter;
+
 import net.onest.time.api.vo.TaskVo;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class TaskCollections {
+public class TaskCollections implements BaseExpandableRecyclerViewAdapter.BaseGroupBean<TaskVo> {
     private Long taskCollectionsId;
     private String taskCollectionsName;
     private int taskCollectionsColor;
@@ -55,5 +57,21 @@ public class TaskCollections {
 
     public static Comparator<TaskCollections> comparator() {
         return Comparator.comparing(TaskCollections::getTaskCollectionsId, Comparator.reverseOrder());
+    }
+
+
+    @Override
+    public int getChildCount() {
+        return tasks.size();
+    }
+
+    @Override
+    public TaskVo getChildAt(int childIndex) {
+        return tasks.size()<=childIndex?null:tasks.get(childIndex);
+    }
+
+    @Override
+    public boolean isExpandable() {
+        return getChildCount() > 0;
     }
 }
