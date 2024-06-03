@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import net.onest.time.adapter.ranking.RankingAdapter
 import net.onest.time.api.StatisticApi
 import net.onest.time.api.vo.UserVo
+import net.onest.time.components.LoadingView
 import net.onest.time.databinding.ActivityRankingListBinding
 
 class RankingListActivity : AppCompatActivity() {
@@ -16,20 +17,27 @@ class RankingListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRankingListBinding
     private var rankingList = ArrayList<UserVo>()
 
+    private lateinit var rankingAdapter: RankingAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRankingListBinding.inflate(LayoutInflater.from(this), null, false)
         setContentView(binding.root)
 
-        val rankingAdapter = RankingAdapter(this, rankingList)
-        val linearLayoutManager = LinearLayoutManager(this)
-        binding.rankingList.run {
-            layoutManager = linearLayoutManager
-            adapter = rankingAdapter
-        }
-
+        val loadingView = LoadingView(this)
+        loadingView.show()
         StatisticApi.rankingList({
-            rankingList = it as ArrayList<UserVo>
+            runOnUiThread {
+                rankingList = it as ArrayList<UserVo>
+                rankingAdapter = RankingAdapter(this, rankingList)
+
+                val linearLayoutManager = LinearLayoutManager(this)
+                binding.rankingList.run {
+                    layoutManager = linearLayoutManager
+                    adapter = rankingAdapter
+                }
+                loadingView.dismiss()
+            }
             Log.i(TAG, "onCreate: 数据加载成功")
         }, {
             Log.e(TAG, "onCreate: ${it.code} ${it.message}")
