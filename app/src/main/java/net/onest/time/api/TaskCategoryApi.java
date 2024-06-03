@@ -62,11 +62,11 @@ public class TaskCategoryApi {
                 .buildAndSend(new TypeToken<List<TaskVo>>(){});
     }
 
-    public static Map<TaskCategoryVo, List<TaskVo>> getAllCategoryAndTasks(){
+    public static List<TaskCategoryVo> getAllCategoryAndTasks(){
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + GET_ALL_CATEGORY_AND_TASKS)
                 .get()
-                .buildAndSend(new TypeToken<Map<TaskCategoryVo, List<TaskVo>>>(){});
+                .buildAndSend(new TypeToken<List<TaskCategoryVo>>(){});
     }
 
 }

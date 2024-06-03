@@ -8,6 +8,7 @@ import net.onest.time.api.vo.TaskVo;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 public class TaskCategoryApiTest {
     @Test
@@ -48,4 +49,9 @@ public class TaskCategoryApiTest {
         System.out.println(allTasks);
     }
 
+    @Test
+    public void getAllCategoryAndTasks() {
+        List<TaskCategoryVo> allCategoryAndTasks = TaskCategoryApi.getAllCategoryAndTasks();
+        System.out.println(allCategoryAndTasks);
+    }
 }
