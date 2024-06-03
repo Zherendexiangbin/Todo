@@ -5,7 +5,6 @@ import static android.app.Activity.RESULT_OK;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -30,7 +29,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,9 +47,6 @@ import net.onest.time.api.vo.RoomVo;
 import net.onest.time.api.vo.UserVo;
 import net.onest.time.navigation.activity.FindStudyRoomActivity;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

@@ -43,6 +43,7 @@ import net.onest.time.R
 import net.onest.time.api.StatisticApi
 import net.onest.time.api.vo.statistic.StatisticVo
 import net.onest.time.databinding.RecordFragmentBinding
+import net.onest.time.navigation.activity.RankingListActivity
 import net.onest.time.utils.*
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -149,6 +150,12 @@ class RecordFragment : Fragment() {
 
 
     private fun setListeners() {
+        // 排行榜
+        binding.rankingList.setOnClickListener {
+            val intent = Intent(context, RankingListActivity::class.java)
+            requireActivity().startActivity(intent)
+        }
+
         // 专注时长分布
         // 左按钮
         binding.focusDurationRatioLeft.setOnClickListener {
