@@ -17,6 +17,7 @@ import android.text.InputFilter.LengthFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewPropertyAnimator
 import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -45,6 +46,7 @@ import net.onest.time.api.vo.statistic.StatisticVo
 import net.onest.time.databinding.RecordFragmentBinding
 import net.onest.time.navigation.activity.RankingListActivity
 import net.onest.time.utils.*
+import okhttp3.internal.wait
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.SortedMap
@@ -150,8 +152,14 @@ class RecordFragment : Fragment() {
 
 
     private fun setListeners() {
+        // 无数据
+        binding.emptyData.setOnClickListener {
+            it.doShakeAnimation()
+        }
+
         // 排行榜
         binding.rankingList.setOnClickListener {
+            it.doShakeAnimation()
             val intent = Intent(context, RankingListActivity::class.java)
             requireActivity().startActivity(intent)
         }
