@@ -7,7 +7,8 @@
         android:layout_height="match_parent"
         tools:context=".navigation.activity.RankingListActivity"
         android:background="@color/wheat"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:fitsSystemWindows="true">
 
     <TextView
             android:id="@+id/title"

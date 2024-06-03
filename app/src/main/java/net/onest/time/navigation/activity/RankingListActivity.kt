@@ -35,6 +35,4 @@ class RankingListActivity : AppCompatActivity() {
             Log.e(TAG, "onCreate: ${it.code} ${it.message}")
         })
     }
-
-
 }
