@@ -4,6 +4,7 @@ import net.onest.time.api.StatisticApi;
 import net.onest.time.api.TaskApi;
 import net.onest.time.api.vo.TaskVo;
 import net.onest.time.api.vo.statistic.StatisticVo;
+import net.onest.time.api.vo.statistic.StopReasonRatio;
 
 import org.junit.Test;
 
@@ -37,5 +38,11 @@ public class StatisticApiTest {
         Long taskId = 227L;
         StatisticVo statisticVo = StatisticApi.simpleStatisticByTask(taskId);
         System.out.println(statisticVo);
+    }
+
+    @Test
+    public void statisticStopReason() {
+        List<StopReasonRatio> stopReasonRatios = StatisticApi.statisticStopReason();
+        System.out.println(stopReasonRatios);
     }
 }
