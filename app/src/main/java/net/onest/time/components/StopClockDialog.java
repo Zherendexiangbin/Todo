@@ -1,5 +1,6 @@
 package net.onest.time.components;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -27,14 +28,18 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mut_jaeryo.circletimer.CircleTimer;
 
 import net.onest.time.R;
 import net.onest.time.TimerActivity;
+import net.onest.time.api.StatisticApi;
 import net.onest.time.api.TomatoClockApi;
 import net.onest.time.api.vo.TaskVo;
+import net.onest.time.api.vo.statistic.StopReasonRatio;
 import net.onest.time.navigation.activity.NavigationActivity;
+import net.onest.time.utils.ColorUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,18 +156,29 @@ public class StopClockDialog extends AlertDialog {
                 legend.setXEntrySpace(15f);//设置图例之间的间隔！
                 legend.setTextColor(getContext().getResources().getColor(R.color.black)); //图例的文字颜色
 
-
                 //设置数据源
                 List<PieEntry> yVals = new ArrayList<>();
                 List<Integer> colors = new ArrayList<>();
-                //设置饼状图数据：
-                yVals.add(new PieEntry(0.286f, "吃饭"));
-                yVals.add(new PieEntry(0.603f, "睡觉"));
-                yVals.add(new PieEntry(1f-0.286f-0.603f, "洗澡"));
 
-                colors.add(Color.parseColor("#4A92FC"));
-                colors.add(Color.parseColor("#ee6e55"));
-                colors.add(Color.parseColor("#adff2f"));
+                try {
+                    List<StopReasonRatio> stopReasonRatios = StatisticApi.statisticStopReason();
+                    stopReasonRatios.forEach(stopReasonRatio -> {
+                        yVals.add(new PieEntry(stopReasonRatio.getRatio().floatValue(),stopReasonRatio.getStopReason()));
+                        colors.add(ColorUtil.getColorByRgb(null));
+                    });
+                }catch (RuntimeException e){
+                    Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
+                }
+
+
+                //设置饼状图数据：
+//                yVals.add(new PieEntry(0.286f, "吃饭"));
+//                yVals.add(new PieEntry(0.603f, "睡觉"));
+//                yVals.add(new PieEntry(1f-0.286f-0.603f, "洗澡"));
+//
+//                colors.add(Color.parseColor("#4A92FC"));
+//                colors.add(Color.parseColor("#ee6e55"));
+//                colors.add(Color.parseColor("#adff2f"));
                 setPieChartData(abandonReasonChart,yVals,colors);
 
 
@@ -229,6 +245,14 @@ public class StopClockDialog extends AlertDialog {
         abandonReasonChart.setEntryLabelColor(Color.RED);//描述文字的颜色
         pieDataSet.setValueTextSize(15);//数字大小
         pieDataSet.setValueTextColor(Color.BLACK);//数字颜色
+        //设置数字格式！
+        pieDataSet.setValueFormatter(new ValueFormatter() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public String getFormattedValue(float value) {
+                return String.format("%.2f%%", value * 100);
+            }
+        });
 
         //设置描述的位置
         pieDataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
@@ -240,7 +264,7 @@ public class StopClockDialog extends AlertDialog {
         pieDataSet.setValueLineColor(Color.BLUE);
 
         abandonReasonChart.setData(pieData);
-        abandonReasonChart.setExtraOffsets(0f,32f,0f,32f);
+        abandonReasonChart.setExtraOffsets(0f,20f,0f,20f);
         //动画（如果使用了动画可以则省去更新数据的那一步）
 //        pieChart.animateY(1000); //在Y轴的动画  参数是动画执行时间 毫秒为单位
 //        pieChart.animateX(1000); //X轴动画
