@@ -15,6 +15,7 @@ import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.holder.AdapterHolder
 import net.onest.time.utils.showToast
 import net.onest.time.utils.withCustomAlphaAnimation
+import net.onest.time.utils.withOnClickInfoDialog
 
 class TaskInfoDialog(
     private val context: Context, // 存储当前交互的taskVo
@@ -83,6 +84,9 @@ class TaskInfoDialog(
                 this@TaskInfoDialog
             )
         }
+
+        learnHistory?.withOnClickInfoDialog()
+        learnStatistics?.withOnClickInfoDialog()
     }
 
     private fun findViews(dialogView: View) {

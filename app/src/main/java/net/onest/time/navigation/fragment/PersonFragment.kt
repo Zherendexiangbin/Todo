@@ -1,154 +1,156 @@
-package net.onest.time.navigation.fragment;
+package net.onest.time.navigation.fragment
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import net.onest.time.MainActivity
+import net.onest.time.R
+import net.onest.time.api.UserApi
+import net.onest.time.constant.SharedPreferencesConstant
+import net.onest.time.databinding.PersonFragmentBinding
+import net.onest.time.navigation.activity.AccountActivity
+import net.onest.time.navigation.activity.PersonEditActivity
+import net.onest.time.utils.applicationContext
+import net.onest.time.utils.withOnClickInfoDialog
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+class PersonFragment : Fragment() {
+    private lateinit var view: View
+    private var userAvatar: ImageView? = null
+    private var userEdit: LinearLayout? = null
+    private var userName: TextView? = null
+    private var userId: TextView? = null
+    private var userCreateAt: TextView? = null
+    private var userTotalDay: TextView? = null
+    private var userTodayComplete: TextView? = null
+    private var userTotalComplete: TextView? = null
+    private var change: Button? = null
+    private var exit: Button? = null
 
-import com.bumptech.glide.Glide;
+    private lateinit var binding: PersonFragmentBinding
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = PersonFragmentBinding.inflate(inflater, container, false)
+        view = binding.root
 
-import net.onest.time.MainActivity;
-import net.onest.time.R;
-import net.onest.time.TimerActivity;
-import net.onest.time.api.ServerConstant;
-import net.onest.time.api.UserApi;
-import net.onest.time.api.vo.UserVo;
-import net.onest.time.application.TimeApplication;
-import net.onest.time.constant.SharedPreferencesConstant;
-import net.onest.time.navigation.activity.AccountActivity;
-import net.onest.time.navigation.activity.NavigationActivity;
-import net.onest.time.navigation.activity.PersonEditActivity;
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-
-public class PersonFragment extends Fragment {
-    private View view;
-    private ImageView userAvatar;
-    private LinearLayout userEdit;
-    private TextView userName, userId, userCreateAt, userTotalDay;
-    private TextView userTodayComplete, userTotalComplete;
-    private Button change,exit;
-
-    private static final int INTENT_CODE = 1;
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.person_fragment, container, false);
-        findViewById(view);
-        initData();
-        setListeners();
-        return view;
+        findViewById()
+        initData()
+        setListeners()
+        return view
     }
 
-    private void setListeners() {
+    private fun setListeners() {
         //点击进入用户信息编辑页面
-        userEdit.setOnClickListener(view -> {
-            Intent intent = new Intent(getContext(), PersonEditActivity.class);
-            startActivityForResult(intent, INTENT_CODE);
-        });
+        userEdit!!.setOnClickListener { view: View? ->
+            val intent = Intent(context, PersonEditActivity::class.java)
+            startActivityForResult(intent, INTENT_CODE)
+        }
 
         //切换账号:
-        change.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(requireContext(), AccountActivity.class);
-                requireContext().startActivity(intent);
-            }
-        });
+        change!!.setOnClickListener {
+            val intent = Intent(requireContext(), AccountActivity::class.java)
+            requireContext().startActivity(intent)
+        }
         //退出登录:
-        exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeToken();
-                requireActivity().finish();
-                Intent intent = new Intent();
-                intent.setClass(requireContext(), MainActivity.class);
-                requireContext().startActivity(intent);
-            }
-        });
+        exit!!.setOnClickListener {
+            removeToken()
+            requireActivity().finish()
+            val intent = Intent()
+            intent.setClass(requireContext(), MainActivity::class.java)
+            requireContext().startActivity(intent)
+        }
+
+        // 设置弹窗
+        binding.accountAndSecurity.withOnClickInfoDialog()
+        binding.bindPhone.withOnClickInfoDialog()
+        binding.privacy.withOnClickInfoDialog()
+        binding.general.withOnClickInfoDialog()
+        binding.accessibility.withOnClickInfoDialog()
+        binding.privacyPolicySummary.withOnClickInfoDialog()
+        binding.commonProblem.withOnClickInfoDialog()
+        binding.feedback.withOnClickInfoDialog()
+        binding.aboutUs.withOnClickInfoDialog()
     }
 
     /**
      * 删除token
      */
-    private void removeToken() {
-        SharedPreferences preferences = TimeApplication
-                .getApplication()
-                .getApplicationContext()
-                .getSharedPreferences(SharedPreferencesConstant.USER_INFO, Context.MODE_PRIVATE);
+    private fun removeToken() {
+        val preferences = applicationContext()
+            .getSharedPreferences(SharedPreferencesConstant.USER_INFO, Context.MODE_PRIVATE)
         preferences.edit()
-                .remove("token")
-                .apply();
+            .remove("token")
+            .apply()
     }
 
     //处理页面跳转返回结果
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        initData();
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        initData()
     }
 
     @SuppressLint("SetTextI18n")
-    private void initData() {
+    private fun initData() {
         //获取用户信息
-        UserVo userVo = UserApi.getUserInfo();
+        val userVo = UserApi.getUserInfo()
 
         //用户头像
         Glide.with(requireContext())
-                .load(userVo.getAvatar())
-                        .into(userAvatar);
+            .load(userVo.avatar)
+            .into(userAvatar!!)
         //用户昵称
-        userName.setText(userVo.getUserName());
+        userName!!.text = userVo.userName
         //用户Id
-        userId.setText("UID：" + userVo.getUserId());
+        userId!!.text = "UID：" + userVo.userId
 
         //用户创建时间及应用使用时间
-        @SuppressLint("SimpleDateFormat")
-        String format = new SimpleDateFormat("yyyy年MM月dd日").format(userVo.getCreatedAt());
-        userCreateAt.setText(format);
+        @SuppressLint("SimpleDateFormat") val format =
+            SimpleDateFormat("yyyy年MM月dd日").format(userVo.createdAt)
+        userCreateAt!!.text = format
 
-        LocalDate localDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年M月d日");
-        LocalDate specifiedDate = LocalDate.parse(userCreateAt.getText().toString().trim(), formatter);
-        userTotalDay.setText(Long.toString(ChronoUnit.DAYS.between(specifiedDate, localDate)));
+        val localDate = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy年M月d日")
+        val specifiedDate =
+            LocalDate.parse(userCreateAt!!.text.toString().trim { it <= ' ' }, formatter)
+        userTotalDay!!.text =
+            ChronoUnit.DAYS.between(specifiedDate, localDate).toString()
 
         //用户今日完成日程数及累计完整日程数
-        userTodayComplete.setText("今日完成日程：" + 3);
-        userTotalComplete.setText("累计完成日程：" + 1144);
+        userTodayComplete!!.text = "今日完成日程：" + 3
+        userTotalComplete!!.text = "累计完成日程：" + 1144
     }
 
-    private void findViewById(View view) {
-        userAvatar = view.findViewById(R.id.user_avatar);
-        userEdit = view.findViewById(R.id.user_edit);
-        userName = view.findViewById(R.id.user_name);
-        userId = view.findViewById(R.id.user_id);
-        userCreateAt = view.findViewById(R.id.user_create_time);
-        userTotalDay = view.findViewById(R.id.user_total_day);
-        userTodayComplete = view.findViewById(R.id.user_today_complete);
-        userTotalComplete = view.findViewById(R.id.user_total_complete);
+    private fun findViewById() {
+        userAvatar = view.findViewById(R.id.user_avatar)
+        userEdit = view.findViewById(R.id.user_edit)
+        userName = view.findViewById(R.id.user_name)
+        userId = view.findViewById(R.id.user_id)
+        userCreateAt = view.findViewById(R.id.user_create_time)
+        userTotalDay = view.findViewById(R.id.user_total_day)
+        userTodayComplete = view.findViewById(R.id.user_today_complete)
+        userTotalComplete = view.findViewById(R.id.user_total_complete)
 
-        change = view.findViewById(R.id.btn_change);
-        exit = view.findViewById(R.id.btn_exit);
+        change = view.findViewById(R.id.btn_change)
+        exit = view.findViewById(R.id.btn_exit)
+    }
+
+    companion object {
+        private const val INTENT_CODE = 1
     }
 }
