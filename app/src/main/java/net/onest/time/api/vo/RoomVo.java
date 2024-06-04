@@ -2,6 +2,7 @@ package net.onest.time.api.vo;
 
 public class RoomVo {
     private Long roomId;
+    private Long userId;
     private String roomName;
     private String roomAvatar;
 
@@ -29,10 +30,19 @@ public class RoomVo {
         this.roomAvatar = roomAvatar;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     @Override
     public String toString() {
         return "RoomVo{" +
                 "roomId=" + roomId +
+                ", userId=" + userId +
                 ", roomName='" + roomName + '\'' +
                 ", roomAvatar='" + roomAvatar + '\'' +
                 '}';

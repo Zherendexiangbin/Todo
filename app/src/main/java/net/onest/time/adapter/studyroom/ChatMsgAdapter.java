@@ -1,5 +1,6 @@
 package net.onest.time.adapter.studyroom;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import net.onest.time.R;
 import net.onest.time.api.vo.Message;
+import net.onest.time.api.vo.UserVo;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHolder> {
     private final Context context;
-    private final List<Message> mMsgList;
+    private List<Message> mMsgList;
+    private final Long userId;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         private RelativeLayout leftLayout;
@@ -39,9 +43,10 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
         }
     }
 
-    public ChatMsgAdapter(Context context, List<Message> msgList) {
+    public ChatMsgAdapter(Context context, List<Message> msgList, Long userId) {
         this.context = context;
         this.mMsgList = msgList;
+        this.userId = userId;
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -50,22 +55,19 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
     }
 
     public void onBindViewHolder(ViewHolder holder, int position) {
-//        ChatMessage msg = mMsgList.get(position);
-//        if (Objects.equals(msg.getFromId(), HuaShangApplication.getUser().getId())) {
-//            //如果是发送消息，则显示右边的消息布局
-//            holder.rightLayout.setVisibility(View.VISIBLE);
-//            holder.leftLayout.setVisibility(View.GONE);
-//            holder.rightMsg.setText(msg.getContent());
-//            //判断是否显示时间控件
-//            holder.rightTime.setVisibility(View.GONE);
-//        } else {
-//            //如果是收到消息，则显示左边的消息布局
-//            holder.leftLayout.setVisibility(View.VISIBLE);
-//            holder.rightLayout.setVisibility(View.GONE);
-//            holder.leftMsg.setText(msg.getContent());
-//            //判断是否显示时间控件
-//            holder.leftTime.setVisibility(View.GONE);
-//        }
+        Message msg = mMsgList.get(position);
+        String sendTime = msg.getSendTime().getMonth()+1 + "." + (msg.getSendTime().getDay()+2) + " " + msg.getSendTime().getHours() + ":" + msg.getSendTime().getMinutes();
+        if (Objects.equals(msg.getFromUserId(), userId)){
+            holder.leftLayout.setVisibility(View.GONE);
+            holder.rightLayout.setVisibility(View.VISIBLE);
+            holder.rightName.setText( sendTime + " " + userId.toString());
+            holder.rightMsg.setText(msg.getContent());
+        }else {
+            holder.leftLayout.setVisibility(View.VISIBLE);
+            holder.rightLayout.setVisibility(View.GONE);
+            holder.leftName.setText(msg.getFromUserId().toString() + " " + sendTime);
+            holder.leftMsg.setText(msg.getContent());
+        }
     }
 
     public int getItemCount() {
@@ -75,5 +77,10 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public void updateData(List<Message> newMessage) {
+        this.mMsgList = newMessage;
+        notifyDataSetChanged(); // 通知适配器数据集已更改，刷新列表
     }
 }
