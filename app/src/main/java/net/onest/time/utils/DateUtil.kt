@@ -216,7 +216,8 @@ enum class DateTimeUnit {
     var value by Delegates.notNull<Long>()
 }
 
-fun LocalDateTime.localFormat() = this.format(DateUtil.LOCAL_DATE_FORMAT)
+fun LocalDateTime.localFormat() = this.format(DateUtil.LOCAL_DATE_TIME_FORMAT)
+fun LocalDate.localFormat() = this.format(DateUtil.LOCAL_DATE_FORMAT)
 
 fun LocalDateTime.plus(value: Long, timeUnit: DateTimeUnit): LocalDateTime? {
     return when(timeUnit) {

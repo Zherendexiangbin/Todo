@@ -10,7 +10,9 @@ import net.onest.time.api.StatisticApi
 import net.onest.time.api.vo.UserVo
 import net.onest.time.components.LoadingView
 import net.onest.time.databinding.ActivityRankingListBinding
+import net.onest.time.utils.localFormat
 import net.onest.time.utils.showToast
+import java.time.LocalDate
 
 class RankingListActivity : AppCompatActivity() {
     private val TAG = javaClass.name
@@ -24,6 +26,8 @@ class RankingListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRankingListBinding.inflate(LayoutInflater.from(this), null, false)
         setContentView(binding.root)
+
+        binding.date.text = LocalDate.now().localFormat()
 
         val loadingView = LoadingView(this)
         loadingView.show()
