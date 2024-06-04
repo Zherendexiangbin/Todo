@@ -1,6 +1,7 @@
 package net.onest.time.utils
 
 import android.view.View
+import android.view.ViewPropertyAnimator
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
@@ -27,4 +28,34 @@ fun View.withCustomTranslateAnimation(): View {
     translateAnimation.duration = 5000
     this.animation = translateAnimation
     return this
+}
+
+fun View.doShakeAnimation(rotation: Float = 15f, duration: Long = 500) {
+    var animator: ViewPropertyAnimator? = null
+
+    animator = this.animate()
+        .rotation(rotation)
+    animator.duration = duration / 4
+    animator.withEndAction {
+        animator = this.animate()
+            .rotationBy(-rotation * 2)
+        animator!!.duration = duration / 2
+        animator!!.withEndAction {
+            animator = this.animate()
+                .rotationBy(rotation)
+            animator!!.duration = duration / 4
+        }
+    }
+}
+
+fun View.doSpinCircleAnimation(duration: Long = 500) {
+    var animator: ViewPropertyAnimator? = null
+
+    animator = this.animate()
+        .rotation(90f)
+    animator.duration = duration
+    animator.withEndAction {
+        animator.rotation(0f)
+        animator.duration = 0
+    }
 }

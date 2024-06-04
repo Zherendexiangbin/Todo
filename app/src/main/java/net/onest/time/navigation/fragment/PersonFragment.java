@@ -1,7 +1,9 @@
 package net.onest.time.navigation.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +29,9 @@ import net.onest.time.TimerActivity;
 import net.onest.time.api.ServerConstant;
 import net.onest.time.api.UserApi;
 import net.onest.time.api.vo.UserVo;
+import net.onest.time.application.TimeApplication;
+import net.onest.time.constant.SharedPreferencesConstant;
+import net.onest.time.navigation.activity.AccountActivity;
 import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.navigation.activity.PersonEditActivity;
 
@@ -67,9 +72,7 @@ public class PersonFragment extends Fragment {
         change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(requireContext(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
+                Intent intent = new Intent(requireContext(), AccountActivity.class);
                 requireContext().startActivity(intent);
             }
         });
@@ -77,12 +80,26 @@ public class PersonFragment extends Fragment {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                removeToken();
+                requireActivity().finish();
                 Intent intent = new Intent();
                 intent.setClass(requireContext(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
                 requireContext().startActivity(intent);
             }
         });
+    }
+
+    /**
+     * 删除token
+     */
+    private void removeToken() {
+        SharedPreferences preferences = TimeApplication
+                .getApplication()
+                .getApplicationContext()
+                .getSharedPreferences(SharedPreferencesConstant.USER_INFO, Context.MODE_PRIVATE);
+        preferences.edit()
+                .remove("token")
+                .apply();
     }
 
     //处理页面跳转返回结果

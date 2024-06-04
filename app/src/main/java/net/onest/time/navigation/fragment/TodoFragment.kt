@@ -27,6 +27,8 @@ import net.onest.time.components.CheckInDialog
 import net.onest.time.components.holder.AdapterHolder
 import net.onest.time.entity.CheckIn
 import net.onest.time.utils.DateUtil
+import net.onest.time.utils.doShakeAnimation
+import net.onest.time.utils.doSpinCircleAnimation
 import net.onest.time.utils.showToast
 import java.time.Instant
 import java.time.LocalDateTime
@@ -140,7 +142,8 @@ class TodoFragment : Fragment() {
         }
 
         //添加待办：
-        todoBtn!!.setOnClickListener { v: View? ->
+        todoBtn!!.setOnClickListener {
+            it.doSpinCircleAnimation()
             AddTaskDialog(
                 requireContext(),
                 tasks,
