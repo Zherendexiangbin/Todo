@@ -31,6 +31,7 @@ import net.onest.time.api.UserApi;
 import net.onest.time.api.vo.UserVo;
 import net.onest.time.application.TimeApplication;
 import net.onest.time.constant.SharedPreferencesConstant;
+import net.onest.time.navigation.activity.AccountActivity;
 import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.navigation.activity.PersonEditActivity;
 
@@ -71,10 +72,7 @@ public class PersonFragment extends Fragment {
         change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeToken();
-                requireActivity().finish();
-                Intent intent = new Intent();
-                intent.setClass(requireContext(), MainActivity.class);
+                Intent intent = new Intent(requireContext(), AccountActivity.class);
                 requireContext().startActivity(intent);
             }
         });

@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import net.onest.time.R
 import net.onest.time.api.vo.UserVo
-import net.onest.time.databinding.RankingItemBinding
+import net.onest.time.databinding.ItemRankingBinding
 
 class RankingAdapter(
     var context: Context,
     var rankingList: MutableList<UserVo>,
 ) : RecyclerView.Adapter<RankingAdapter.ViewHolder>() {
-    private lateinit var binding: RankingItemBinding
+    private lateinit var binding: ItemRankingBinding
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ranking = binding.ranking
@@ -29,7 +29,7 @@ class RankingAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        binding = RankingItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        binding = ItemRankingBinding.inflate(LayoutInflater.from(context), parent, false)
         return ViewHolder(binding.root)
     }
 
