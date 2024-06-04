@@ -144,6 +144,7 @@
             android:paddingRight="10dp"
             android:paddingBottom="5dp">
             <TextView
+                android:id="@+id/account_and_security"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@mipmap/arrow_right"
@@ -155,6 +156,7 @@
                 android:layout_height="1sp"
                 android:background="@color/lightgrey"/>
             <TextView
+                android:id="@+id/bind_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@mipmap/arrow_right"
@@ -181,6 +183,7 @@
             android:paddingRight="10dp"
             android:paddingBottom="5dp">
             <TextView
+                android:id="@+id/privacy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@mipmap/arrow_right"
@@ -188,6 +191,7 @@
                 android:text="隐私"
                 android:textColor="@color/black"/>
             <View
+                android:id="@+id/general"
                 android:layout_width="match_parent"
                 android:layout_height="1sp"
                 android:background="@color/lightgrey"/>
@@ -204,6 +208,7 @@
                 android:layout_height="1sp"
                 android:background="@color/lightgrey"/>
             <TextView
+                android:id="@+id/accessibility"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@mipmap/arrow_right"
@@ -230,6 +235,7 @@
             android:paddingRight="10dp"
             android:paddingBottom="5dp">
             <TextView
+                android:id="@+id/privacy_policy_summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@mipmap/arrow_right"
@@ -241,6 +247,7 @@
                 android:layout_height="1sp"
                 android:background="@color/lightgrey"/>
             <TextView
+                android:id="@+id/common_problem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@mipmap/arrow_right"
@@ -253,6 +260,7 @@
                 android:layout_height="1sp"
                 android:background="@color/lightgrey"/>
             <TextView
+                android:id="@+id/feedback"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@mipmap/arrow_right"
@@ -265,6 +273,7 @@
                 android:layout_height="1sp"
                 android:background="@color/lightgrey"/>
             <TextView
+                android:id="@+id/about_us"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@mipmap/arrow_right"
