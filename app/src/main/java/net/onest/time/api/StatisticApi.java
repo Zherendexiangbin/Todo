@@ -6,6 +6,7 @@ import net.onest.time.api.utils.RequestUtil;
 import net.onest.time.api.utils.ResponseErrorException;
 import net.onest.time.api.vo.UserVo;
 import net.onest.time.api.vo.statistic.StatisticVo;
+import net.onest.time.api.vo.statistic.StopReasonRatio;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -24,6 +25,9 @@ public class StatisticApi {
 
     // 排行榜
     private final static String RANKLING_LIST = "/rankingList";
+
+    // 统计中断原因
+    private final static String STATISTIC_STOP_REASON = "/stopReason";
 
 
     public static StatisticVo statistic() {
@@ -62,5 +66,12 @@ public class StatisticApi {
             .url(ServerConstant.HTTP_ADDRESS + PREFIX + RANKLING_LIST)
             .get()
             .submit(new TypeToken<List<UserVo>>(){}, consumer, exceptionHandler);
+    }
+
+    public static List<StopReasonRatio> statisticStopReason() {
+        return RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC_STOP_REASON)
+                .get()
+                .buildAndSend(new TypeToken<List<StopReasonRatio>>(){});
     }
 }
