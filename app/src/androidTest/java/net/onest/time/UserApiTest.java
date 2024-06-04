@@ -93,6 +93,13 @@ public class UserApiTest {
     }
 
     @Test
+    public void getUserInfoById() {
+        Long userId = 25L;
+        UserVo userInfo = UserApi.getUserInfo(userId);
+        System.out.println(userInfo);
+    }
+
+    @Test
     public void logout() {
         UserApi.logout();
     }

@@ -137,6 +137,14 @@ public class UserApi {
                 .buildAndSend(UserVo.class);
     }
 
+    // 获取其他用户信息
+    public static UserVo getUserInfo(Long userId){
+        return RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + GET_USER_INFO + "/" + userId)
+                .get()
+                .buildAndSend(UserVo.class);
+    }
+
     // 用户注销
     public static void logout(){
         RequestUtil.builder()
