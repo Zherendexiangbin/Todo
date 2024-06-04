@@ -287,7 +287,8 @@ class UpdateTaskDialog (
             }
 
             val taskVo = TaskApi.updateTask(TaskDto().withTaskVo(task))
-            adapter.notifyItemChanged(tasks.indexOf(taskVo))
+//            adapter.notifyItemChanged(tasks.indexOf(taskVo))
+            adapter.notifyDataSetChanged()
 
             dialog.dismiss()
         }

@@ -48,8 +48,7 @@
                         android:textStyle="bold"
                         android:textColor="@color/white"
                         app:deleteLineWidth="1dp"
-                        app:deleteLineColor="@color/black"
-                        app:showDeleteLine="show" />
+                        app:deleteLineColor="@color/black" />
 
                 <TextView
                         android:id="@+id/list_fragment_item_child_txt_time"
