@@ -11,11 +11,15 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import net.onest.time.R;
+import net.onest.time.api.UserApi;
 import net.onest.time.api.vo.Message;
 import net.onest.time.api.vo.MessageVo;
 import net.onest.time.api.vo.UserVo;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,6 +51,7 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
     public ChatMsgAdapter(Context context, List<MessageVo> msgList, Long userId) {
         this.context = context;
         this.mMsgList = msgList;
+//        Collections.reverse(mMsgList);
         this.userId = userId;
     }
 
@@ -61,13 +66,19 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
         if (Objects.equals(msg.getFromUserId(), userId)){
             holder.leftLayout.setVisibility(View.GONE);
             holder.rightLayout.setVisibility(View.VISIBLE);
-            holder.rightName.setText( sendTime + " " + userId.toString());
+            holder.rightName.setText(sendTime + " " + UserApi.getUserInfo(msg.getFromUserId()).getUserName());
             holder.rightMsg.setText(msg.getContent());
+            Glide.with(context)
+                    .load(UserApi.getUserInfo(msg.getFromUserId()).getAvatar())
+                    .into(holder.rightUserHeader);
         }else {
             holder.leftLayout.setVisibility(View.VISIBLE);
             holder.rightLayout.setVisibility(View.GONE);
-            holder.leftName.setText(msg.getFromUserId().toString() + " " + sendTime);
+            holder.leftName.setText(UserApi.getUserInfo(msg.getFromUserId()).getUserName() + " " + sendTime);
             holder.leftMsg.setText(msg.getContent());
+            Glide.with(context)
+                    .load(UserApi.getUserInfo(msg.getFromUserId()).getAvatar())
+                    .into(holder.leftUserHeader);
         }
     }
 

@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import net.onest.time.R;
+import net.onest.time.api.RoomApi;
+import net.onest.time.api.UserApi;
+import net.onest.time.api.vo.RoomVo;
 import net.onest.time.api.vo.UserVo;
 
 import java.util.Comparator;
@@ -37,11 +40,29 @@ public class StudyRoomUserItemAdapter extends RecyclerView.Adapter<StudyRoomUser
         Glide.with(context)
                         .load(userVo.getAvatar())
                                 .into(holder.userAvatar);
+        //查询用户所在自习室
+        try {
+            RoomVo roomVo = RoomApi.getRoomInfo();
+            if (roomVo != null) {
+                //查询自习室管理员信息
+                UserVo managerInfo = UserApi.getUserInfo(roomVo.getUserId());
+                if (userVo.getUserName().equals(managerInfo.getUserName())){
+                    holder.userRank.setText(""+(position+1));
+                    holder.userName.setText(userVo.getUserName() + "（管理员）");
+                    holder.userTime.setText("" + userVo.getTomatoDuration());
+                }else{
+                    holder.userRank.setText(""+(position+1));
+                    holder.userName.setText(userVo.getUserName());
+                    holder.userTime.setText("" + userVo.getTomatoDuration());
+                }
+            }else {
+                holder.userRank.setText(""+(position+1));
+                holder.userName.setText(userVo.getUserName());
+                holder.userRank.setText("" + (position+1));
+            }
+        }catch (Exception e){
 
-        holder.userName.setText(userVo.getUserName());
-        holder.userRank.setText("" + (position+1));
-        holder.userrTime.setText("" + userVo.getCreatedAt());
-
+        }
     }
 
     @Override
@@ -68,14 +89,14 @@ public class StudyRoomUserItemAdapter extends RecyclerView.Adapter<StudyRoomUser
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public ImageView userAvatar;
-        public TextView userRank, userName, userrTime;
+        public TextView userRank, userName, userTime;
 
         public ViewHolder(View itemView){
             super(itemView);
             userAvatar = itemView.findViewById(R.id.user_avatar);
             userRank = itemView.findViewById(R.id.user_rank);
             userName = itemView.findViewById(R.id.user_name);
-            userrTime = itemView.findViewById(R.id.user_time);
+            userTime = itemView.findViewById(R.id.user_time);
         }
     }
 

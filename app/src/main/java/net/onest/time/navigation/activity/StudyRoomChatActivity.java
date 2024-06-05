@@ -29,6 +29,7 @@ import net.onest.time.api.vo.UserVo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -111,11 +112,14 @@ public class StudyRoomChatActivity extends AppCompatActivity {
     //下拉刷新获取消息
     private void getMessages(Position position, boolean scrollToEnd){
         try {
-            Page<MessageVo> newMessages = ChatApi.findRoomMessagePage(pageNum, 10, roomVo.getRoomId(), messagesList.get(0).getSendTime().getTime());
+            Page<MessageVo> newMessages = ChatApi.findRoomMessagePage(pageNum, 10, roomVo.getRoomId(), System.currentTimeMillis());
             if (newMessages != null) {
-                newMessages.getRecords()
-                        .forEach(messageVo -> addAndRefreshMsgList(messageVo, position, scrollToEnd));
-                messagesList = newMessages.getRecords();
+//                newMessages.getRecords()
+//                        .forEach(messageVo -> addAndRefreshMsgList(messageVo, position, scrollToEnd));
+//                messagesList = newMessages.getRecords();
+                for (int i=newMessages.getRecords().size()-1; i>=0; i--){
+                    addAndRefreshMsgList(newMessages.getRecords().get(i), position, scrollToEnd);
+                }
                 chatMsgAdapter.updateData(messagesList);
             }else {
                 Toast.makeText(this, "没有其他消息了", Toast.LENGTH_SHORT).show();
