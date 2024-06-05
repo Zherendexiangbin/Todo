@@ -2,11 +2,22 @@ package net.onest.time.api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import net.onest.time.api.utils.RequestUtil;
 import net.onest.time.api.dto.UserDto;
 import net.onest.time.api.vo.UserVo;
 import net.onest.time.application.TimeApplication;
 import net.onest.time.constant.SharedPreferencesConstant;
+import net.onest.time.constant.UserInfoConstant;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class UserApi {
     private final static String PREFIX = "/user";
@@ -52,18 +63,44 @@ public class UserApi {
     }
 
     public static String login(UserDto userDto) {
+        Gson gson = RequestUtil.getGson();
         String token = RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + LOGIN)
                 .post(userDto)
                 .buildAndSend(String.class);
 
-        // 将token存入SharedPreferences
         SharedPreferences preferences = TimeApplication
                 .getApplication()
                 .getApplicationContext()
                 .getSharedPreferences(SharedPreferencesConstant.USER_INFO, Context.MODE_PRIVATE);
+
+        // 将token存入SharedPreferences
         preferences.edit()
                 .putString("token", token)
+                .apply();
+
+
+        // 获得用户信息
+        UserVo userVo = getUserInfo();
+
+        // 添加已登录用户
+        // user
+        String userVoSetJson = preferences.getString(UserInfoConstant.LOGGED_USERS, "");
+        Set<UserVo> userVoSet = gson.fromJson(userVoSetJson, new TypeToken<Set<UserVo>>() {});
+        if (userVoSet == null) userVoSet = new HashSet<>();
+        userVoSet.add(userVo);
+
+        // userId --> token
+        String tokenMapJson = preferences.getString(UserInfoConstant.LOGGED_TOKENS, "");
+        Map<Long, String> tokenMap = gson.fromJson(tokenMapJson, new TypeToken<Map<Long, String>>() {});
+        if (tokenMap == null) {
+            tokenMap = new HashMap<>();
+        }
+        tokenMap.put(userVo.getUserId(), token);
+
+        preferences.edit()
+                .putString(UserInfoConstant.LOGGED_USERS, gson.toJson(userVoSet))
+                .putString(UserInfoConstant.LOGGED_TOKENS, gson.toJson(tokenMap))
                 .apply();
 
         return token;
@@ -133,6 +170,14 @@ public class UserApi {
     public static UserVo getUserInfo(){
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + GET_USER_INFO)
+                .get()
+                .buildAndSend(UserVo.class);
+    }
+
+    // 获取其他用户信息
+    public static UserVo getUserInfo(Long userId){
+        return RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + GET_USER_INFO + "/" + userId)
                 .get()
                 .buildAndSend(UserVo.class);
     }

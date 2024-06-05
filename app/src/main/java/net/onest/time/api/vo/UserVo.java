@@ -65,7 +65,7 @@ public class UserVo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserVo userVo = (UserVo) o;
-        return Objects.equals(userId, userVo.userId) && Objects.equals(userName, userVo.userName) && Objects.equals(avatar, userVo.avatar) && Objects.equals(signature, userVo.signature) && Objects.equals(createdAt, userVo.createdAt) && Objects.equals(tomatoDuration, userVo.tomatoDuration);
+        return Objects.equals(userId, userVo.userId);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class UserVo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, userName, avatar, signature, createdAt, tomatoDuration);
+        return Objects.hash(userId);
     }
 
 }

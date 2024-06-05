@@ -1,5 +1,8 @@
 package net.onest.time.api.dto
 
+import net.onest.time.api.vo.TaskCategoryVo
+import net.onest.time.api.vo.TaskVo
+
 class TaskCategoryDto {
     var categoryId: Long? = null
     var categoryName: String? = null
@@ -27,6 +30,12 @@ class TaskCategoryDto {
 //        outerInterrupt = 0
 //        startedAt = null
 //        completedAt = null
+        return this
+    }
+    fun withTaskCategoryVo(taskCategoryVo: TaskCategoryVo): TaskCategoryDto {
+        categoryId=taskCategoryVo.categoryId
+        categoryName=taskCategoryVo.categoryName
+        color=taskCategoryVo.color
         return this
     }
 }

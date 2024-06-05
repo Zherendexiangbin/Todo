@@ -1,13 +1,23 @@
 package net.onest.time.api.vo
 
-class TaskCategoryVo {
-    var categoryId: Long? = null
-    var categoryName: String? = null
-    var color: Int? = null
-    var taskVos: List<TaskVo>? = null
+import com.hgdendi.expandablerecycleradapter.BaseExpandableRecyclerViewAdapter
+
+class TaskCategoryVo(
+    var categoryId: Long?,
+    var categoryName: String,
+    var color: Int,
+    var taskVos: List<TaskVo>
+): BaseExpandableRecyclerViewAdapter.BaseGroupBean<TaskVo?> {
+
     override fun toString(): String {
         return "TaskCategoryVo(categoryId=$categoryId, categoryName=$categoryName, color=$color, taskVos=$taskVos)"
     }
+
+    override fun getChildCount() = taskVos.size
+
+    override fun getChildAt(childIndex: Int) = taskVos[childIndex]
+
+    override fun isExpandable() = childCount > 0
 
 
 }

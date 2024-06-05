@@ -33,7 +33,7 @@ class ListFragment : Fragment() {
     private var menuBtn: Button? = null
     private var taskCollectionsList: MutableList<TaskCategoryVo> = ArrayList()
 //    private var parentMap: MutableMap<TaskCategoryVo, List<TaskVo?>> = HashMap()
-    private var expandableListAdapter: ExpandableListAdapter? = null
+//    private var expandableListAdapter: ExpandableListAdapter? = null
     private var listFragmentGroupAdapter: ListFragmentGroupAdapter? = null
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,9 +54,11 @@ class ListFragment : Fragment() {
 //            init()
 //        )
 
+//        taskCollectionsList = init().toMutableList()
+
         listFragmentGroupAdapter = ListFragmentGroupAdapter(
             requireContext(),
-            init().toMutableList()
+            init()
         )
 
 
@@ -64,7 +66,8 @@ class ListFragment : Fragment() {
 
         backLogRey?.layoutManager = LinearLayoutManager(requireContext())
 
-        backLogRey?.adapter = ListFragmentGroupAdapter(requireContext(),init().toMutableList())
+        backLogRey?.adapter = listFragmentGroupAdapter
+
 
 //        val display = requireActivity().windowManager.defaultDisplay
 //        //        Point size = new Point();
@@ -73,23 +76,9 @@ class ListFragment : Fragment() {
 //        val width = display.width
 //        //        backLog.setIndicatorBoundsRelative(100,100);
 //        backLog!!.setIndicatorBounds(width - 320, width - 290)
-//
-//
-//        //默认展开第一项
-////        backLog.expandGroup(0);
-//        backLog!!.setOnGroupClickListener { parent, v, groupPosition, id ->
-//            val groupExpanded = backLog!!.isGroupExpanded(groupPosition)
-//            if (groupExpanded) {
-//                v.findViewById<View>(R.id.list_fragment_parent_arrow)
-//                    .setBackgroundResource(R.drawable.arrow_right2)
-//                Log.e("s","${groupPosition}")
-//            } else {
-//                v.findViewById<View>(R.id.list_fragment_parent_arrow)
-//                    .setBackgroundResource(R.drawable.arrow_down2)
-//            }
-//            false
-//        }
-//
+
+
+
 ////        长按删除/编辑事件:
 //        backLog!!.setOnItemLongClickListener { parent, view, position, id ->
 //
@@ -164,13 +153,13 @@ class ListFragment : Fragment() {
         addParentBtn!!.setOnClickListener {
             AddTaskCollectionsDialog(
                     requireContext(),
-                    expandableListAdapter!!,
+                    listFragmentGroupAdapter!!,
                     taskCollectionsList
             )
         }
     }
 
-    private fun init(): List<TaskCategoryVo> {
+    private fun init(): MutableList<TaskCategoryVo> {
 //        try {
 //            val all = TaskCategoryApi.getAll()
 //            all.forEach { taskCategoryVo ->
@@ -183,7 +172,8 @@ class ListFragment : Fragment() {
 //        }
 
         try {
-            taskCollectionsList = TaskCategoryApi.getAllCategoryAndTasks()
+            var allCategoryAndTasks = TaskCategoryApi.getAllCategoryAndTasks()
+            taskCollectionsList.addAll(allCategoryAndTasks)
         }catch (e:RuntimeException) {
             e.message?.showToast()
         }

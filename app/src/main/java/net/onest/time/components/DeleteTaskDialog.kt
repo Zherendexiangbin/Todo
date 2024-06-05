@@ -32,7 +32,7 @@ class DeleteTaskDialog(
 
                 val position = tasks.indexOf(taskVo)
                 (tasks as MutableList).removeAt(position)
-                adapter.notifyItemRemoved(position)
+                adapter.notifyDataSetChanged()
                 dialog.dismiss()
             }
             .show()

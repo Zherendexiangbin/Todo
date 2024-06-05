@@ -16,24 +16,22 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import net.onest.time.R
-import net.onest.time.adapter.list.ExpandableListAdapter
 import net.onest.time.adapter.list.ListFragmentGroupAdapter
 import net.onest.time.api.TaskCategoryApi
 import net.onest.time.api.dto.TaskCategoryDto
 import net.onest.time.api.vo.TaskCategoryVo
-import net.onest.time.entity.list.TaskCollections
+import net.onest.time.api.vo.TaskVo
+import net.onest.time.components.holder.AdapterHolder
 import net.onest.time.utils.makeToast
 import net.onest.time.utils.showToast
 
-/**
- * 添加待办集合
- */
-class AddTaskCollectionsDialog(
-    context: Context,
-//    private val expandableListAdapter: ExpandableListAdapter,
+class UpdateCategoryDialog(
+    private val context: Context,
+    private val taskCategory: TaskCategoryVo,
     private val listFragmentGroupAdapter: ListFragmentGroupAdapter,
-    private val taskCollectionsList: MutableList<TaskCategoryVo>
-) : AlertDialog(context) {
+) : AlertDialog (
+    context
+){
     private var addYes: Button? = null
     private var addNo: Button? = null
     private var groupOne: RadioGroup? = null
@@ -54,16 +52,11 @@ class AddTaskCollectionsDialog(
         setEditColor("#0000ff")
 
         findViews(dialogView)
-        setListeners()
-    }
 
-    private fun findViews(dialogView: View) {
-        addYes = dialogView.findViewById(R.id.add_list_item_yes)
-        addNo = dialogView.findViewById(R.id.add_list_item_no)
-        groupOne = dialogView.findViewById(R.id.list_fragment_pop_window_group_one)
-        groupTwo = dialogView.findViewById(R.id.list_fragment_pop_window_group_two)
-        edit = dialogView.findViewById(R.id.list_fragment_group_edit)
-        editLayout = dialogView.findViewById(R.id.list_fragment_group_edit_layout)
+        //回显
+        edit?.setText(taskCategory.categoryName)
+
+        setListeners()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -146,28 +139,33 @@ class AddTaskCollectionsDialog(
 //                ArrayList()
 //            )
 
-            val taskCollections2 = TaskCategoryVo(null,taskCollectionsName,taskCollectionsColor,ArrayList())
-            taskCollections2.categoryName = taskCollectionsName
-            taskCollections2.color = taskCollectionsColor
-            taskCollections2.taskVos = ArrayList()
+            taskCategory.categoryName = taskCollectionsName
+            taskCategory.color = taskCollectionsColor
 
-            val taskCategoryDto = TaskCategoryDto()
-            taskCategoryDto.categoryName=taskCollections2.categoryName
-            taskCategoryDto.color=taskCollections2.color
+            val taskCategoryDto = TaskCategoryDto().withTaskCategoryVo(taskCategory)
 
             try {
-                val taskCategory = TaskCategoryApi.addTaskCategory(taskCategoryDto)
-                taskCollections2.categoryId = taskCategory.categoryId
+                var updateTaskCategory = TaskCategoryApi.updateTaskCategory(taskCategoryDto)
             } catch (e: RuntimeException) {
                 e.message?.showToast()
             }
 
-            taskCollectionsList.add(taskCollections2)
+//            TaskCategoryApi.updateTaskCategory(taskCategoryDto)
+//            taskCollectionsList.add(taskCollections2)
             listFragmentGroupAdapter.notifyDataSetChanged()
             dismiss()
         }
 
         addNo!!.setOnClickListener { dismiss() }
+    }
+
+    private fun findViews(dialogView: View) {
+        addYes = dialogView.findViewById(R.id.add_list_item_yes)
+        addNo = dialogView.findViewById(R.id.add_list_item_no)
+        groupOne = dialogView.findViewById(R.id.list_fragment_pop_window_group_one)
+        groupTwo = dialogView.findViewById(R.id.list_fragment_pop_window_group_two)
+        edit = dialogView.findViewById(R.id.list_fragment_group_edit)
+        editLayout = dialogView.findViewById(R.id.list_fragment_group_edit_layout)
     }
 
     private fun setEditColor(color: String) {

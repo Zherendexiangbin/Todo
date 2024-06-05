@@ -17,6 +17,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -138,6 +139,14 @@ public class StudyRoomFragment extends Fragment {
         });
         //刷新自习室信息
         userRefresh.setOnClickListener(view1 -> {
+            final ViewPropertyAnimator animator = view1.animate()
+                    .rotation(360f);
+            animator.setDuration(1000)
+                    .withEndAction(() -> {
+                        animator.rotation(0);
+                        animator.setDuration(0);
+                    });
+
             if (roomVo != null ){
                 userVos = RoomApi.listUsers(roomVo.getRoomId());
 

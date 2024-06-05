@@ -1,7 +1,9 @@
 package net.onest.time.utils
 
+import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -15,7 +17,11 @@ import android.view.PixelCopy
 import android.view.View
 import android.view.Window
 import androidx.core.content.FileProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.reflect.TypeToken
+import net.onest.time.MainActivity
 import net.onest.time.api.utils.RequestUtil
+import net.onest.time.api.vo.Message
 import net.onest.time.api.vo.UserVo
 import net.onest.time.constant.SharedPreferencesConstant
 import net.onest.time.constant.UserInfoConstant
@@ -109,4 +115,20 @@ fun Bitmap.drawUserWatermark(): Bitmap {
     canvas.drawText(username, this.width - username.length * 36 - 44f, this.height - 44f, paint)
 
     return this
+}
+
+fun View.withOnClickInfoDialog(
+    title: String = "敬请期待！",
+    message: String = "敬请期待！"
+) {
+    this.setOnClickListener {
+        MaterialAlertDialogBuilder(context)
+            .setCancelable(true)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("确定") { dialog, which ->
+                dialog.dismiss()
+            }
+            .show()
+    }
 }
