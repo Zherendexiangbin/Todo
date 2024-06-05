@@ -228,32 +228,32 @@ public class StudyRoomFragment extends Fragment {
     }
 
     private void loadData() {
-
-        for (int i=20; i>0; i--){
-            UserVo user = new UserVo();
-            user.setUserId(userVo.getUserId());
-            user.setUserName("用户--"+ i);
-            user.setAvatar(userVo.getAvatar());
-            user.setSignature(userVo.getSignature());
-//            user.setCreatedAt(new Date(System.currentTimeMillis()));
-
-            // 创建一个Random对象
-            Random random = new Random();
-
-            // 生成随机的年份、月份、日期、小时、分钟和秒数
-            int year = 2024; // 假设生成的年份范围为1920-2020
-            int month = 6; // 月份范围为1-12
-            int day = 1; // 假设每个月都有28天
-            int hour = random.nextInt(24); // 小时范围为0-23
-            int minute = random.nextInt(60); // 分钟范围为0-59
-            int second = random.nextInt(60); // 秒数范围为0-59
-
-            // 使用Date类的构造函数创建一个新的Date对象
-            Date randomDate = new Date(year-1900, month, day, hour, minute, second);
-
-            user.setCreatedAt(randomDate);
-            userVos.add(user);
-        }
+        userVos.add(userVo);
+//        for (int i=20; i>0; i--){
+//            UserVo user = new UserVo();
+//            user.setUserId(userVo.getUserId());
+//            user.setUserName("空位以待"+ i);
+//            user.setAvatar(userVo.getAvatar());
+//            user.setSignature(userVo.getSignature());
+////            user.setCreatedAt(new Date(System.currentTimeMillis()));
+//
+//            // 创建一个Random对象
+//            Random random = new Random();
+//
+//            // 生成随机的年份、月份、日期、小时、分钟和秒数
+//            int year = 2024; // 假设生成的年份范围为1920-2020
+//            int month = 6; // 月份范围为1-12
+//            int day = 1; // 假设每个月都有28天
+//            int hour = random.nextInt(24); // 小时范围为0-23
+//            int minute = random.nextInt(60); // 分钟范围为0-59
+//            int second = random.nextInt(60); // 秒数范围为0-59
+//
+//            // 使用Date类的构造函数创建一个新的Date对象
+//            Date randomDate = new Date(year-1900, month, day, hour, minute, second);
+//
+//            user.setCreatedAt(randomDate);
+//            userVos.add(user);
+//        }
     }
 
     private void findViewById(View view) {

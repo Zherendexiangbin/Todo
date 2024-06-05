@@ -37,6 +37,7 @@ public class StudyRoomUserItemAdapter extends RecyclerView.Adapter<StudyRoomUser
     public void onBindViewHolder(ViewHolder holder, int position){
         UserVo userVo = userVoList.get(position);
 
+        holder.userRank.setText(""+(position+1));
         Glide.with(context)
                         .load(userVo.getAvatar())
                                 .into(holder.userAvatar);
@@ -47,18 +48,14 @@ public class StudyRoomUserItemAdapter extends RecyclerView.Adapter<StudyRoomUser
                 //查询自习室管理员信息
                 UserVo managerInfo = UserApi.getUserInfo(roomVo.getUserId());
                 if (userVo.getUserName().equals(managerInfo.getUserName())){
-                    holder.userRank.setText(""+(position+1));
                     holder.userName.setText(userVo.getUserName() + "（管理员）");
                     holder.userTime.setText("" + userVo.getTomatoDuration());
                 }else{
-                    holder.userRank.setText(""+(position+1));
                     holder.userName.setText(userVo.getUserName());
                     holder.userTime.setText("" + userVo.getTomatoDuration());
                 }
             }else {
-                holder.userRank.setText(""+(position+1));
                 holder.userName.setText(userVo.getUserName());
-                holder.userRank.setText("" + (position+1));
             }
         }catch (Exception e){
 

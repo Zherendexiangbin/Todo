@@ -52,11 +52,11 @@ public class AccountSafeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (modifyPage.getVisibility() == View.GONE) {
                     modifyPage.setVisibility(View.VISIBLE);
-                    sign.setBackground(getResources().getDrawable(R.drawable.arrow_down2));
+                    sign.setBackground(getResources().getDrawable(R.mipmap.arrow_down));
 
                 } else {
                     modifyPage.setVisibility((View.GONE));
-                    sign.setBackground(getResources().getDrawable(R.drawable.right_arrow));
+                    sign.setBackground(getResources().getDrawable(R.mipmap.arrow_right));
                 }
             }
         });

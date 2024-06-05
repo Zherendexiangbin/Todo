@@ -79,6 +79,7 @@ public class StudyRoomChatActivity extends AppCompatActivity {
         //绑定适配器
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         messagesView.setLayoutManager(layoutManager);
+        messagesView.setNestedScrollingEnabled(false);
         chatMsgAdapter = new ChatMsgAdapter(this, messagesList, userVo.getUserId());
         messagesView.setAdapter(chatMsgAdapter);
     }
@@ -92,13 +93,6 @@ public class StudyRoomChatActivity extends AppCompatActivity {
             if (editMessage.getText().toString().isEmpty()){
                 Toast.makeText(this, "发送消息不可为空", Toast.LENGTH_SHORT).show();
             }else {
-//                MessageVo message = new MessageVo();
-//                message.setFromUserId(userVo.getUserId());
-//                message.setContent(editMessage.getText().toString());
-//                message.setSendTime(new Date(System.currentTimeMillis()));
-//                messagesList.add(message);
-//                chatMsgAdapter.updateData(messagesList);
-//                editMessage.setText("");
                 MessageDto sendMessage = new MessageDto();
                 sendMessage.setToRoomId(roomVo.getRoomId());
                 sendMessage.setContent(editMessage.getText().toString());

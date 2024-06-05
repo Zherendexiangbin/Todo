@@ -42,6 +42,7 @@ class PersonFragment : Fragment() {
     private var change: Button? = null
     private var exit: Button? = null
     private var privacy: TextView? = null
+    private var general: TextView? = null
 
     private lateinit var binding: PersonFragmentBinding
     override fun onCreateView(
@@ -86,17 +87,17 @@ class PersonFragment : Fragment() {
             requireContext().startActivity(intent)
         }
 
-        // 设置弹窗
+        // 账号安全
         binding.accountAndSecurity.setOnClickListener {
             val intent = Intent(requireContext(),AccountSafeActivity::class.java)
             requireContext().startActivity(intent)
         }
 
-        binding.accessibility.withOnClickInfoDialog()
-//        binding.privacyPolicySummary.withOnClickInfoDialog()
-        binding.commonProblem.withOnClickInfoDialog()
-        binding.feedback.withOnClickInfoDialog()
-        binding.aboutUs.withOnClickInfoDialog()
+        binding.accessibility.withOnClickInfoDialog("辅助功能")
+        binding.general.withOnClickInfoDialog("通用")
+        binding.commonProblem.withOnClickInfoDialog("常见问题")
+        binding.feedback.withOnClickInfoDialog("意见反馈")
+        binding.aboutUs.withOnClickInfoDialog("关于时光")
     }
 
     /**
@@ -161,6 +162,7 @@ class PersonFragment : Fragment() {
         exit = view.findViewById(R.id.btn_exit)
 
         privacy = view.findViewById(R.id.privacy_policy_summary);
+        general = view.findViewById(R.id.general);
     }
 
     companion object {

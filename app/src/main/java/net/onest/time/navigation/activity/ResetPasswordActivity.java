@@ -12,12 +12,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 
 import net.onest.time.R;
+import net.onest.time.api.UserApi;
+import net.onest.time.api.dto.UserDto;
 
 import java.util.concurrent.TimeUnit;
 
 public class ResetPasswordActivity extends AppCompatActivity {
     private TextInputEditText resetUser, resetCode, resetPassword, passwordConfirm;
     private Button getCode, btnReset;
+    private String resetPasswordKey;
 
     @SuppressLint("MissingInflateId")
     @Override
@@ -27,11 +30,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_resetpassword_page);
 
         findViewById();
-        resetUser.setText("shiguang@qq.com");
-        resetCode.setText("ZGRW4A");
-        resetPassword.setText("123456");
-        passwordConfirm.setText("123456");
-
         setListeners();
     }
 
@@ -44,20 +42,30 @@ public class ResetPasswordActivity extends AppCompatActivity {
             String confirm = passwordConfirm.getText().toString().trim();
 
             if(user.length()==0 || code.length()==0 || password.length()==0 || confirm.length()==0){
-                runOnUiThread(() -> Toast.makeText(this, "不可为空，请重新输入！", Toast.LENGTH_SHORT).show());
-            } else if (!code.equals("ZGRW4A")) {
-                runOnUiThread(() -> Toast.makeText(this, "验证码有误，请重新输入！", Toast.LENGTH_SHORT).show());
+                Toast.makeText(this, "不可为空，请重新输入！", Toast.LENGTH_SHORT).show();
             } else if (!password.equals(confirm)) {
-                runOnUiThread(() -> Toast.makeText(this, "两次密码输入不同，请重新输入！", Toast.LENGTH_SHORT).show());
+                Toast.makeText(this, "两次密码输入不同，请重新输入！", Toast.LENGTH_SHORT).show();
             }else {
-                runOnUiThread(() -> Toast.makeText(this, "密码修改成功，请登录", Toast.LENGTH_SHORT).show());
+                UserDto userDto = new UserDto();
+                userDto.setEmail(user);
+                userDto.setPassword(password);
+                userDto.setConfirmPassword(confirm);
+                userDto.setEmailCodeKey(resetPasswordKey);
+                userDto.setEmailCode(code);
+                UserApi.modifyPassword(userDto);
+                Toast.makeText(this, "密码修改成功，请登录", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
 
         //获取验证码
         getCode.setOnClickListener(view -> {
-            startCountdown();
+            if (resetUser.getText().toString().isEmpty()){
+                Toast.makeText(this, "请输入手机号或邮箱！", Toast.LENGTH_SHORT).show();
+            }else {
+                resetPasswordKey = UserApi.getEmailCodeKey(resetUser.getText().toString().trim());
+                startCountdown();
+            }
         });
     }
 
