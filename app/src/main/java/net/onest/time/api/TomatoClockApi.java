@@ -23,6 +23,9 @@ public class TomatoClockApi {
     // 停止番茄钟
     private final static String STOP_TOMATO_CLOCK = "/stopTomatoClock";
 
+    // 提前完成任务
+    private final static String ADVANCE_COMPLETE_TASK = "/advanceCompleteTask";
+
     // 查询一个番茄钟
     private final static String FIND_TOMATO_CLOCK = "/findTomatoClock";
 
@@ -110,5 +113,12 @@ public class TomatoClockApi {
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC_HISTORY_BY_USER)
                 .get()
                 .buildAndSend(new TypeToken<Map<Long, List<TomatoClockVo>>>(){});
+    }
+
+    public static void advanceCompleteTask(Long taskId) {
+        RequestUtil.builder()
+            .url(ServerConstant.HTTP_ADDRESS + PREFIX + ADVANCE_COMPLETE_TASK + "/" + taskId)
+            .put()
+            .buildAndSend();
     }
 }
