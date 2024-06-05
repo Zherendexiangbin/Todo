@@ -21,6 +21,7 @@ import net.onest.time.components.AccountListDialogBuilder
 import net.onest.time.constant.SharedPreferencesConstant
 import net.onest.time.databinding.PersonFragmentBinding
 import net.onest.time.navigation.activity.PersonEditActivity
+import net.onest.time.navigation.activity.PrivacyPolicyActivity
 import net.onest.time.utils.applicationContext
 import net.onest.time.utils.withOnClickInfoDialog
 import java.text.SimpleDateFormat
@@ -40,6 +41,7 @@ class PersonFragment : Fragment() {
     private var userTotalComplete: TextView? = null
     private var change: Button? = null
     private var exit: Button? = null
+    private var privacy: TextView? = null
 
     private lateinit var binding: PersonFragmentBinding
     override fun onCreateView(
@@ -61,6 +63,12 @@ class PersonFragment : Fragment() {
         userEdit!!.setOnClickListener { view: View? ->
             val intent = Intent(context, PersonEditActivity::class.java)
             startActivityForResult(intent, INTENT_CODE)
+        }
+
+        //隐私政策
+        privacy!!.setOnClickListener{ view: View? ->
+            val intent = Intent(context, PrivacyPolicyActivity::class.java)
+            startActivity(intent);
         }
 
         //切换账号:
@@ -85,8 +93,7 @@ class PersonFragment : Fragment() {
         }
 
         binding.accessibility.withOnClickInfoDialog()
-
-        binding.privacyPolicySummary.withOnClickInfoDialog()
+//        binding.privacyPolicySummary.withOnClickInfoDialog()
         binding.commonProblem.withOnClickInfoDialog()
         binding.feedback.withOnClickInfoDialog()
         binding.aboutUs.withOnClickInfoDialog()
@@ -152,6 +159,8 @@ class PersonFragment : Fragment() {
 
         change = view.findViewById(R.id.btn_change)
         exit = view.findViewById(R.id.btn_exit)
+
+        privacy = view.findViewById(R.id.privacy_policy_summary);
     }
 
     companion object {
