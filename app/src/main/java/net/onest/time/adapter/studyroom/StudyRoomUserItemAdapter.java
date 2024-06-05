@@ -24,9 +24,6 @@ public class StudyRoomUserItemAdapter extends RecyclerView.Adapter<StudyRoomUser
     public StudyRoomUserItemAdapter(Context context, List<UserVo> userVoList) {
         this.context = context;
         this.userVoList = userVoList;   // 后端已按专注时长排序
-        // this.userVoList = userVoList.stream()
-        //         .sorted(Comparator.comparing(UserVo :: getCreatedAt))
-        //         .collect(Collectors.toList());
     }
 
     @Override
@@ -36,29 +33,10 @@ public class StudyRoomUserItemAdapter extends RecyclerView.Adapter<StudyRoomUser
         Glide.with(context)
                         .load(userVo.getAvatar())
                                 .into(holder.userAvatar);
-        // //查询用户所在自习室
-        // try {
-        //     RoomVo roomVo = RoomApi.getRoomInfo();
-        //     if (roomVo != null) {
-        //         //查询自习室管理员信息
-        //         UserVo managerInfo = UserApi.getUserInfo(roomVo.getUserId());
-        //         if (userVo.getUserName().equals(managerInfo.getUserName())){
-        //             holder.userRank.setText(""+(position+1));
-        //             holder.userName.setText(userVo.getUserName() + "（管理员）");
-        //             holder.userTime.setText("" + userVo.getTomatoDuration());
-        //         }else{
-        //             holder.userRank.setText(""+(position+1));
-        //             holder.userName.setText(userVo.getUserName());
-        //             holder.userTime.setText("" + userVo.getTomatoDuration());
-        //         }
-        //     }else {
-        //         holder.userRank.setText(""+(position+1));
-        //         holder.userName.setText(userVo.getUserName());
-        //         holder.userRank.setText("" + (position+1));
-        //     }
-        // }catch (Exception e){
-        //
-        // }
+
+        holder.userName.setText(userVo.getUserName());
+        holder.userRank.setText("" + (position + 1));
+        holder.userTime.setText(userVo.getTomatoDuration() + "分钟");
     }
 
     @Override

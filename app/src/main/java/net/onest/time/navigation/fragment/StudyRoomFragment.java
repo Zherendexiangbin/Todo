@@ -39,8 +39,8 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.wynsbin.vciv.VerificationCodeInputView;
 
 import net.onest.time.R;
+import net.onest.time.adapter.ranking.RankingAdapter;
 import net.onest.time.adapter.studyroom.ApplicationItemAdapter;
-import net.onest.time.adapter.studyroom.StudyRoomUserItemAdapter;
 import net.onest.time.api.RoomApi;
 import net.onest.time.api.UserApi;
 import net.onest.time.api.dto.RoomDto;
@@ -50,9 +50,7 @@ import net.onest.time.navigation.activity.FindStudyRoomActivity;
 import net.onest.time.navigation.activity.StudyRoomChatActivity;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class StudyRoomFragment extends Fragment {
@@ -63,7 +61,7 @@ public class StudyRoomFragment extends Fragment {
     private ImageView roomAvatar, roomChat, userRefresh;
     private TextView roomName, roomManager;
     private String roomId;
-    private StudyRoomUserItemAdapter itemAdapter;
+    private RankingAdapter rankingAdapter;
     private RoomCodePopWindow addMenu;//创建、加入自习室弹框
     private MenuPopWindow menuPopWindow;//管理员查看自习室信息
     private List<UserVo> userVos;
@@ -89,7 +87,6 @@ public class StudyRoomFragment extends Fragment {
 
         //根据加入自习室的方式判断是否为管理员
 
-        loadData();
         findViewById(view);
         setListeners();
 
@@ -106,7 +103,8 @@ public class StudyRoomFragment extends Fragment {
                 btnMenu.setVisibility(View.VISIBLE);
                 roomManager.setVisibility(View.VISIBLE);
 
-                itemAdapter.updateData(userVos);
+                rankingAdapter.setRankingList(userVos);
+                rankingAdapter.notifyDataSetChanged();
 
                 if (roomVo.getUserId().equals(userVo.getUserId())){
                     this.isMaster = true;
@@ -156,11 +154,12 @@ public class StudyRoomFragment extends Fragment {
                         .into(roomAvatar);
 
                 roomName.setText(roomVo.getRoomName());
-                roomManager.setText("管理员：" + userVo.getUserName());
+                // roomManager.setText("管理员：" + userVo.getUserName());
             }
 
             if (userVos != null){
-                itemAdapter.updateData(userVos);
+                rankingAdapter.setRankingList(userVos);
+                rankingAdapter.notifyDataSetChanged();
             }
         });
 
@@ -182,8 +181,8 @@ public class StudyRoomFragment extends Fragment {
                                         RoomApi.deleteRoom(roomVo.getRoomId());
                                         userVos.clear();
 
-                                        loadData();
-                                        itemAdapter.updateData(userVos);
+                                        rankingAdapter.setRankingList(userVos);
+                                        rankingAdapter.notifyDataSetChanged();
 
                                         roomAvatar.setImageResource(R.mipmap.logo);
                                         roomName.setText("时光自习室");
@@ -207,8 +206,8 @@ public class StudyRoomFragment extends Fragment {
 
                                 RoomApi.userExit(roomVo.getRoomId());
                                 userVos.clear();
-                                loadData();
-                                itemAdapter.updateData(userVos);
+                                rankingAdapter.setRankingList(userVos);
+                                rankingAdapter.notifyDataSetChanged();
 
                                 roomName.setText("时光自习室");
                                 isMaster = false;
@@ -228,34 +227,34 @@ public class StudyRoomFragment extends Fragment {
         });
     }
 
-    private void loadData() {
-
-        for (int i=20; i>0; i--){
-            UserVo user = new UserVo();
-            user.setUserId(userVo.getUserId());
-            user.setUserName("用户--"+ i);
-            user.setAvatar(userVo.getAvatar());
-            user.setSignature(userVo.getSignature());
-//            user.setCreatedAt(new Date(System.currentTimeMillis()));
-
-            // 创建一个Random对象
-            Random random = new Random();
-
-            // 生成随机的年份、月份、日期、小时、分钟和秒数
-            int year = 2024; // 假设生成的年份范围为1920-2020
-            int month = 6; // 月份范围为1-12
-            int day = 1; // 假设每个月都有28天
-            int hour = random.nextInt(24); // 小时范围为0-23
-            int minute = random.nextInt(60); // 分钟范围为0-59
-            int second = random.nextInt(60); // 秒数范围为0-59
-
-            // 使用Date类的构造函数创建一个新的Date对象
-            Date randomDate = new Date(year-1900, month, day, hour, minute, second);
-
-            user.setCreatedAt(randomDate);
-            userVos.add(user);
-        }
-    }
+//     private void loadData() {
+//
+//         for (int i=20; i>0; i--){
+//             UserVo user = new UserVo();
+//             user.setUserId(userVo.getUserId());
+//             user.setUserName("用户--"+ i);
+//             user.setAvatar(userVo.getAvatar());
+//             user.setSignature(userVo.getSignature());
+// //            user.setCreatedAt(new Date(System.currentTimeMillis()));
+//
+//             // 创建一个Random对象
+//             Random random = new Random();
+//
+//             // 生成随机的年份、月份、日期、小时、分钟和秒数
+//             int year = 2024; // 假设生成的年份范围为1920-2020
+//             int month = 6; // 月份范围为1-12
+//             int day = 1; // 假设每个月都有28天
+//             int hour = random.nextInt(24); // 小时范围为0-23
+//             int minute = random.nextInt(60); // 分钟范围为0-59
+//             int second = random.nextInt(60); // 秒数范围为0-59
+//
+//             // 使用Date类的构造函数创建一个新的Date对象
+//             Date randomDate = new Date(year-1900, month, day, hour, minute, second);
+//
+//             user.setCreatedAt(randomDate);
+//             userVos.add(user);
+//         }
+//     }
 
     private void findViewById(View view) {
         roomAvatar = view.findViewById(R.id.room_avatar);
@@ -269,8 +268,8 @@ public class StudyRoomFragment extends Fragment {
         recyclerView = view.findViewById(R.id.user_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
-        itemAdapter = new StudyRoomUserItemAdapter(getContext(), userVos);
-        recyclerView.setAdapter(itemAdapter);
+        rankingAdapter = new RankingAdapter(requireContext(), userVos);
+        recyclerView.setAdapter(rankingAdapter);
 
         btnMenu = view.findViewById(R.id.btn_room_menu);
         btnMenu.setVisibility(View.GONE);
