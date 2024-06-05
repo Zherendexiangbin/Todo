@@ -1,6 +1,9 @@
 package net.onest.time.adapter.ranking
 
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +11,9 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import net.onest.time.R
+import net.onest.time.api.UserApi
 import net.onest.time.api.vo.UserVo
 import net.onest.time.databinding.ItemRankingBinding
 import net.onest.time.utils.withOnClickInfoDialog
@@ -61,7 +66,20 @@ class RankingAdapter(
             .load(userVo.avatar)
             .into(holder.avatar)
 
-        holder.itemView.withOnClickInfoDialog(message = userVo.toString())
+        holder.itemView.setOnClickListener {
+            MaterialAlertDialogBuilder(context)
+                    .setCancelable(true)
+                    .setTitle(userVo.userName)
+                    .setIcon(holder.avatar.drawable)
+                    .setMessage("userId：" + userVo.userId + "\n"
+                                    + "email：" + UserApi.getUserInfo(userVo.userId).email + "\n"
+                                    + "个性签名：" + userVo.signature + "\n"
+                                    + "专注时长：" + userVo.tomatoDuration + "分钟")
+                    .setPositiveButton("确定"){dialog, which ->
+                        dialog.dismiss()
+                    }
+                    .show()
+        }
     }
 
 }

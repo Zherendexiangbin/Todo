@@ -8,6 +8,7 @@ public class MessageVo {
     private Long toUserId;
     private Long toRoomId;
     private String content;
+    private Integer type;
     private Date sendTime;
     private String fromUserName;
     private String fromUserAvatar;
@@ -18,6 +19,14 @@ public class MessageVo {
 
     public void setMessageId(Long messageId) {
         this.messageId = messageId;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public Long getFromUserId() {
@@ -74,5 +83,20 @@ public class MessageVo {
 
     public void setFromUserAvatar(String fromUserAvatar) {
         this.fromUserAvatar = fromUserAvatar;
+    }
+
+    @Override
+    public String toString() {
+        return "MessageVo{" +
+                "messageId=" + messageId +
+                ", fromUserId=" + fromUserId +
+                ", toUserId=" + toUserId +
+                ", toRoomId=" + toRoomId +
+                ", content='" + content + '\'' +
+                ", type=" + type +
+                ", sendTime=" + sendTime +
+                ", fromUserName='" + fromUserName + '\'' +
+                ", fromUserAvatar='" + fromUserAvatar + '\'' +
+                '}';
     }
 }
