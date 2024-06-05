@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import net.onest.time.R;
 import net.onest.time.api.vo.Message;
+import net.onest.time.api.vo.MessageVo;
 import net.onest.time.api.vo.UserVo;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.Objects;
 
 public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHolder> {
     private final Context context;
-    private List<Message> mMsgList;
+    private List<MessageVo> mMsgList;
     private final Long userId;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -43,7 +44,7 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
         }
     }
 
-    public ChatMsgAdapter(Context context, List<Message> msgList, Long userId) {
+    public ChatMsgAdapter(Context context, List<MessageVo> msgList, Long userId) {
         this.context = context;
         this.mMsgList = msgList;
         this.userId = userId;
@@ -55,7 +56,7 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
     }
 
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Message msg = mMsgList.get(position);
+        MessageVo msg = mMsgList.get(position);
         String sendTime = msg.getSendTime().getMonth()+1 + "." + (msg.getSendTime().getDay()+2) + " " + msg.getSendTime().getHours() + ":" + msg.getSendTime().getMinutes();
         if (Objects.equals(msg.getFromUserId(), userId)){
             holder.leftLayout.setVisibility(View.GONE);
@@ -79,7 +80,7 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
         return position;
     }
 
-    public void updateData(List<Message> newMessage) {
+    public void updateData(List<MessageVo> newMessage) {
         this.mMsgList = newMessage;
         notifyDataSetChanged(); // 通知适配器数据集已更改，刷新列表
     }
