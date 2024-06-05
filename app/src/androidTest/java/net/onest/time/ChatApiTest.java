@@ -53,7 +53,7 @@ public class ChatApiTest {
     @Test
     public void sendRoomMessage() {
         login2();
-        List<Message> messages = new CopyOnWriteArrayList<>();
+        List<MessageVo> messages = new CopyOnWriteArrayList<>();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -96,7 +96,7 @@ public class ChatApiTest {
     @Test
     public void sendUserMessage() {
         login2();
-        List<Message> messages = new CopyOnWriteArrayList<>();
+        List<MessageVo> messages = new CopyOnWriteArrayList<>();
         new Thread(new Runnable() {
             @Override
             public void run() {
