@@ -5,7 +5,7 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 
-import net.onest.time.api.vo.Message;
+import net.onest.time.api.vo.MessageVo;
 
 import java.util.List;
 
@@ -16,10 +16,10 @@ import okio.ByteString;
 
 public class MessageListener extends WebSocketListener {
 
-    private final List<Message> messages;
+    private final List<MessageVo> messages;
     private static final Gson gson = RequestUtil.getGson();
 
-    public MessageListener(List<Message> messages) {
+    public MessageListener(List<MessageVo> messages) {
         super();
         this.messages = messages;
     }
@@ -42,7 +42,7 @@ public class MessageListener extends WebSocketListener {
     @Override
     public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
         super.onMessage(webSocket, text);
-        messages.add(gson.fromJson(text, Message.class));
+        messages.add(gson.fromJson(text, MessageVo.class));
     }
 
     @Override
