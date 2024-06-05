@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import net.onest.time.AccountSafeActivity
 import net.onest.time.MainActivity
 import net.onest.time.R
 import net.onest.time.api.UserApi
@@ -77,10 +78,12 @@ class PersonFragment : Fragment() {
         }
 
         // 设置弹窗
-        binding.accountAndSecurity.withOnClickInfoDialog()
-        binding.bindPhone.withOnClickInfoDialog()
-        binding.privacy.withOnClickInfoDialog()
-        binding.general.withOnClickInfoDialog()
+        binding.accountAndSecurity!!.setOnClickListener {
+            val intent = Intent(requireContext(),AccountSafeActivity::class.java)
+            requireContext().startActivity(intent)
+        }
+//        binding.accountAndSecurity.withOnClickInfoDialog()
+//        binding.bindPhone.withOnClickInfoDialog()
         binding.accessibility.withOnClickInfoDialog()
         binding.privacyPolicySummary.withOnClickInfoDialog()
         binding.commonProblem.withOnClickInfoDialog()

@@ -6,6 +6,7 @@ import java.util.Objects;
 public class UserVo {
     private Long userId;
     private String userName;
+    private String email;
     private String avatar;
     private String signature;
     private Date createdAt;
@@ -60,6 +61,14 @@ public class UserVo {
         this.tomatoDuration = tomatoDuration;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,6 +82,7 @@ public class UserVo {
         return "UserVo{" +
                 "userId=" + userId +
                 ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", signature='" + signature + '\'' +
                 ", createdAt=" + createdAt +

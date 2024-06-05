@@ -151,19 +151,19 @@
                 android:padding="10dp"
                 android:text="账号与安全"
                 android:textColor="@color/black"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1sp"
-                android:background="@color/lightgrey"/>
-            <TextView
-                android:id="@+id/bind_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableRight="@mipmap/arrow_right"
-                android:layout_marginTop="5dp"
-                android:padding="10dp"
-                android:text="绑定手机号"
-                android:textColor="@color/black"/>
+<!--            <View-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="1sp"-->
+<!--                android:background="@color/lightgrey"/>-->
+<!--            <TextView-->
+<!--                android:id="@+id/bind_phone"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:drawableRight="@mipmap/arrow_right"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:padding="10dp"-->
+<!--                android:text="绑定手机号"-->
+<!--                android:textColor="@color/black"/>-->
         </LinearLayout>
 
         <LinearLayout
@@ -183,15 +183,14 @@
             android:paddingRight="10dp"
             android:paddingBottom="5dp">
             <TextView
-                android:id="@+id/privacy"
+                android:id="@+id/privacy_policy_summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@mipmap/arrow_right"
                 android:padding="10dp"
-                android:text="隐私"
+                android:text="隐私政策摘要"
                 android:textColor="@color/black"/>
             <View
-                android:id="@+id/general"
                 android:layout_width="match_parent"
                 android:layout_height="1sp"
                 android:background="@color/lightgrey"/>
@@ -234,25 +233,14 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="5dp">
-            <TextView
-                android:id="@+id/privacy_policy_summary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableRight="@mipmap/arrow_right"
-                android:padding="10dp"
-                android:text="隐私政策摘要"
-                android:textColor="@color/black"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1sp"
-                android:background="@color/lightgrey"/>
+
             <TextView
                 android:id="@+id/common_problem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@mipmap/arrow_right"
                 android:layout_marginTop="10dp"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:text="常见问题"
                 android:textColor="@color/black"/>
             <View

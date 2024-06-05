@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission
-            android:name="android.permission.PACKAGE_USAGE_STATS"
-            tools:ignore="ProtectedPermissions" />
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -22,36 +22,39 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission
-            android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-            tools:ignore="ScopedStorage" />
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-            android:name=".application.TimeApplication"
-            android:allowBackup="true"
-            android:dataExtractionRules="@xml/data_extraction_rules"
-            android:fullBackupContent="@xml/backup_rules"
-            android:icon="@mipmap/logo"
-            android:label="@string/app_name"
-            android:requestLegacyExternalStorage="true"
-            android:supportsRtl="true"
-            android:theme="@style/Theme.Time"
-            android:usesCleartextTraffic="true"
-            tools:targetApi="31">
+        android:name=".application.TimeApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/logo"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Time"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
         <activity
-                android:name=".navigation.activity.AccountActivity"
-                android:exported="false" />
+            android:name=".AccountSafeActivity"
+            android:exported="false" />
         <activity
-                android:name=".navigation.activity.RankingListActivity"
-                android:exported="false" />
+            android:name=".navigation.activity.AccountActivity"
+            android:exported="false" />
         <activity
-                android:name=".TimerActivity"
-                android:exported="false" />
+            android:name=".navigation.activity.RankingListActivity"
+            android:exported="false" />
         <activity
-                android:name=".navigation.activity.NavigationActivity"
-                android:exported="true"
-                android:icon="@android:drawable/ic_menu_share"
-                android:label="添加待办">
+            android:name=".TimerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".navigation.activity.NavigationActivity"
+            android:exported="true"
+            android:icon="@android:drawable/ic_menu_share"
+            android:label="添加待办">
             <intent-filter>
                 <action android:name="android.intent.action.PROCESS_TEXT" />
 
@@ -61,8 +64,8 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".MainActivity"
-                android:exported="true">
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -70,31 +73,31 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".navigation.activity.RegisterActivity"
-                android:exported="false" />
+            android:name=".navigation.activity.RegisterActivity"
+            android:exported="false" />
         <activity
-                android:name=".navigation.activity.ResetPasswordActivity"
-                android:exported="false" />
+            android:name=".navigation.activity.ResetPasswordActivity"
+            android:exported="false" />
         <activity
-                android:name=".navigation.activity.PersonEditActivity"
-                android:exported="false" />
+            android:name=".navigation.activity.PersonEditActivity"
+            android:exported="false" />
         <activity
-                android:name=".navigation.activity.FindStudyRoomActivity"
-                android:exported="false" />
+            android:name=".navigation.activity.FindStudyRoomActivity"
+            android:exported="false" />
 
         <provider
-                android:name="androidx.core.content.FileProvider"
-                android:authorities="net.onest.time.fileprovider"
-                android:exported="false"
-                android:grantUriPermissions="true">
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="net.onest.time.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
-                    android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/filepaths" />
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
         </provider>
 
         <activity
-                android:name=".navigation.activity.StudyRoomChatActivity"
-                android:exported="false" />
+            android:name=".navigation.activity.StudyRoomChatActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
