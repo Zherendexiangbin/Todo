@@ -72,7 +72,7 @@ class TaskInfoDialog(
 //        }else{
 //            textRemark?.text = task.remark
 //        }
-        textRemark?.text = if(textRemark?.text.isNullOrBlank()) "无备注" else task.remark
+        textRemark?.text = if(task.remark.isNullOrBlank()) "无备注" else task.remark
 
         show()
         window!!.setContentView(dialogView)
@@ -104,12 +104,12 @@ class TaskInfoDialog(
 
         }
 
-        //改变背景:
-        changeBackground!!.setOnClickListener {
-
-            parentBackground!!.background = DrawableUtil.getRandomImage(context)
-
-        }
+//        //改变背景:
+//        changeBackground!!.setOnClickListener {
+//
+//            parentBackground!!.background = DrawableUtil.getRandomImage(context)
+//
+//        }
 
     }
 
