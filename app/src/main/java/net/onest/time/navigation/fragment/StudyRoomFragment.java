@@ -135,6 +135,7 @@ public class StudyRoomFragment extends Fragment {
         //跳转至聊天
         roomChat.setOnClickListener(view1 -> {
             Intent intent = new Intent(getActivity(), StudyRoomChatActivity.class);
+            intent.putExtra("room", roomVo);
             startActivity(intent);
         });
         //刷新自习室信息

@@ -1,6 +1,5 @@
 package net.onest.time.adapter.studyroom;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,17 +8,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
 import net.onest.time.R;
 import net.onest.time.api.UserApi;
-import net.onest.time.api.vo.Message;
 import net.onest.time.api.vo.MessageVo;
-import net.onest.time.api.vo.UserVo;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,7 +25,7 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
     private List<MessageVo> mMsgList;
     private final Long userId;
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private RelativeLayout leftLayout;
         private RelativeLayout rightLayout;
         private TextView leftName, leftMsg;
@@ -51,16 +48,18 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
     public ChatMsgAdapter(Context context, List<MessageVo> msgList, Long userId) {
         this.context = context;
         this.mMsgList = msgList;
-//        Collections.reverse(mMsgList);
         this.userId = userId;
     }
 
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_message_item, parent, false);
+    @NonNull
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater
+                .from(context).
+                inflate(R.layout.chat_message_item, parent, false);
         return new ViewHolder(view);
     }
 
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         MessageVo msg = mMsgList.get(position);
         String sendTime = msg.getSendTime().getMonth()+1 + "." + (msg.getSendTime().getDay()+2) + " " + msg.getSendTime().getHours() + ":" + msg.getSendTime().getMinutes();
         if (Objects.equals(msg.getFromUserId(), userId)){
@@ -84,15 +83,5 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
 
     public int getItemCount() {
         return mMsgList.size();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return position;
-    }
-
-    public void updateData(List<MessageVo> newMessage) {
-        this.mMsgList = newMessage;
-        notifyDataSetChanged(); // 通知适配器数据集已更改，刷新列表
     }
 }

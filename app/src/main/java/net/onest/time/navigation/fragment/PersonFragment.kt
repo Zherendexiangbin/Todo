@@ -85,6 +85,7 @@ class PersonFragment : Fragment() {
         }
 
         binding.accessibility.withOnClickInfoDialog()
+        binding.general.withOnClickInfoDialog()
 
         binding.privacyPolicySummary.withOnClickInfoDialog()
         binding.commonProblem.withOnClickInfoDialog()
