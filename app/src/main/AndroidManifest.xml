@@ -50,7 +50,7 @@
         <activity
                 android:name=".navigation.activity.NavigationActivity"
                 android:exported="true"
-                android:icon="@android:drawable/ic_menu_share"
+                android:icon="@drawable/logo2"
                 android:label="添加待办">
             <intent-filter>
                 <action android:name="android.intent.action.PROCESS_TEXT" />

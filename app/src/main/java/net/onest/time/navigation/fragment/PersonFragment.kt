@@ -79,9 +79,11 @@ class PersonFragment : Fragment() {
         // 设置弹窗
         binding.accountAndSecurity.withOnClickInfoDialog()
         binding.bindPhone.withOnClickInfoDialog()
+
         binding.privacy.withOnClickInfoDialog()
         binding.general.withOnClickInfoDialog()
         binding.accessibility.withOnClickInfoDialog()
+
         binding.privacyPolicySummary.withOnClickInfoDialog()
         binding.commonProblem.withOnClickInfoDialog()
         binding.feedback.withOnClickInfoDialog()

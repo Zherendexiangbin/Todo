@@ -24,6 +24,7 @@ import net.onest.time.api.vo.TaskCategoryVo
 import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.AddTaskCollectionsDialog
 import net.onest.time.entity.list.TaskCollections
+import net.onest.time.utils.doShakeAnimation
 import net.onest.time.utils.showToast
 
 class ListFragment : Fragment() {
@@ -151,6 +152,7 @@ class ListFragment : Fragment() {
 
         //添加待办集:
         addParentBtn!!.setOnClickListener {
+            it.doShakeAnimation()
             AddTaskCollectionsDialog(
                     requireContext(),
                     listFragmentGroupAdapter!!,
@@ -172,7 +174,7 @@ class ListFragment : Fragment() {
 //        }
 
         try {
-            var allCategoryAndTasks = TaskCategoryApi.getAllCategoryAndTasks()
+            val allCategoryAndTasks = TaskCategoryApi.getAllCategoryAndTasks()
             taskCollectionsList.addAll(allCategoryAndTasks)
         }catch (e:RuntimeException) {
             e.message?.showToast()
