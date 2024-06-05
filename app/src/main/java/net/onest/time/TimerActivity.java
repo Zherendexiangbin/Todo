@@ -137,7 +137,7 @@ public class TimerActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
                 mCountDownTimer.cancel();
             }else{
-                stopClockDialog = new StopClockDialog(TimerActivity.this,taskVo);
+                stopClockDialog = new StopClockDialog(TimerActivity.this,taskVo,tomatoClockVos);
             }
         }else{
             int time = Integer.parseInt(intent.getStringExtra("time"));
@@ -155,8 +155,7 @@ public class TimerActivity extends AppCompatActivity {
 //                        NavController navController = Navigation.findNavController(TimerActivity.this, R.id.nav_host_fragments);
 //                        navController.navigate(R.id.action_todo_fragment_to_list_fragment);
             }else{
-                stopClockDialog = new StopClockDialog(TimerActivity.this,taskVo);
-
+                stopClockDialog = new StopClockDialog(TimerActivity.this,taskVo,tomatoClockVos);
             }
         }
     }
@@ -208,12 +207,12 @@ public class TimerActivity extends AppCompatActivity {
                         if (mCurPosX - mPosX > 70
                                 && (Math.abs(mCurPosX - mPosX) > 70)) {
                             //设置停止弹窗:
-                            new StopClockDialog(TimerActivity.this,taskVo);
+                            new StopClockDialog(TimerActivity.this,taskVo,tomatoClockVos);
                             Toast.makeText(TimerActivity.this, "向右滑动😊", Toast.LENGTH_SHORT).show();
                         }else if (mCurPosX - mPosX < -70
                                 && (Math.abs(mCurPosX - mPosX) > 70)) {
                             //设置停止弹窗:
-                            new StopClockDialog(TimerActivity.this,taskVo);
+                            new StopClockDialog(TimerActivity.this,taskVo,tomatoClockVos);
                             Toast.makeText(TimerActivity.this, "向左滑动😊", Toast.LENGTH_SHORT).show();
                         }
                         break;
@@ -460,7 +459,7 @@ public class TimerActivity extends AppCompatActivity {
 //                        NavController navController = Navigation.findNavController(TimerActivity.this, R.id.nav_host_fragments);
 //                        navController.navigate(R.id.action_todo_fragment_to_list_fragment);
                     }else{
-                        stopClockDialog = new StopClockDialog(TimerActivity.this,taskVo,circleTimer);
+                        stopClockDialog = new StopClockDialog(TimerActivity.this,taskVo,tomatoClockVos);
                     }
                 }
             });
@@ -544,7 +543,7 @@ public class TimerActivity extends AppCompatActivity {
                         overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
                         mCountDownTimer.cancel();
                     }else{
-                        stopClockDialog = new StopClockDialog(TimerActivity.this,taskVo);
+                        stopClockDialog = new StopClockDialog(TimerActivity.this,taskVo,tomatoClockVos);
                     }
                 }
             });
@@ -600,7 +599,7 @@ public class TimerActivity extends AppCompatActivity {
                 //对于正向计时:若是超过5秒，添加正向计时的番茄钟
                 if(mTimeLeftInMillis/1000 == 5){
                     if(taskId != 0){
-                        TomatoClockApi.addTomatoClock(taskId);
+                        tomatoClockVos = TomatoClockApi.addTomatoClock(taskId);
                         Log.e("番茄钟","添加");
                         Toast.makeText(TimerActivity.this, "开始添加番茄钟"+mTimeLeftInMillis, Toast.LENGTH_SHORT).show();
                     }

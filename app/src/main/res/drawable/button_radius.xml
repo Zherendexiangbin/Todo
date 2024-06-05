@@ -5,7 +5,7 @@
     <!--设置背景色-->
     <solid android:color="@android:color/white"/>
     <!--设置圆角-->
-    <corners android:radius="30dp" />
+    <corners android:radius="20dp" />
     <!--<padding-->
     <!--android:bottom="10dp"-->
     <!--android:left="10dp"-->

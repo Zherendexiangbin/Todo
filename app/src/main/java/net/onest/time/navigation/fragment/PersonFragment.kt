@@ -87,7 +87,7 @@ class PersonFragment : Fragment() {
             requireContext().startActivity(intent)
         }
 
-        // 账号安全
+        // 账号与安全
         binding.accountAndSecurity.setOnClickListener {
             val intent = Intent(requireContext(),AccountSafeActivity::class.java)
             requireContext().startActivity(intent)
@@ -162,7 +162,6 @@ class PersonFragment : Fragment() {
         exit = view.findViewById(R.id.btn_exit)
 
         privacy = view.findViewById(R.id.privacy_policy_summary);
-        general = view.findViewById(R.id.general);
     }
 
     companion object {

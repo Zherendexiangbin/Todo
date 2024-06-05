@@ -35,8 +35,10 @@ import com.mut_jaeryo.circletimer.CircleTimer;
 import net.onest.time.R;
 import net.onest.time.TimerActivity;
 import net.onest.time.api.StatisticApi;
+import net.onest.time.api.TaskApi;
 import net.onest.time.api.TomatoClockApi;
 import net.onest.time.api.vo.TaskVo;
+import net.onest.time.api.vo.TomatoClockVo;
 import net.onest.time.api.vo.statistic.StopReasonRatio;
 import net.onest.time.navigation.activity.NavigationActivity;
 import net.onest.time.utils.ColorUtil;
@@ -49,6 +51,8 @@ public class StopClockDialog extends AlertDialog {
     private TextView advance;
     private TextView cancel;
     private TaskVo taskVo;
+    private List<TomatoClockVo> tomatoClockVos = new ArrayList<>();
+    private int num;
 
     private CountDownTimer countDownTimer;
     private CircleTimer circleTimer;
@@ -69,6 +73,24 @@ public class StopClockDialog extends AlertDialog {
 //        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //
 //    }
+
+    public StopClockDialog(@NonNull Context context,TaskVo taskVo,List<TomatoClockVo> tomatoClockVos){
+        super(context);
+        this.taskVo = taskVo;
+        this.tomatoClockVos = tomatoClockVos;
+        this.num = num;
+        View view = LayoutInflater.from(context).inflate(R.layout.timer_activity_stop_pop,null);
+
+        abandon = view.findViewById(R.id.abandon_btn);
+        advance = view.findViewById(R.id.advance_btn);
+        cancel = view.findViewById(R.id.cancel_btn);
+
+        setListeners();
+
+        show();
+        getWindow().setContentView(view);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    }
 
     public StopClockDialog(@NonNull Context context,TaskVo taskVo,CircleTimer circleTimer){
         super(context);
@@ -222,10 +244,21 @@ public class StopClockDialog extends AlertDialog {
         advance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //提前完成之正向计时:
 
-                //提前完成之倒计时:
-                circleTimer.setValue(0);
+                TomatoClockApi.stopTomatoClock(taskVo.getTaskId(),"");
+                TaskApi.complete(taskVo.getTaskId());
+
+//                            circleTimer.setValue(10);//设置时钟的值
+                Toast.makeText(getContext(), "任务完成☺", Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent();
+                intent2.setClass(getContext(), NavigationActivity.class);
+                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
+                getContext().startActivity(intent2);
+
+//                circleTimer.setMaximumTime(0);
+//                circleTimer.setInitPosition(1);
+//                circleTimer.start();
+//                StopClockDialog.this.dismiss();
             }
         });
         //取消
