@@ -115,7 +115,7 @@ class TaskInfoDialog(
 
     private fun findViews(dialogView: View) {
         title = dialogView.findViewById(R.id.txt_title) //待办标题txt
-        changeBackground = dialogView.findViewById(R.id.btn_changeBackground) //设置背景button
+//        changeBackground = dialogView.findViewById(R.id.btn_changeBackground) //设置背景button
         setItem = dialogView.findViewById(R.id.btn_set) //编辑待办button
 //        moveItem = dialogView.findViewById(R.id.btn_move) //排序或移动待办button
         deleteItem = dialogView.findViewById(R.id.btn_delete) //删除待办button
