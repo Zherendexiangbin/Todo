@@ -119,6 +119,7 @@ class RecordFragment : Fragment() {
         dataDateTxt!!.text = dateTimeDay.localFormat()
         setPieChartData(pieEntries, colors)
         pieChart!!.notifyDataSetChanged()
+//        pieChart!!.invalidate()
     }
 
     private fun week(statisticsVo : StatisticVo, dateTimeDay : LocalDateTime) {
@@ -133,6 +134,7 @@ class RecordFragment : Fragment() {
         dataDateTxt!!.text = dateTimeDay.weekString()
         setPieChartData(pieEntries, colors)
         pieChart!!.notifyDataSetChanged()
+//        pieChart!!.invalidate()
     }
 
     private fun month(statisticsVo : StatisticVo, dateTimeDay : LocalDateTime) {
@@ -147,6 +149,7 @@ class RecordFragment : Fragment() {
         dataDateTxt!!.text = dateTimeDay.monthString()
         setPieChartData(pieEntries, colors)
         pieChart!!.notifyDataSetChanged()
+//        pieChart!!.invalidate()
     }
 
 
@@ -478,7 +481,7 @@ class RecordFragment : Fragment() {
             binding.emptyData.visibility = View.VISIBLE
             pieChart?.visibility = View.INVISIBLE
         }else{
-            binding.emptyData.visibility = View.INVISIBLE
+//            binding.emptyData.visibility = View.GONE
             pieChart?.visibility = View.VISIBLE
 
             val pieDataSet = PieDataSet(yVals, "")
@@ -518,6 +521,10 @@ class RecordFragment : Fragment() {
 //            legend.formSize = 15f
 //            legend.textSize = 15f
             legend.textColor=Color.BLACK
+
+            pieDataSet.notifyDataSetChanged()
+            pieChart!!.notifyDataSetChanged()
+
         }
     }
 
