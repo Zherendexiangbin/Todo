@@ -16,9 +16,9 @@ import com.bumptech.glide.Glide
 import net.onest.time.MainActivity
 import net.onest.time.R
 import net.onest.time.api.UserApi
+import net.onest.time.components.AccountListDialogBuilder
 import net.onest.time.constant.SharedPreferencesConstant
 import net.onest.time.databinding.PersonFragmentBinding
-import net.onest.time.navigation.activity.AccountActivity
 import net.onest.time.navigation.activity.PersonEditActivity
 import net.onest.time.utils.applicationContext
 import net.onest.time.utils.withOnClickInfoDialog
@@ -64,9 +64,13 @@ class PersonFragment : Fragment() {
 
         //切换账号:
         change!!.setOnClickListener {
-            val intent = Intent(requireContext(), AccountActivity::class.java)
-            requireContext().startActivity(intent)
+            AccountListDialogBuilder(requireActivity())
+                .show()
+
+//            val intent = Intent(requireContext(), AccountActivity::class.java)
+//            requireContext().startActivity(intent)
         }
+
         //退出登录:
         exit!!.setOnClickListener {
             removeToken()
