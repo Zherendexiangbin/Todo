@@ -225,7 +225,10 @@ public class StopClockDialog extends AlertDialog {
                 //提前完成之正向计时:
 
                 //提前完成之倒计时:
-                circleTimer.setValue(0);
+                circleTimer.setMaximumTime(0);
+                circleTimer.setInitPosition(1);
+                circleTimer.start();
+                StopClockDialog.this.dismiss();
             }
         });
         //取消
