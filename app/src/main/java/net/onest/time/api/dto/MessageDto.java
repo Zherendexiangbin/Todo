@@ -6,6 +6,16 @@ public class MessageDto {
     private Long toRoomId;
     private String content;
 
+    private Integer type;
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     public Long getFromUserId() {
         return fromUserId;
     }
@@ -45,6 +55,7 @@ public class MessageDto {
                 ", toUserId=" + toUserId +
                 ", toRoomId=" + toRoomId +
                 ", content='" + content + '\'' +
+                ", type=" + type +
                 '}';
     }
 }

@@ -116,7 +116,7 @@ class RecordFragment : Fragment() {
             ColorUtil.getColorByRgb(null)
         }
 
-        dataDateTxt!!.text = dateTimeDay.localFormat()
+        dataDateTxt!!.text = dateTimeDay.dayString()
         setPieChartData(pieEntries, colors)
         pieChart!!.notifyDataSetChanged()
 //        pieChart!!.invalidate()
