@@ -17,9 +17,9 @@ import net.onest.time.AccountSafeActivity
 import net.onest.time.MainActivity
 import net.onest.time.R
 import net.onest.time.api.UserApi
+import net.onest.time.components.AccountListDialogBuilder
 import net.onest.time.constant.SharedPreferencesConstant
 import net.onest.time.databinding.PersonFragmentBinding
-import net.onest.time.navigation.activity.AccountActivity
 import net.onest.time.navigation.activity.PersonEditActivity
 import net.onest.time.utils.applicationContext
 import net.onest.time.utils.withOnClickInfoDialog
@@ -65,9 +65,10 @@ class PersonFragment : Fragment() {
 
         //切换账号:
         change!!.setOnClickListener {
-            val intent = Intent(requireContext(), AccountActivity::class.java)
-            requireContext().startActivity(intent)
+            AccountListDialogBuilder(requireActivity())
+                .show()
         }
+
         //退出登录:
         exit!!.setOnClickListener {
             removeToken()
@@ -78,13 +79,13 @@ class PersonFragment : Fragment() {
         }
 
         // 设置弹窗
-        binding.accountAndSecurity!!.setOnClickListener {
+        binding.accountAndSecurity.setOnClickListener {
             val intent = Intent(requireContext(),AccountSafeActivity::class.java)
             requireContext().startActivity(intent)
         }
-//        binding.accountAndSecurity.withOnClickInfoDialog()
-//        binding.bindPhone.withOnClickInfoDialog()
+
         binding.accessibility.withOnClickInfoDialog()
+
         binding.privacyPolicySummary.withOnClickInfoDialog()
         binding.commonProblem.withOnClickInfoDialog()
         binding.feedback.withOnClickInfoDialog()

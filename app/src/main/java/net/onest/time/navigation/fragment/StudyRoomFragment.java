@@ -69,7 +69,7 @@ public class StudyRoomFragment extends Fragment {
     private List<UserVo> userVos;
     private RecyclerView recyclerView;
     private Button btnMenu, btnAdd;
-    private Boolean isMaster = false;//是否为房间创建者
+    private Boolean isMaster;//是否为房间创建者
     private static final int REQUEST_CODE = 1;
     private static final int INTENT_CODE = 1;
 
@@ -82,6 +82,7 @@ public class StudyRoomFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view =  inflater.inflate(R.layout.study_room_fragment, container, false);
+        isMaster = false;
         userVo = UserApi.getUserInfo();
         userVos = new ArrayList<>();
         avatarString = userVo.getAvatar();
@@ -104,16 +105,22 @@ public class StudyRoomFragment extends Fragment {
                 roomName.setText(roomVo.getRoomName());
                 btnMenu.setVisibility(View.VISIBLE);
                 roomManager.setVisibility(View.VISIBLE);
-                roomManager.setText("管理员：" + userVo.getUserName());
 
                 itemAdapter.updateData(userVos);
 
-                if (!isMaster){
+                if (roomVo.getUserId().equals(userVo.getUserId())){
+                    this.isMaster = true;
+                    roomManager.setText("管理员");
+                    btnMenu.setVisibility(View.VISIBLE);
+                    btnAdd.setHint("dissolution");
+                    btnAdd.setBackgroundResource(R.mipmap.quit);
+                }else {
+                    isMaster =false;
+                    roomManager.setText("成员");
                     btnMenu.setVisibility(View.GONE);
+                    btnAdd.setHint("quit");
+                    btnAdd.setBackgroundResource(R.mipmap.quit);
                 }
-
-                btnAdd.setHint("dissolution");
-                btnAdd.setBackgroundResource(R.mipmap.quit);
             }
         }catch (Exception e){
 
@@ -128,7 +135,6 @@ public class StudyRoomFragment extends Fragment {
         //跳转至聊天
         roomChat.setOnClickListener(view1 -> {
             Intent intent = new Intent(getActivity(), StudyRoomChatActivity.class);
-            intent.putExtra("roomId", "1111");
             startActivity(intent);
         });
         //刷新自习室信息
@@ -180,6 +186,7 @@ public class StudyRoomFragment extends Fragment {
 
                                         roomAvatar.setImageResource(R.mipmap.logo);
                                         roomName.setText("时光自习室");
+                                        isMaster = false;
                                         roomManager.setVisibility(View.GONE);
                                         btnMenu.setVisibility(View.GONE);
                                         Toast.makeText(getContext(), "解散成功！", Toast.LENGTH_SHORT).show();
@@ -203,6 +210,7 @@ public class StudyRoomFragment extends Fragment {
                                 itemAdapter.updateData(userVos);
 
                                 roomName.setText("时光自习室");
+                                isMaster = false;
                                 roomManager.setVisibility(View.GONE);
                                 btnMenu.setVisibility(View.GONE);
                                 Toast.makeText(getContext(), "退出成功！", Toast.LENGTH_SHORT).show();
@@ -378,7 +386,7 @@ public class StudyRoomFragment extends Fragment {
                                         }
                                         //设置自习室管理员
                                         roomManager.setVisibility(View.VISIBLE);
-                                        roomManager.setText("管理员：" + userVo.getUserName());
+                                        roomManager.setText("管理员");
                                         //设置自习室头像
 
                                         Glide.with(getContext())
@@ -386,6 +394,7 @@ public class StudyRoomFragment extends Fragment {
                                                 .into(roomAvatar);
                                         roomDto.setRoomAvatar(avatarString);
 
+                                        isMaster = true;
                                         btnMenu.setVisibility(View.VISIBLE);
                                         btnAdd.setBackgroundResource(R.mipmap.quit);
                                         btnAdd.setHint("dissolution");
@@ -428,7 +437,16 @@ public class StudyRoomFragment extends Fragment {
                                     //获取加入的自习室信息
 
                                     roomVo = RoomApi.getRoomInfo();
-                                    btnMenu.setVisibility(View.VISIBLE);
+                                    Glide.with(getContext())
+                                            .load(roomVo.getRoomAvatar())
+                                            .into(roomAvatar);
+                                    roomName.setText(roomVo.getRoomName());
+                                    roomManager.setText("成员");
+
+                                    isMaster = false;
+                                    btnMenu.setVisibility(View.GONE);
+                                    btnAdd.setBackgroundResource(R.mipmap.quit);
+                                    btnAdd.setHint("quit");
                                     dismiss();
                                     Toast.makeText(getContext(), "加入成功！", Toast.LENGTH_SHORT).show();
                                 }
@@ -595,10 +613,12 @@ public class StudyRoomFragment extends Fragment {
                 .load(roomVo.getRoomAvatar())
                 .into(roomAvatar);
         roomName.setText(roomVo.getRoomName());
-        roomManager.setText("管理员：" + userVo.getUserName());
+        roomManager.setText("成员");
 
-        btnAdd.setBackgroundResource(R.mipmap.add3);
-        btnAdd.setHint("add");
+        isMaster = false;
+        btnMenu.setVisibility(View.GONE);
+        btnAdd.setBackgroundResource(R.mipmap.quit);
+        btnAdd.setHint("quit");
 
         Toast.makeText(getContext(), "加入成功", Toast.LENGTH_SHORT).show();
     }

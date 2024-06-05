@@ -165,6 +165,8 @@ class ListFragmentGroupAdapter(
                 toast.show()
             }
             color.setBackgroundColor(groupBean.color)
+
+            arrow.isClickable = false
         }
     }
 

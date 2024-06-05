@@ -195,6 +195,7 @@
                 android:layout_height="1sp"
                 android:background="@color/lightgrey"/>
             <TextView
+                android:id="@+id/general"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@mipmap/arrow_right"
