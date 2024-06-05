@@ -25,24 +25,9 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:background="@drawable/add_todo"/>
-            <Button
-                android:id="@+id/list_fragment_menu_btn"
-                android:layout_width="33dp"
-                android:layout_height="33dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/menu1"/>
         </LinearLayout>
     </RelativeLayout>
 
-<!--    <ExpandableListView-->
-<!--        android:id="@+id/list_fragment_backlog"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:scrollbars="none"-->
-<!--        android:groupIndicator="@null"-->
-<!--        android:descendantFocusability="beforeDescendants"-->
-<!--        android:listSelector="@android:color/transparent"/>-->
-<!--    android:groupIndicator="@drawable/list_fragment_expandbale_view_arrow"-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_fragment_backlog"
         android:layout_width="match_parent"

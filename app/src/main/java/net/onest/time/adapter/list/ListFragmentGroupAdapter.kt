@@ -47,18 +47,12 @@ class ListFragmentGroupAdapter(
         TaskVo?,
         GroupVH?,
         ChildVH?>() {
-//    private var taskCategoryGroupBeanList: MutableList<TaskCategoryVo>
     lateinit var parentBinding: ListFragmentExpandableParentListBinding
     lateinit var childBinding: ListFragmentExpandableChildListBinding
 
     private var intent: Intent? = null
 
     init {
-//        taskCategoryGroupBeanList =
-//            taskCategoryList.map {
-//                TaskCategoryVo(it.taskVos!!, it.categoryId!!, it.categoryName!!, it.color!!)
-//            }.toMutableList()
-
 
         this.setListener(object :
             ExpandableRecyclerViewOnClickListener<TaskCategoryVo, TaskVo?> {
@@ -158,11 +152,6 @@ class ListFragmentGroupAdapter(
                         )
                     )
                 }
-            }
-            dataBtn.setOnClickListener {
-                val toast = Toast.makeText(context, "该功能尚未完善😙", Toast.LENGTH_SHORT)
-                toast.setGravity(Gravity.TOP, 0, 0)
-                toast.show()
             }
             color.setBackgroundColor(groupBean.color)
 
@@ -264,7 +253,6 @@ class ListFragmentGroupAdapter(
     inner class GroupVH(itemView: View?) : BaseGroupViewHolder(itemView) {
         val nameTv = parentBinding.listFragmentParentItemName
         val addBtn = parentBinding.listFragmentParentAdd
-        val dataBtn = parentBinding.listFragmentParentData
         val color = parentBinding.listFragmentParentItemColor
         val arrow = parentBinding.listFragmentParentArrow
 

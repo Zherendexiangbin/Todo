@@ -12,12 +12,17 @@ import net.onest.time.R
 import net.onest.time.api.vo.UserVo
 import net.onest.time.databinding.ItemRankingBinding
 import net.onest.time.utils.withOnClickInfoDialog
+import java.util.Comparator
 
 class RankingAdapter(
     var context: Context,
     var rankingList: MutableList<UserVo>,
 ) : RecyclerView.Adapter<RankingAdapter.ViewHolder>() {
     private lateinit var binding: ItemRankingBinding
+
+    init {
+        rankingList.sortWith(Comparator.comparing(UserVo::getTomatoDuration).reversed())
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ranking = binding.ranking
