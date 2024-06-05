@@ -3,6 +3,7 @@ package net.onest.time;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -13,14 +14,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.lxj.xpopup.XPopup;
+
 import net.onest.time.api.UserApi;
 import net.onest.time.api.dto.UserDto;
 import net.onest.time.api.vo.UserVo;
 
 public class AccountSafeActivity extends AppCompatActivity {
-    private Button back,modify,sendVerify,sign;
-    private EditText passwordOne,passwordTwo,verification;
-    private RelativeLayout modifyPass,logOut;
+    private Button back, modify, sendVerify, sign;
+    private EditText passwordOne, passwordTwo, verification;
+    private RelativeLayout modifyPass, logOut;
     private LinearLayout modifyPage;
     private UserVo userVo;
     private String codeKey;
@@ -46,11 +50,11 @@ public class AccountSafeActivity extends AppCompatActivity {
             @SuppressLint("UseCompatLoadingForDrawables")
             @Override
             public void onClick(View v) {
-                if(modifyPage.getVisibility()==View.GONE){
+                if (modifyPage.getVisibility() == View.GONE) {
                     modifyPage.setVisibility(View.VISIBLE);
                     sign.setBackground(getResources().getDrawable(R.drawable.arrow_down2));
 
-                }else{
+                } else {
                     modifyPage.setVisibility((View.GONE));
                     sign.setBackground(getResources().getDrawable(R.drawable.right_arrow));
                 }
@@ -62,13 +66,13 @@ public class AccountSafeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 codeKey = UserApi.getEmailCodeKey(userVo.getEmail());
-                Toast.makeText(AccountSafeActivity.this, "你的验证码是 " + codeKey , Toast.LENGTH_SHORT).show();
-                new CountDownTimer(60000,1000){
+                Toast.makeText(AccountSafeActivity.this, "你的验证码是 " + codeKey, Toast.LENGTH_SHORT).show();
+                new CountDownTimer(60000, 1000) {
 
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        sendVerify.setText(millisUntilFinished+"");
+                        sendVerify.setText(millisUntilFinished + "");
                     }
 
                     @Override
@@ -80,25 +84,29 @@ public class AccountSafeActivity extends AppCompatActivity {
         });
 
         //注销账户
-        logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UserApi.logout();
-                Intent intent = new Intent(AccountSafeActivity.this,MainActivity.class);
-                startActivity(intent);
-            }
-        });
-        
+        logOut.setOnClickListener(v -> new MaterialAlertDialogBuilder(AccountSafeActivity.this)
+                .setTitle("注销账号")
+                .setMessage("是否注销账号？")
+                .setCancelable(true)
+                .setPositiveButton("确定", (dialog, which) -> {
+                    UserApi.logout();
+                    Intent intent = new Intent(AccountSafeActivity.this, MainActivity.class);
+                    startActivity(intent);
+                })
+                .setNegativeButton("取消", null)
+                .show()
+        );
+
         //修改密码:
         modify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(verification.getText().toString().isEmpty()){
+                if (verification.getText().toString().isEmpty()) {
                     Toast.makeText(AccountSafeActivity.this, "验证码已发送至QQ邮箱，请填写~", Toast.LENGTH_SHORT).show();
-                }else if(passwordOne.getText().toString().trim().isEmpty()||
-                        !passwordOne.getText().toString().trim().equals(passwordTwo.getText().toString().trim())){
+                } else if (passwordOne.getText().toString().trim().isEmpty() ||
+                        !passwordOne.getText().toString().trim().equals(passwordTwo.getText().toString().trim())) {
                     Toast.makeText(AccountSafeActivity.this, "两次密码不一致！请确定~", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     UserDto userDto = new UserDto();
                     userDto.setPassword(passwordOne.getText().toString().trim());
                     userDto.setConfirmPassword(passwordTwo.getText().toString().trim());
@@ -107,7 +115,7 @@ public class AccountSafeActivity extends AppCompatActivity {
                     UserApi.modifyPassword(userDto);
                     Toast.makeText(AccountSafeActivity.this, "修改成功😊", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(AccountSafeActivity.this,MainActivity.class);
+                    Intent intent = new Intent(AccountSafeActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
             }

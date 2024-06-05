@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AccountSafeActivity"
-    android:background="@color/white"
+    android:background="@drawable/gradual_color_change_background"
     android:orientation="vertical"
     android:fitsSystemWindows="true">
     <RelativeLayout
@@ -13,8 +13,8 @@
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/back"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:background="@mipmap/arrow_left"/>
         <TextView
             android:layout_width="wrap_content"
@@ -26,15 +26,22 @@
             android:layout_centerInParent="true"
             android:padding="5dp"/>
     </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/gray"
+        android:layout_marginTop="5dp"/>
     <RelativeLayout
         android:id="@+id/modify_password"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="修改密码"
             android:textSize="22dp"
+            android:textStyle="bold"
             android:layout_marginLeft="10dp"/>
         <Button
             android:id="@+id/sign"
@@ -79,6 +86,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/button_wheat"
                 android:text="验证码"/>
         </LinearLayout>
         <android.widget.Button
@@ -86,17 +94,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@drawable/button_wheat"
             android:text="修改密码"/>
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/gray"
+        android:layout_marginTop="10dp"/>
     <RelativeLayout
         android:id="@+id/log_out"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="注销账户"
+            android:text="注销账号"
             android:textSize="22dp"
+            android:textStyle="bold"
             android:layout_marginLeft="10dp"/>
         <Button
             android:layout_width="35dp"
