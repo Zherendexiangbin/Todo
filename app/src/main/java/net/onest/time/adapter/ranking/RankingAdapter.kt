@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import net.onest.time.R
 import net.onest.time.api.vo.UserVo
 import net.onest.time.databinding.ItemRankingBinding
+import net.onest.time.utils.withOnClickInfoDialog
 
 class RankingAdapter(
     var context: Context,
@@ -54,6 +55,8 @@ class RankingAdapter(
         Glide.with(context)
             .load(userVo.avatar)
             .into(holder.avatar)
+
+        holder.itemView.withOnClickInfoDialog(message = userVo.toString())
     }
 
 }

@@ -1,6 +1,8 @@
 package net.onest.time.api.vo;
 
-public class RoomVo {
+import java.io.Serializable;
+
+public class RoomVo implements Serializable {
     private Long roomId;
     private Long userId;
     private String roomName;
