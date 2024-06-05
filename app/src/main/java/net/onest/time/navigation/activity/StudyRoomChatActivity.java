@@ -21,6 +21,8 @@ import net.onest.time.adapter.studyroom.ChatMsgAdapter;
 import net.onest.time.api.ChatApi;
 import net.onest.time.api.RoomApi;
 import net.onest.time.api.UserApi;
+import net.onest.time.api.dto.MessageDto;
+import net.onest.time.api.utils.MessageListener;
 import net.onest.time.api.vo.Message;
 import net.onest.time.api.vo.MessageVo;
 import net.onest.time.api.vo.Page;
@@ -39,6 +41,7 @@ public class StudyRoomChatActivity extends AppCompatActivity {
     private RoomVo roomVo;
     private Button btnBack, btnSend;
     private TextView roomName;
+    private MessageListener messageListener;
     private Page<MessageVo> historyMessagesList = new Page<>();
     private int pageNum = 1;
     private List<MessageVo> messagesList = new ArrayList<>();
@@ -56,14 +59,23 @@ public class StudyRoomChatActivity extends AppCompatActivity {
         roomVo = RoomApi.getRoomInfo();
         findView();
         initData();
+        ChatApi.connectRoom(roomVo.getRoomId(), messageListener);
         setListeners();
         setKeyboardListener();
     }
 
     private void initData(){
+        try {
+            historyMessagesList = ChatApi.findRoomMessagePage(1, 10, roomVo.getRoomId(), System.currentTimeMillis());
+            if(historyMessagesList != null){
+                messagesList = historyMessagesList.getRecords();
+            }else {
+                messagesList = new ArrayList<>();
+            }
+        }catch (Exception e){
 
-        historyMessagesList = ChatApi.findRoomMessagePage(1, 10, roomVo.getRoomId(), System.currentTimeMillis());
-        messagesList = historyMessagesList.getRecords();
+        }
+        messageListener = new MessageListener(messagesList);
         //绑定适配器
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         messagesView.setLayoutManager(layoutManager);
@@ -80,12 +92,17 @@ public class StudyRoomChatActivity extends AppCompatActivity {
             if (editMessage.getText().toString().isEmpty()){
                 Toast.makeText(this, "发送消息不可为空", Toast.LENGTH_SHORT).show();
             }else {
-                MessageVo message = new MessageVo();
-                message.setFromUserId(userVo.getUserId());
-                message.setContent(editMessage.getText().toString());
-                message.setSendTime(new Date(System.currentTimeMillis()));
-                messagesList.add(message);
-                chatMsgAdapter.updateData(messagesList);
+//                MessageVo message = new MessageVo();
+//                message.setFromUserId(userVo.getUserId());
+//                message.setContent(editMessage.getText().toString());
+//                message.setSendTime(new Date(System.currentTimeMillis()));
+//                messagesList.add(message);
+//                chatMsgAdapter.updateData(messagesList);
+//                editMessage.setText("");
+                MessageDto sendMessage = new MessageDto();
+                sendMessage.setToRoomId(roomVo.getRoomId());
+                sendMessage.setContent(editMessage.getText().toString());
+                ChatApi.sendMessage(sendMessage);
                 editMessage.setText("");
             }
         });
