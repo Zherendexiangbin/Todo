@@ -47,6 +47,8 @@ import net.onest.time.databinding.RecordFragmentBinding
 import net.onest.time.navigation.activity.RankingListActivity
 import net.onest.time.utils.*
 import okhttp3.internal.wait
+import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.SortedMap
@@ -86,7 +88,7 @@ class RecordFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         try {
-            statisticsVo = StatisticApi.statistic()
+            statisticsVo = StatisticApi.statistic(Instant.now().toEpochMilli())
             statisticsVoWeek = statisticsVo
             statisticsVoMonth = statisticsVo
         } catch (e: RuntimeException) {
