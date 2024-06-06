@@ -42,9 +42,6 @@
             android:name=".AccountSafeActivity"
             android:exported="false" />
         <activity
-            android:name=".navigation.activity.AccountActivity"
-            android:exported="false" />
-        <activity
             android:name=".navigation.activity.RankingListActivity"
             android:exported="false" />
         <activity

@@ -8,7 +8,7 @@ public class MessageVo {
     private Long toUserId;
     private Long toRoomId;
     private String content;
-    private Integer type;
+    private Integer type;   // 0 --> text  1 --> image
     private Date sendTime;
     private String fromUserName;
     private String fromUserAvatar;
