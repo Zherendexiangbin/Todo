@@ -8,7 +8,6 @@ public class TomatoClockVo implements Serializable {
     private Long clockId;
     private Long taskId;
     private Long parentId;
-    private Integer sequence;
     private Integer clockDuration;
     private Integer clockStatus;
     private String stopReason;
@@ -56,14 +55,6 @@ public class TomatoClockVo implements Serializable {
         this.taskId = taskId;
     }
 
-    public Integer getSequence() {
-        return sequence;
-    }
-
-    public void setSequence(Integer sequence) {
-        this.sequence = sequence;
-    }
-
     public Status getClockStatus() {
         return of(clockStatus);
     }
@@ -103,7 +94,6 @@ public class TomatoClockVo implements Serializable {
                 "clockId=" + clockId +
                 ", taskId=" + taskId +
                 ", parentId=" + parentId +
-                ", sequence=" + sequence +
                 ", clockDuration=" + clockDuration +
                 ", clockStatus=" + clockStatus +
                 ", stopReason='" + stopReason + '\'' +

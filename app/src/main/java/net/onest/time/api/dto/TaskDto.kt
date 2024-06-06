@@ -22,7 +22,6 @@ class TaskDto {
 
     var categoryId: Long? = null
 
-    var tomatoClockTimes: Int? = null
     var tomatoClocks: ArrayList<TomatoClock>? = null
 
     var stopTimes: Int? = null
@@ -46,7 +45,6 @@ class TaskDto {
         restTime = 5
         again = 0
         categoryId = null
-        tomatoClockTimes = 1
         tomatoClocks = ArrayList()
         stopTimes = 0
         taskStatus = 0
