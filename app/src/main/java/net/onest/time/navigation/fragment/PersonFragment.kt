@@ -10,9 +10,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Switch
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import net.onest.time.AccountSafeActivity
 import net.onest.time.MainActivity
 import net.onest.time.R
@@ -59,6 +61,7 @@ class PersonFragment : Fragment() {
         return view
     }
 
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private fun setListeners() {
         //点击进入用户信息编辑页面
         userEdit!!.setOnClickListener { view: View? ->
@@ -93,11 +96,30 @@ class PersonFragment : Fragment() {
             requireContext().startActivity(intent)
         }
 
-        binding.accessibility.withOnClickInfoDialog("辅助功能")
-        binding.general.withOnClickInfoDialog("通用")
+//        binding.accessibility.withOnClickInfoDialog("辅助功能")
+//        binding.general.withOnClickInfoDialog("通用")
         binding.commonProblem.withOnClickInfoDialog("常见问题")
         binding.feedback.withOnClickInfoDialog("意见反馈")
         binding.aboutUs.withOnClickInfoDialog("关于时光")
+
+        binding.general.setOnClickListener{
+            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val generalView = inflater.inflate(R.layout.activity_general_switch_page, null)
+//            val switch = view.findViewById<Switch>(R.id.message_remind_switch)
+            MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("通用")
+                    .setView(generalView)
+                    .show()
+        }
+
+        binding.accessibility.setOnClickListener{
+            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val accessibilityView = inflater.inflate(R.layout.activity_accessibilty_switch_page, null)
+            MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("辅助功能")
+                    .setView(accessibilityView)
+                    .show()
+        }
     }
 
     /**
@@ -160,7 +182,7 @@ class PersonFragment : Fragment() {
 
         change = view.findViewById(R.id.btn_change)
         exit = view.findViewById(R.id.btn_exit)
-
+        general = view.findViewById(R.id.general)
         privacy = view.findViewById(R.id.privacy_policy_summary);
     }
 
