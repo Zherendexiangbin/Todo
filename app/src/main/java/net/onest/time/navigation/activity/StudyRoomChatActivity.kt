@@ -174,6 +174,8 @@ class StudyRoomChatActivity : AppCompatActivity() {
         messagesView!!.layoutManager = layoutManager
         chatMsgAdapter = ChatMsgAdapter(this, messagesList, userVo!!.userId)
         messagesView!!.adapter = chatMsgAdapter
+
+        messagesView!!.scrollToPosition(chatMsgAdapter!!.itemCount-1)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
