@@ -82,14 +82,17 @@ fun Bitmap.saveBitmapGallery(): Uri? {
     return insert
 }
 
-fun Bitmap.saveBitmapCache(path: String): Uri {
+fun Bitmap.saveBitmapCache(
+    path: String,
+    fileName: String = "${System.currentTimeMillis()}.png"
+): Uri {
     var file = File(path)
 
     if (!file.exists() && !file.mkdirs()) {
         throw RuntimeException("创建目录失败")
     }
 
-    file = File(file, "${LocalDate.now()}.jpg")
+    file = File(file, fileName)
 
     file.outputStream().use {
         this.compress(Bitmap.CompressFormat.JPEG, 100, it)

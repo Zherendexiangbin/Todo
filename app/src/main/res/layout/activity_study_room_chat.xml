@@ -83,11 +83,17 @@
         </LinearLayout>
         <LinearLayout
             android:id="@+id/tools"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginBottom="10dp"
             android:orientation="horizontal">
+            <Button
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="16dp"
+                    android:id="@+id/camera"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@android:drawable/ic_menu_camera" />
             <Button
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="16dp"
@@ -101,7 +107,7 @@
                     android:id="@+id/check_in"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:background="@drawable/checkin_test"/>
+                    android:background="@drawable/checkin"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

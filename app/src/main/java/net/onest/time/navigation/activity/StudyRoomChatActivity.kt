@@ -2,6 +2,7 @@ package net.onest.time.navigation.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
@@ -39,6 +40,9 @@ import net.onest.time.constant.SharedPreferencesConstant
 import net.onest.time.constant.UserInfoConstant
 import net.onest.time.databinding.ActivityStudyRoomChatBinding
 import net.onest.time.entity.CheckIn
+import net.onest.time.utils.createBitmap
+import net.onest.time.utils.saveBitmapCache
+import net.onest.time.utils.saveBitmapGallery
 import net.onest.time.utils.showToast
 import okhttp3.WebSocket
 import java.io.File
@@ -64,6 +68,21 @@ class StudyRoomChatActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("Range")
+    private val cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        (it.data?.extras?.get("data") as Bitmap).run {
+            val path = "${this@StudyRoomChatActivity.externalCacheDir}/room/images"
+            val fileName = "${System.currentTimeMillis()}.png"
+            File(path).apply {
+                if (!exists() && !mkdirs()) {
+                    "创建文件失败".showToast()
+                }
+            }
+
+            this.saveBitmapCache(path, fileName)
+            sendImage("$path/$fileName")
+        }
+    }
+    @RequiresApi(Build.VERSION_CODES.Q)
     private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         it.data?.data?.run {
             val filePathColumn = arrayOf(MediaStore.Images.Media.DISPLAY_NAME)
@@ -73,7 +92,7 @@ class StudyRoomChatActivity : AppCompatActivity() {
                 cursor.moveToFirst()
                 val fileName = cursor.getString(0)
                 val path = "${this@StudyRoomChatActivity.externalCacheDir}/room/images"
-                val file = File(path).apply {
+                File(path).apply {
                     if (!exists() && !mkdirs()) {
                         "创建文件失败".showToast()
                     }
@@ -83,16 +102,22 @@ class StudyRoomChatActivity : AppCompatActivity() {
                 val outputStream = FileOutputStream("$path/$fileName")
                 inputStream?.run {
                     FileUtils.copy(inputStream, outputStream)
-                    val url = UserApi.uploadAvatar("$path/$fileName")
-                    val messageDto = MessageDto()
-                    messageDto.toRoomId = roomVo!!.roomId
-                    messageDto.content = url
-                    messageDto.type = 1
-
-                    ChatApi.sendMessage(messageDto)
+                    sendImage("$path/$fileName")
                 }
             }
         }
+    }
+
+    private fun sendImage(file: String) {
+        val url = UserApi.uploadAvatar(file)
+        val messageDto = MessageDto()
+        messageDto.toRoomId = roomVo!!.roomId
+        messageDto.content = url
+        messageDto.type = 1
+
+        ChatApi.sendMessage(messageDto)
+
+        messagesView?.scrollToPosition(chatMsgAdapter!!.itemCount)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -118,7 +143,6 @@ class StudyRoomChatActivity : AppCompatActivity() {
                     super.onMessage(webSocket, text)
                     runOnUiThread {
                         chatMsgAdapter!!.notifyItemInserted(messagesList.size)
-                        messagesView!!.smoothScrollToPosition(RecyclerView.SCROLL_INDICATOR_BOTTOM)
                     }
                 }
             }
@@ -150,7 +174,6 @@ class StudyRoomChatActivity : AppCompatActivity() {
         messagesView!!.layoutManager = layoutManager
         chatMsgAdapter = ChatMsgAdapter(this, messagesList, userVo!!.userId)
         messagesView!!.adapter = chatMsgAdapter
-        messagesView!!.scrollToPosition(messagesList.size - 1)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -182,7 +205,23 @@ class StudyRoomChatActivity : AppCompatActivity() {
                 statistic.tomatoDuration.toDouble(),
                 statistic.ratioByDurationOfDay
             )
-            CheckInDialog(this, checkInData)
+            val checkInDialog = CheckInDialog(this, checkInData)
+            checkInDialog.setSendImageConsumer {
+                val path = "${this@StudyRoomChatActivity.externalCacheDir}/room/images"
+                val fileName = "${System.currentTimeMillis()}.png"
+                it.saveBitmapCache(path, fileName)
+                    .run {
+                        sendImage("$path/$fileName")
+                    }
+            }
+        }
+
+        // 拍照发送
+        binding.camera.setOnClickListener {
+            // 打开相册发送图片
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+            cameraLauncher.launch(intent)
         }
 
         // 发送图片
@@ -199,7 +238,6 @@ class StudyRoomChatActivity : AppCompatActivity() {
             if (binding.tools.visibility == View.VISIBLE) {
                 binding.tools.visibility = View.GONE
             } else {
-                messagesView!!.scrollToPosition(messagesList.size - 1)
                 binding.tools.visibility = View.VISIBLE
             }
         }
