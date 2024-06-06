@@ -26,7 +26,7 @@ class RankingListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRankingListBinding.inflate(LayoutInflater.from(this), null, false)
         setContentView(binding.root)
-
+        
         binding.date.text = LocalDate.now().localFormat()
 
         val loadingView = LoadingView(this)

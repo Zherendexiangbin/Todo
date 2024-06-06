@@ -50,40 +50,24 @@ public class StopClockDialog extends AlertDialog {
     private TextView abandon;
     private TextView advance;
     private TextView cancel;
+    private TextView advanceAll;
     private TaskVo taskVo;
     private List<TomatoClockVo> tomatoClockVos = new ArrayList<>();
-    private int num;
 
     private CountDownTimer countDownTimer;
     private CircleTimer circleTimer;
 
-//    public StopClockDialog(@NonNull Context context) {
-//        super(context);
-//
-//        View view = LayoutInflater.from(context).inflate(R.layout.timer_activity_stop_pop,null);
-//
-//        abandon = view.findViewById(R.id.abandon_btn);
-//        advance = view.findViewById(R.id.advance_btn);
-//        cancel = view.findViewById(R.id.cancel_btn);
-//
-//        setListeners();
-//
-//        show();
-//        getWindow().setContentView(view);
-//        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//
-//    }
 
     public StopClockDialog(@NonNull Context context,TaskVo taskVo,List<TomatoClockVo> tomatoClockVos){
         super(context);
         this.taskVo = taskVo;
         this.tomatoClockVos = tomatoClockVos;
-        this.num = num;
         View view = LayoutInflater.from(context).inflate(R.layout.timer_activity_stop_pop,null);
 
         abandon = view.findViewById(R.id.abandon_btn);
         advance = view.findViewById(R.id.advance_btn);
         cancel = view.findViewById(R.id.cancel_btn);
+        advanceAll = view.findViewById(R.id.advance_all_btn);
 
         setListeners();
 
@@ -92,15 +76,23 @@ public class StopClockDialog extends AlertDialog {
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
-    public StopClockDialog(@NonNull Context context,TaskVo taskVo,CircleTimer circleTimer){
+    public StopClockDialog(@NonNull Context context,TaskVo taskVo,CircleTimer circleTimer,List<TomatoClockVo> tomatoClockVos){
         super(context);
         this.taskVo = taskVo;
         this.circleTimer = circleTimer;
+        this.tomatoClockVos = tomatoClockVos;
         View view = LayoutInflater.from(context).inflate(R.layout.timer_activity_stop_pop,null);
 
         abandon = view.findViewById(R.id.abandon_btn);
         advance = view.findViewById(R.id.advance_btn);
         cancel = view.findViewById(R.id.cancel_btn);
+        advanceAll = view.findViewById(R.id.advance_all_btn);
+
+        if(tomatoClockVos.size()==1){
+            advanceAll.setVisibility(View.GONE);
+        }else{
+            advanceAll.setVisibility(View.VISIBLE);
+        }
 
         setListeners();
 
@@ -109,157 +101,119 @@ public class StopClockDialog extends AlertDialog {
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
-    public StopClockDialog(@NonNull Context context, TaskVo taskVo){
-        super(context);
-        this.taskVo = taskVo;
-        View view = LayoutInflater.from(context).inflate(R.layout.timer_activity_stop_pop,null);
-
-        abandon = view.findViewById(R.id.abandon_btn);
-        advance = view.findViewById(R.id.advance_btn);
-        cancel = view.findViewById(R.id.cancel_btn);
-
-        setListeners();
-
-        show();
-        getWindow().setContentView(view);
-        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-    }
 
     private void setListeners() {
         //放弃当前计时
-        abandon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                StopClockDialog.this.dismiss();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.CustomDialogStyle);
-                LayoutInflater inflater = LayoutInflater.from(getContext());
-                View dialogViewAban = inflater.inflate(R.layout.timer_activity_abandon,null);
-                final Dialog dialogAban = builder.create();
-                dialogAban.show();
-                dialogAban.getWindow().setContentView(dialogViewAban);
-                dialogAban.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        abandon.setOnClickListener(v -> {
+            StopClockDialog.this.dismiss();
+            Builder builder = new Builder(getContext(),R.style.CustomDialogStyle);
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            View dialogViewAban = inflater.inflate(R.layout.timer_activity_abandon,null);
+            final Dialog dialogAban = builder.create();
+            dialogAban.show();
+            dialogAban.getWindow().setContentView(dialogViewAban);
+            dialogAban.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                TextView abandonYes = dialogViewAban.findViewById(R.id.timer_activity_abandon_yes);
-                Button abandonNo = dialogViewAban.findViewById(R.id.timer_activity_abandon_no);
-                TextInputEditText abandonReason = dialogViewAban.findViewById(R.id.abandon_reason);
-                PieChart abandonReasonChart = dialogAban.findViewById(R.id.abandon_reason_pie_chart);
+            TextView abandonYes = dialogViewAban.findViewById(R.id.timer_activity_abandon_yes);
+            Button abandonNo = dialogViewAban.findViewById(R.id.timer_activity_abandon_no);
+            TextInputEditText abandonReason = dialogViewAban.findViewById(R.id.abandon_reason);
+            PieChart abandonReasonChart = dialogAban.findViewById(R.id.abandon_reason_pie_chart);
 
 
-                String descriptionStr = "本月打断原因分析";
-                Description description = new Description();
-                description.setText(descriptionStr);
-                description.setTextColor(Color.BLACK);
-                description.setTextSize(15f);
-                abandonReasonChart.setDescription(description);
+            String descriptionStr = "本月打断原因分析";
+            Description description = new Description();
+            description.setText(descriptionStr);
+            description.setTextColor(Color.BLACK);
+            description.setTextSize(15f);
+            abandonReasonChart.setDescription(description);
 
-                // 获取屏幕中间x 轴的像素坐标
-                WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-                DisplayMetrics dm = new DisplayMetrics();
-                wm.getDefaultDisplay().getMetrics(dm);
-                float x = dm.widthPixels / 2;
-                // y轴像素坐标，获取文本高度（dp）+上方间隔12dp 转换为像素
-                Paint paint = new Paint();
-                paint.setTextSize(18f);
-                Rect rect = new Rect();
-                paint.getTextBounds(descriptionStr, 0, descriptionStr.length(), rect);
-                float y = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                        rect.height() + 10, getContext().getResources().getDisplayMetrics());
-                // 设置饼状图的位置
-                description.setPosition(x, y);
-                description.setTextAlign(Paint.Align.LEFT);
+            // 获取屏幕中间x 轴的像素坐标
+            WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+            DisplayMetrics dm = new DisplayMetrics();
+            wm.getDefaultDisplay().getMetrics(dm);
+            float x = dm.widthPixels / 2;
+            // y轴像素坐标，获取文本高度（dp）+上方间隔12dp 转换为像素
+            Paint paint = new Paint();
+            paint.setTextSize(18f);
+            Rect rect = new Rect();
+            paint.getTextBounds(descriptionStr, 0, descriptionStr.length(), rect);
+            float y = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    rect.height() + 10, getContext().getResources().getDisplayMetrics());
+            // 设置饼状图的位置
+            description.setPosition(x, y);
+            description.setTextAlign(Paint.Align.LEFT);
 
-                //设置图例:
-                Legend legend = abandonReasonChart.getLegend();
-                legend.setWordWrapEnabled(true);
-                legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);//设置图例的排列走向:vertacal相当于分行
-                legend.setForm(Legend.LegendForm.SQUARE);//设置图例的图形样式,默认为圆形
-                legend.setFormSize(12f);//设置图例的大小
-                legend.setTextSize(12f);//设置图注的字体大小
-                legend.setXEntrySpace(15f);//设置图例之间的间隔！
-                legend.setTextColor(getContext().getResources().getColor(R.color.black)); //图例的文字颜色
+            //设置图例:
+            Legend legend = abandonReasonChart.getLegend();
+            legend.setWordWrapEnabled(true);
+            legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);//设置图例的排列走向:vertacal相当于分行
+            legend.setForm(Legend.LegendForm.SQUARE);//设置图例的图形样式,默认为圆形
+            legend.setFormSize(12f);//设置图例的大小
+            legend.setTextSize(12f);//设置图注的字体大小
+            legend.setXEntrySpace(15f);//设置图例之间的间隔！
+            legend.setTextColor(getContext().getResources().getColor(R.color.black)); //图例的文字颜色
 
-                //设置数据源
-                List<PieEntry> yVals = new ArrayList<>();
-                List<Integer> colors = new ArrayList<>();
+            //设置数据源
+            List<PieEntry> yVals = new ArrayList<>();
+            List<Integer> colors = new ArrayList<>();
 
-                try {
-                    List<StopReasonRatio> stopReasonRatios = StatisticApi.statisticStopReason();
-                    stopReasonRatios.forEach(stopReasonRatio -> {
-                        yVals.add(new PieEntry(stopReasonRatio.getRatio().floatValue(),stopReasonRatio.getStopReason()));
-                        colors.add(ColorUtil.getColorByRgb(null));
-                    });
-                }catch (RuntimeException e){
-                    Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
-                }
-
-
-                //设置饼状图数据：
-//                yVals.add(new PieEntry(0.286f, "吃饭"));
-//                yVals.add(new PieEntry(0.603f, "睡觉"));
-//                yVals.add(new PieEntry(1f-0.286f-0.603f, "洗澡"));
-//
-//                colors.add(Color.parseColor("#4A92FC"));
-//                colors.add(Color.parseColor("#ee6e55"));
-//                colors.add(Color.parseColor("#adff2f"));
-                setPieChartData(abandonReasonChart,yVals,colors);
-
-
-                abandonYes.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //获取放弃原因!
-                        String reason = abandonReason.getText().toString().trim();
-
-                        if(abandonReason.getText().toString().isEmpty()){
-                            Toast.makeText(getContext(), "请输入打断的原因", Toast.LENGTH_SHORT).show();
-
-                        }else{
-                            try {
-                                TomatoClockApi.stopTomatoClock(taskVo.getTaskId(),reason);
-                            } catch (RuntimeException e) {
-                                Toast.makeText(getContext(),"番茄钟放弃失败", Toast.LENGTH_SHORT).show();
-                            }
-                            dialogAban.dismiss();
-                            Intent intent2 = new Intent();
-                            intent2.setClass(getContext(), NavigationActivity.class);
-                            intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
-                            getContext().startActivity(intent2);
-
-//                            overridePendingTransition(R.anim.slide_left,R.anim.slide_right);
-                        }
-                    }
+            try {
+                List<StopReasonRatio> stopReasonRatios = StatisticApi.statisticStopReason();
+                stopReasonRatios.forEach(stopReasonRatio -> {
+                    yVals.add(new PieEntry(stopReasonRatio.getRatio().floatValue(),stopReasonRatio.getStopReason()));
+                    colors.add(ColorUtil.getColorByRgb(null));
                 });
-
-                abandonNo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialogAban.dismiss();
-                    }
-                });
+            }catch (RuntimeException e){
+                Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
             }
+
+            setPieChartData(abandonReasonChart,yVals,colors);
+
+            abandonYes.setOnClickListener(v12 -> {
+                //获取放弃原因!
+                String reason = abandonReason.getText().toString().trim();
+
+                if(abandonReason.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(), "请输入打断的原因", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    try {
+                        TomatoClockApi.stopTomatoClock(taskVo.getTaskId(),reason);
+                    } catch (RuntimeException e) {
+                        Toast.makeText(getContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                    dialogAban.dismiss();
+                    Intent intent2 = new Intent();
+                    intent2.setClass(getContext(), NavigationActivity.class);
+                    intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
+                    getContext().startActivity(intent2);
+
+                }
+            });
+
+            abandonNo.setOnClickListener(v1 -> dialogAban.dismiss());
         });
 
+        //提前完成当前计时
+        advanceAll.setOnClickListener(v -> {
+            circleTimer.setMaximumTime(0);
+            circleTimer.setInitPosition(1);
+            circleTimer.start();
+            StopClockDialog.this.dismiss();
+        });
 
         //提前完成计时
-        advance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        advance.setOnClickListener(v -> {
 
-                TomatoClockApi.stopTomatoClock(taskVo.getTaskId(),"");
-                TaskApi.complete(taskVo.getTaskId());
+            TomatoClockApi.advanceCompleteTask(taskVo.getTaskId());
+            TaskApi.complete(taskVo.getTaskId());
 
-//                            circleTimer.setValue(10);//设置时钟的值
-                Toast.makeText(getContext(), "任务完成☺", Toast.LENGTH_SHORT).show();
-                Intent intent2 = new Intent();
-                intent2.setClass(getContext(), NavigationActivity.class);
-                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
-                getContext().startActivity(intent2);
+            Toast.makeText(getContext(), "任务完成☺", Toast.LENGTH_SHORT).show();
+            Intent intent2 = new Intent();
+            intent2.setClass(getContext(), NavigationActivity.class);
+            intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
+            getContext().startActivity(intent2);
 
-//                circleTimer.setMaximumTime(0);
-//                circleTimer.setInitPosition(1);
-//                circleTimer.start();
-//                StopClockDialog.this.dismiss();
-            }
         });
         //取消
         cancel.setOnClickListener(new View.OnClickListener() {

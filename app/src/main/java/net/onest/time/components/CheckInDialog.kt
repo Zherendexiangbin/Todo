@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
@@ -32,6 +33,7 @@ import net.onest.time.utils.showToast
 import net.onest.time.utils.withCustomAlphaAnimation
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.function.Consumer
 
 
 @SuppressLint("RestrictedApi")
@@ -42,6 +44,7 @@ class CheckInDialog(
     context
 ) {
     private lateinit var username: TextView
+    private lateinit var checkInBtn: Button
     private lateinit var share: Button
     private lateinit var save: Button
     private lateinit var tomatoTimes: TextView
@@ -165,8 +168,20 @@ class CheckInDialog(
         }
     }
 
+    fun setSendImageConsumer(consumer: Consumer<Bitmap>) {
+        checkInBtn.setOnClickListener {
+            view.createBitmap(window!!) { bitmap, success ->
+                if (success) {
+                    consumer.accept(bitmap!!)
+                }
+            }
+            dismiss()
+        }
+    }
+
     private fun findViews(view: View) {
         username = view.findViewById(R.id.txt_user_name)
+        checkInBtn = view.findViewById(R.id.btn_check_in)
         share = view.findViewById(R.id.btn_share)
         save = view.findViewById(R.id.btn_save)
         tomatoTimes = view.findViewById(R.id.txt_tomato_times_value)

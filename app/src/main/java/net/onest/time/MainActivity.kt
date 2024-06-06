@@ -50,12 +50,12 @@ class MainActivity : AppCompatActivity() {
             .transition(DrawableTransitionOptions.withCrossFade(2000))
             .into(logo!!)
 
-//        autoLogin()
+        autoLogin()
 
-//        loginUser?.setText("2808021998@qq.com");
-//        loginPassword?.setText("123456");
-        loginUser!!.setText("212296944@qq.com")
-        loginPassword!!.setText("123456")
+        loginUser?.setText("2808021998@qq.com");
+        loginPassword?.setText("123456789");
+//        loginUser!!.setText("212296944@qq.com")
+//        loginPassword!!.setText("123456789")
 
         setListeners()
         setAnimator()

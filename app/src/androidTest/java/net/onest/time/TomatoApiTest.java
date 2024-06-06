@@ -66,4 +66,10 @@ public class TomatoApiTest {
         Map<Long, List<TomatoClockVo>> result = TomatoClockApi.statisticHistoryByUser();
         System.out.println(result);
     }
+
+    @Test
+    public void advanceCompleteTask() {
+        Long taskId = 722L;
+        TomatoClockApi.advanceCompleteTask(taskId);
+    }
 }

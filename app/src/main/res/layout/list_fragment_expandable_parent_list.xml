@@ -38,13 +38,6 @@
                 android:background="@drawable/arrow_right2"
                 />
             <Button
-                android:id="@+id/list_fragment_parent_data"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:focusable="false"
-                android:layout_marginLeft="15dp"
-                android:background="@drawable/statistic2"/>
-            <Button
                 android:id="@+id/list_fragment_parent_add"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
