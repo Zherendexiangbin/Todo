@@ -24,15 +24,6 @@
         android:layout_margin="10dp"
         android:text="时光自习室"
         android:textSize="25dp" />
-    <Button
-            android:id="@+id/check_in"
-            android:layout_marginTop="14dp"
-            android:layout_marginEnd="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/checkin"/>
     <LinearLayout
         android:id="@+id/chat_body"
         android:layout_width="match_parent"
@@ -57,7 +48,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/chat_message"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:padding="10dp"/>
         </com.scwang.smart.refresh.layout.SmartRefreshLayout>
         <LinearLayout
@@ -80,7 +71,37 @@
                 android:gravity="center"
                 android:background="@drawable/button_ivory"
                 android:text="发 送"
-                android:textSize="15dp"/>
+                android:textSize="15dp"
+                android:visibility="gone"/>
+            <android.widget.Button
+                android:id="@+id/btn_add"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.25"
+                android:gravity="center"
+                android:background="@android:drawable/ic_menu_add" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/tools"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+            <Button
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="16dp"
+                    android:id="@+id/image"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@android:drawable/ic_menu_report_image" />
+            <Button
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="16dp"
+                    android:id="@+id/check_in"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/checkin_test"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

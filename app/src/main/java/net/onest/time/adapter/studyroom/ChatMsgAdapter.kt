@@ -1,87 +1,140 @@
-package net.onest.time.adapter.studyroom;
+package net.onest.time.adapter.studyroom
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import net.onest.time.api.vo.MessageVo
+import net.onest.time.databinding.ItemChatMessageLeftImageBinding
+import net.onest.time.databinding.ItemChatMessageLeftTextBinding
+import net.onest.time.databinding.ItemChatMessageRightImageBinding
+import net.onest.time.databinding.ItemChatMessageRightTextBinding
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+class ChatMsgAdapter(
+    private val context: Context,
+    private val msgList: List<MessageVo>,
+    private val userId: Long
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private lateinit var leftTextBinding: ItemChatMessageLeftTextBinding
+    private lateinit var leftImageBinding: ItemChatMessageLeftImageBinding
+    private lateinit var rightTextBinding: ItemChatMessageRightTextBinding
+    private lateinit var rightImageBinding: ItemChatMessageRightImageBinding
 
-import com.bumptech.glide.Glide;
+    // ViewHolder
+    inner class LeftTextViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val username = leftTextBinding.leftUserName
+        val message = leftTextBinding.leftText
+        val avatar = leftTextBinding.imgLeftHeader
+    }
 
-import net.onest.time.R;
-import net.onest.time.api.UserApi;
-import net.onest.time.api.vo.MessageVo;
+    inner class LeftImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val username = leftImageBinding.leftUserName
+        val image = leftImageBinding.leftImage
+        val avatar = leftImageBinding.imgLeftHeader
+    }
 
-import java.util.List;
-import java.util.Objects;
+    inner class RightTextViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val username = rightTextBinding.rightUserName
+        val message = rightTextBinding.rightText
+        val avatar = rightTextBinding.imgRightHeader
+    }
 
-public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHolder> {
-    private final Context context;
-    private List<MessageVo> mMsgList;
-    private final Long userId;
+    inner class RightImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val username = rightImageBinding.rightUserName
+        val image = rightImageBinding.rightImage
+        val avatar = rightImageBinding.imgRightHeader
+    }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private RelativeLayout leftLayout;
-        private RelativeLayout rightLayout;
-        private TextView leftName, leftMsg;
-        private TextView rightName, rightMsg;
-        private ImageView leftUserHeader, rightUserHeader;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            LEFT_TEXT -> {
+                leftTextBinding = ItemChatMessageLeftTextBinding.inflate(LayoutInflater.from(context), parent, false)
+                return LeftTextViewHolder(leftTextBinding.root)
+            }
+            LEFT_IMAGE -> {
+                leftImageBinding = ItemChatMessageLeftImageBinding.inflate(LayoutInflater.from(context), parent, false)
+                return LeftImageViewHolder(leftImageBinding.root)
+            }
+            RIGHT_TEXT -> {
+                rightTextBinding = ItemChatMessageRightTextBinding.inflate(LayoutInflater.from(context), parent, false)
+                return RightTextViewHolder(rightTextBinding.root)
+            }
+            RIGHT_IMAGE -> {
+                rightImageBinding = ItemChatMessageRightImageBinding.inflate(LayoutInflater.from(context), parent, false)
+                return RightImageViewHolder(rightImageBinding.root)
+            }
 
-        public ViewHolder(View view) {
-            super(view);
-            leftLayout = view.findViewById(R.id.left_layout);
-            rightLayout = view.findViewById(R.id.right_layout);
-            leftName = view.findViewById(R.id.left_user_name);
-            leftMsg = view.findViewById(R.id.left_msg);
-            rightName = view.findViewById(R.id.right_user_name);
-            rightMsg = view.findViewById(R.id.right_msg);
-            leftUserHeader = view.findViewById(R.id.img_left_header);
-            rightUserHeader = view.findViewById(R.id.img_right_header);
+            // 不会执行到的代码
+            else -> LeftTextViewHolder(leftTextBinding.root)
         }
     }
 
-    public ChatMsgAdapter(Context context, List<MessageVo> msgList, Long userId) {
-        this.context = context;
-        this.mMsgList = msgList;
-        this.userId = userId;
-    }
-
-    @NonNull
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater
-                .from(context).
-                inflate(R.layout.chat_message_item, parent, false);
-        return new ViewHolder(view);
-    }
-
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MessageVo msg = mMsgList.get(position);
-        String sendTime = msg.getSendTime().getMonth()+1 + "." + (msg.getSendTime().getDay()+2) + " " + msg.getSendTime().getHours() + ":" + msg.getSendTime().getMinutes();
-        if (Objects.equals(msg.getFromUserId(), userId)){
-            holder.leftLayout.setVisibility(View.GONE);
-            holder.rightLayout.setVisibility(View.VISIBLE);
-            holder.rightName.setText(sendTime + " " + UserApi.getUserInfo(msg.getFromUserId()).getUserName());
-            holder.rightMsg.setText(msg.getContent());
-            Glide.with(context)
-                    .load(UserApi.getUserInfo(msg.getFromUserId()).getAvatar())
-                    .into(holder.rightUserHeader);
-        }else {
-            holder.leftLayout.setVisibility(View.VISIBLE);
-            holder.rightLayout.setVisibility(View.GONE);
-            holder.leftName.setText(UserApi.getUserInfo(msg.getFromUserId()).getUserName() + " " + sendTime);
-            holder.leftMsg.setText(msg.getContent());
-            Glide.with(context)
-                    .load(UserApi.getUserInfo(msg.getFromUserId()).getAvatar())
-                    .into(holder.leftUserHeader);
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val msg = msgList[position]
+        when (holder) {
+            is LeftTextViewHolder -> {
+                holder.username.text = msg.fromUserName
+                Glide.with(context)
+                    .load(msg.fromUserAvatar)
+                    .into(holder.avatar)
+                holder.message.text = msg.content
+            }
+            is LeftImageViewHolder -> {
+                holder.username.text = msg.fromUserName
+                Glide.with(context)
+                    .load(msg.fromUserAvatar)
+                    .into(holder.avatar)
+                Glide.with(context)
+                    .load(msg.content)
+                    .into(holder.image)
+            }
+            is RightTextViewHolder -> {
+                holder.username.text = msg.fromUserName
+                Glide.with(context)
+                    .load(msg.fromUserAvatar)
+                    .into(holder.avatar)
+                holder.message.text = msg.content
+            }
+            is RightImageViewHolder -> {
+                holder.username.text = msg.fromUserName
+                Glide.with(context)
+                    .load(msg.fromUserAvatar)
+                    .into(holder.avatar)
+                Glide.with(context)
+                    .load(msg.content)
+                    .into(holder.image)
+            }
         }
     }
 
-    public int getItemCount() {
-        return mMsgList.size();
+    override fun getItemViewType(position: Int): Int {
+        val messageVo = msgList[position]
+
+        return if (messageVo.fromUserId == userId) {
+            if (messageVo.type == 0) {
+                RIGHT_TEXT
+            } else {
+                RIGHT_IMAGE
+            }
+        } else {
+            if (messageVo.type == 0) {
+                LEFT_TEXT
+            } else {
+                LEFT_IMAGE
+            }
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return msgList.size
+    }
+
+    companion object {
+        val LEFT_TEXT = 0
+        val LEFT_IMAGE = 1
+        val RIGHT_TEXT = 2
+        val RIGHT_IMAGE = 3
     }
 }

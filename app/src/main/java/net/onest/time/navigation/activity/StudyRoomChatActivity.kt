@@ -1,182 +1,267 @@
-package net.onest.time.navigation.activity;
+package net.onest.time.navigation.activity
 
-import android.graphics.Rect;
-import android.os.Bundle;
-import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.graphics.Rect
+import android.os.Build
+import android.os.Bundle
+import android.os.FileUtils
+import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import com.scwang.smart.refresh.layout.api.RefreshLayout
+import net.onest.time.R
+import net.onest.time.adapter.studyroom.ChatMsgAdapter
+import net.onest.time.api.ChatApi
+import net.onest.time.api.StatisticApi
+import net.onest.time.api.UserApi
+import net.onest.time.api.dto.MessageDto
+import net.onest.time.api.utils.MessageListener
+import net.onest.time.api.utils.RequestUtil
+import net.onest.time.api.vo.MessageVo
+import net.onest.time.api.vo.Page
+import net.onest.time.api.vo.RoomVo
+import net.onest.time.api.vo.UserVo
+import net.onest.time.components.CheckInDialog
+import net.onest.time.constant.SharedPreferencesConstant
+import net.onest.time.constant.UserInfoConstant
+import net.onest.time.databinding.ActivityStudyRoomChatBinding
+import net.onest.time.entity.CheckIn
+import net.onest.time.utils.showToast
+import okhttp3.WebSocket
+import java.io.File
+import java.io.FileOutputStream
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+class StudyRoomChatActivity : AppCompatActivity() {
+    private var userVo: UserVo? = null
+    private var roomVo: RoomVo? = null
+    private var btnBack: Button? = null
+    private var btnSend: Button? = null
+    private var roomName: TextView? = null
+    private var messageListener: MessageListener? = null
+    private var historyMessagesList: Page<MessageVo>? = Page()
+    private var pageNum = 1
+    private var messagesList: MutableList<MessageVo> = ArrayList()
+    private var chatMsgAdapter: ChatMsgAdapter? = null
+    private var messagesView: RecyclerView? = null
+    private var editMessage: EditText? = null
+    private var smartRefreshLayout: SmartRefreshLayout? = null
+    private var checkIn: Button? = null
 
-import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+    private lateinit var binding: ActivityStudyRoomChatBinding
 
-import net.onest.time.R;
-import net.onest.time.adapter.studyroom.ChatMsgAdapter;
-import net.onest.time.api.ChatApi;
-import net.onest.time.api.StatisticApi;
-import net.onest.time.api.dto.MessageDto;
-import net.onest.time.api.utils.MessageListener;
-import net.onest.time.api.utils.RequestUtil;
-import net.onest.time.api.vo.MessageVo;
-import net.onest.time.api.vo.Page;
-import net.onest.time.api.vo.RoomVo;
-import net.onest.time.api.vo.UserVo;
-import net.onest.time.api.vo.statistic.StatisticVo;
-import net.onest.time.components.CheckInDialog;
-import net.onest.time.constant.SharedPreferencesConstant;
-import net.onest.time.constant.UserInfoConstant;
-import net.onest.time.entity.CheckIn;
+    @RequiresApi(Build.VERSION_CODES.Q)
+    @SuppressLint("Range")
+    private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        it.data?.data?.run {
+            val filePathColumn = arrayOf(MediaStore.Images.Media.DISPLAY_NAME)
+            val contentResolver = this@StudyRoomChatActivity.contentResolver
+            val cursor = contentResolver.query(this, filePathColumn, null, null, null)
+            cursor?.use {
+                cursor.moveToFirst()
+                val fileName = cursor.getString(0)
+                val path = "${this@StudyRoomChatActivity.externalCacheDir}/room/images"
+                val file = File(path).apply {
+                    if (!exists() && !mkdirs()) {
+                        "创建文件失败".showToast()
+                    }
+                }
 
-import java.util.ArrayList;
-import java.util.List;
+                val inputStream = contentResolver.openInputStream(this)
+                val outputStream = FileOutputStream("$path/$fileName")
+                inputStream?.run {
+                    FileUtils.copy(inputStream, outputStream)
+                    val url = UserApi.uploadAvatar("$path/$fileName")
+                    val messageDto = MessageDto()
+                    messageDto.toRoomId = roomVo!!.roomId
+                    messageDto.content = url
+                    messageDto.type = 1
 
-import okhttp3.WebSocket;
+                    ChatApi.sendMessage(messageDto)
+                }
+            }
+        }
+    }
 
-public class StudyRoomChatActivity extends AppCompatActivity {
-    private UserVo userVo;
-    private RoomVo roomVo;
-    private Button btnBack, btnSend;
-    private TextView roomName;
-    private MessageListener messageListener;
-    private Page<MessageVo> historyMessagesList = new Page<>();
-    private int pageNum = 1;
-    private List<MessageVo> messagesList = new ArrayList<>();
-    private ChatMsgAdapter chatMsgAdapter;
-    private RecyclerView messagesView;
-    private EditText editMessage;
-    private SmartRefreshLayout smartRefreshLayout;
-    private Button checkIn;
+    @RequiresApi(Build.VERSION_CODES.Q)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+//        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        binding = ActivityStudyRoomChatBinding.inflate(LayoutInflater.from(this))
+        setContentView(binding.root)
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        setContentView(R.layout.activity_room_chat_page);
-
-        findView();
-        initData();
-        ChatApi.connectRoom(roomVo.getRoomId(), messageListener);
-        setListeners();
-        setKeyboardListener();
+        findView()
+        initData()
+        setListeners()
+        setKeyboardListener()
 
         // 设置自习室名字
-        roomName.setText(roomVo.getRoomName());
+        roomName!!.text = roomVo!!.roomName
 
         // 连接
         ChatApi.connectRoom(
-                roomVo.getRoomId(),
-                new MessageListener(messagesList) {
-                    @Override
-                    public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
-                        super.onMessage(webSocket, text);
-                        runOnUiThread(() -> {
-                            chatMsgAdapter.notifyItemInserted(messagesList.size());
-                            messagesView.smoothScrollToPosition(RecyclerView.SCROLL_INDICATOR_BOTTOM);
-                        });
+            roomVo!!.roomId,
+            object : MessageListener(messagesList) {
+                override fun onMessage(webSocket: WebSocket, text: String) {
+                    super.onMessage(webSocket, text)
+                    runOnUiThread {
+                        chatMsgAdapter!!.notifyItemInserted(messagesList.size)
+                        messagesView!!.smoothScrollToPosition(RecyclerView.SCROLL_INDICATOR_BOTTOM)
                     }
                 }
-        );
+            }
+        )
     }
 
-    private void initData() {
+    private fun initData() {
         // 获取用户信息
-        String userInfoJson = getSharedPreferences(SharedPreferencesConstant.USER_INFO, MODE_PRIVATE)
-                .getString(UserInfoConstant.USER_INFO, "");
-        userVo = RequestUtil.getGson().fromJson(userInfoJson, UserVo.class);
+        val userInfoJson = getSharedPreferences(SharedPreferencesConstant.USER_INFO, MODE_PRIVATE)
+            .getString(UserInfoConstant.USER_INFO, "")
+        userVo = RequestUtil.getGson().fromJson(userInfoJson, UserVo::class.java)
 
         // 获取自习室信息
-        roomVo = (RoomVo) getIntent().getSerializableExtra("room");
+        roomVo = intent.getSerializableExtra("room") as RoomVo?
 
         try {
-            historyMessagesList = ChatApi.findRoomMessagePage(1, 10, roomVo.getRoomId(), System.currentTimeMillis());
-            if (historyMessagesList != null) {
-                messagesList = historyMessagesList.getRecords();
+            historyMessagesList =
+                ChatApi.findRoomMessagePage(1, 10, roomVo!!.roomId, System.currentTimeMillis())
+            messagesList = if (historyMessagesList != null) {
+                historyMessagesList!!.records
             } else {
-                messagesList = new ArrayList<>();
+                ArrayList()
             }
-        } catch (Exception e) {
-
+        } catch (e: Exception) {
         }
-        messageListener = new MessageListener(messagesList);
+        messageListener = MessageListener(messagesList)
         // 绑定适配器
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        messagesView.setLayoutManager(layoutManager);
-        chatMsgAdapter = new ChatMsgAdapter(this, messagesList, userVo.getUserId());
-        messagesView.setAdapter(chatMsgAdapter);
+        val layoutManager = LinearLayoutManager(this)
+        messagesView!!.layoutManager = layoutManager
+        chatMsgAdapter = ChatMsgAdapter(this, messagesList, userVo!!.userId)
+        messagesView!!.adapter = chatMsgAdapter
+        messagesView!!.scrollToPosition(messagesList.size - 1)
     }
 
-    private void setListeners() {
-        // 打卡按钮
-        checkIn.setOnClickListener(v -> {
-            StatisticVo statistic = StatisticApi.statistic();
-            CheckIn checkInData = new CheckIn(
-                    userVo.getUserName(),
-                    statistic.getTomatoTimes(),
-                    statistic.getTomatoDuration(),
-                    statistic.getRatioByDurationOfDay()
-            );
-            new CheckInDialog(this, checkInData);
-        });
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun setListeners() {
+        editMessage!!.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s.toString().isEmpty()) {
+                    binding.btnAdd.visibility = View.VISIBLE
+                    binding.btnSend.visibility = View.GONE
+                } else {
+                    binding.btnAdd.visibility = View.GONE
+                    binding.btnSend.visibility = View.VISIBLE
+                }
+            }
+        })
+
+        // 打卡
+        binding.checkIn.setOnClickListener {
+            val statistic = StatisticApi.statistic()
+            val checkInData = CheckIn(
+                userVo!!.userName,
+                statistic.tomatoTimes,
+                statistic.tomatoDuration.toDouble(),
+                statistic.ratioByDurationOfDay
+            )
+            CheckInDialog(this, checkInData)
+        }
+
+        // 发送图片
+        binding.image.setOnClickListener {
+            // 打开相册发送图片
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.setType("image/*")
+
+            imagePickerLauncher.launch(intent)
+        }
+
+        // 添加按钮 显示工具
+        binding.btnAdd.setOnClickListener {
+            if (binding.tools.visibility == View.VISIBLE) {
+                binding.tools.visibility = View.GONE
+            } else {
+                messagesView!!.scrollToPosition(messagesList.size - 1)
+                binding.tools.visibility = View.VISIBLE
+            }
+        }
 
         // 返回自习室页面
-        btnBack.setOnClickListener(view -> {
-            finish();
-        });
+        btnBack!!.setOnClickListener { view: View? ->
+            finish()
+        }
 
-        // 发送消息
-        btnSend.setOnClickListener(view -> {
-            if (editMessage.getText().toString().isEmpty()) {
-                Toast.makeText(this, "发送消息不可为空", Toast.LENGTH_SHORT).show();
+        // 发送文本消息
+        btnSend!!.setOnClickListener { view: View? ->
+            if (editMessage!!.text.toString().isEmpty()) {
+                "发送消息不可为空".showToast()
             } else {
-                MessageDto messageDto = new MessageDto();
-                messageDto.setToRoomId(roomVo.getRoomId());
-                messageDto.setContent(editMessage.getText().toString());
+                val messageDto = MessageDto()
+                messageDto.toRoomId = roomVo!!.roomId
+                messageDto.content = editMessage!!.text.toString()
+                messageDto.type = 0
 
-                ChatApi.sendMessage(messageDto);
+                ChatApi.sendMessage(messageDto)
 
-                editMessage.setText("");
+                editMessage!!.setText("")
             }
-        });
+        }
 
-        smartRefreshLayout.setOnRefreshListener(refreshLayout -> {
-            pageNum += 1;
-            getMessages(Position.FIRST, false);
-            refreshLayout.finishRefresh(500, true, false);
-        });
+        smartRefreshLayout!!.setOnRefreshListener { refreshLayout: RefreshLayout ->
+            pageNum += 1
+            getMessages(Position.FIRST, false)
+            refreshLayout.finishRefresh(500, true, false)
+        }
     }
 
-    private void findView() {
-        btnBack = findViewById(R.id.btn_back);
-        roomName = findViewById(R.id.room_name);
+    private fun findView() {
+        btnBack = findViewById(R.id.btn_back)
+        roomName = findViewById(R.id.room_name)
 
-        smartRefreshLayout = findViewById(R.id.smartRefresher);
-        messagesView = findViewById(R.id.chat_message);
-        editMessage = findViewById(R.id.chat_edit);
-        btnSend = findViewById(R.id.btn_send);
+        smartRefreshLayout = findViewById(R.id.smartRefresher)
+        messagesView = findViewById(R.id.chat_message)
+        editMessage = findViewById(R.id.chat_edit)
+        btnSend = findViewById(R.id.btn_send)
 
-        checkIn = findViewById(R.id.check_in);
+        checkIn = findViewById(R.id.check_in)
     }
 
     // 下拉刷新获取消息
-    private void getMessages(Position position, boolean scrollToEnd) {
+    private fun getMessages(position: Position, scrollToEnd: Boolean) {
         try {
-            Page<MessageVo> newMessages = ChatApi.findRoomMessagePage(pageNum, 10, roomVo.getRoomId(), System.currentTimeMillis());
+            val newMessages = ChatApi.findRoomMessagePage(
+                pageNum,
+                10,
+                roomVo!!.roomId,
+                System.currentTimeMillis()
+            )
             if (newMessages != null) {
-                List<MessageVo> messages = newMessages.getRecords();
-                for (int i = messages.size() - 1; i >= 0; i--) {
-                    addAndRefreshMsgList(messages.get(i), position, scrollToEnd);
+                val messages = newMessages.records
+                for (i in messages.indices.reversed()) {
+                    addAndRefreshMsgList(messages[i], position, scrollToEnd)
                 }
             } else {
-                Toast.makeText(this, "没有其他消息了", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "没有其他消息了", Toast.LENGTH_SHORT).show()
             }
-        } catch (Exception e) {
-
+        } catch (e: Exception) {
         }
     }
 
@@ -185,44 +270,45 @@ public class StudyRoomChatActivity extends AppCompatActivity {
      * @param position    插入的位置
      * @param scrollToEnd 是否滚动到最后一条消息
      */
-    private void addAndRefreshMsgList(MessageVo messageVo, Position position, boolean scrollToEnd) {
-        runOnUiThread(() -> {
+    private fun addAndRefreshMsgList(
+        messageVo: MessageVo,
+        position: Position,
+        scrollToEnd: Boolean
+    ) {
+        runOnUiThread {
             if (position == Position.FIRST) {
-                messagesList.add(0, messageVo);
+                messagesList.add(0, messageVo)
                 // 当有新消息时，刷新RecyclerView中的显示
-                chatMsgAdapter.notifyItemInserted(0);
+                chatMsgAdapter!!.notifyItemInserted(0)
             } else if (position == Position.LAST) {
-                messagesList.add(messageVo);
+                messagesList.add(messageVo)
                 // 当有新消息时，刷新RecyclerView中的显示
-                chatMsgAdapter.notifyItemInserted(messagesList.size() - 1);
+                chatMsgAdapter!!.notifyItemInserted(messagesList.size - 1)
             }
             if (scrollToEnd) {
                 // 将RecyclerView定位到最后一行
-                messagesView.scrollToPosition(messagesList.size() - 1);
+                messagesView!!.scrollToPosition(messagesList.size - 1)
             }
-        });
+        }
     }
 
-    private enum Position {
+    private enum class Position {
         FIRST,
         LAST
     }
 
     // 监听键盘是否弹出
-    private void setKeyboardListener() {
-        View contentView = findViewById(android.R.id.content);
-        contentView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Rect rect = new Rect();
-                contentView.getWindowVisibleDisplayFrame(rect);
-                int screenHeight = contentView.getRootView().getHeight();
-                int keypadHeight = screenHeight - rect.bottom;
-                if (keypadHeight > screenHeight * 0.15) {
-                    // 键盘弹出
-                    messagesView.scrollToPosition(messagesList.size() - 1);
-                }
+    private fun setKeyboardListener() {
+        val contentView = findViewById<View>(android.R.id.content)
+        contentView.viewTreeObserver.addOnGlobalLayoutListener {
+            val rect = Rect()
+            contentView.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = contentView.rootView.height
+            val keypadHeight = screenHeight - rect.bottom
+            if (keypadHeight > screenHeight * 0.15) {
+                // 键盘弹出
+                messagesView!!.scrollToPosition(messagesList.size - 1)
             }
-        });
+        }
     }
 }
