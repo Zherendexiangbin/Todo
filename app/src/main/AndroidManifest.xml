@@ -94,6 +94,7 @@
 
         <activity
             android:name=".navigation.activity.StudyRoomChatActivity"
+            android:label="自习室"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
