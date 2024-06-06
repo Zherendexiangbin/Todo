@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.FileUtils
@@ -26,6 +27,7 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout
 import net.onest.time.R
 import net.onest.time.adapter.studyroom.ChatMsgAdapter
 import net.onest.time.api.ChatApi
+import net.onest.time.api.RoomApi
 import net.onest.time.api.StatisticApi
 import net.onest.time.api.UserApi
 import net.onest.time.api.dto.MessageDto
@@ -50,7 +52,7 @@ import java.io.FileOutputStream
 
 class StudyRoomChatActivity : AppCompatActivity() {
     private var userVo: UserVo? = null
-    private var roomVo: RoomVo? = null
+    private lateinit var roomVo: RoomVo
     private var btnBack: Button? = null
     private var btnSend: Button? = null
     private var roomName: TextView? = null
@@ -85,45 +87,25 @@ class StudyRoomChatActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         it.data?.data?.run {
-            val filePathColumn = arrayOf(MediaStore.Images.Media.DISPLAY_NAME)
-            val contentResolver = this@StudyRoomChatActivity.contentResolver
-            val cursor = contentResolver.query(this, filePathColumn, null, null, null)
-            cursor?.use {
-                cursor.moveToFirst()
-                val fileName = cursor.getString(0)
-                val path = "${this@StudyRoomChatActivity.externalCacheDir}/room/images"
-                File(path).apply {
-                    if (!exists() && !mkdirs()) {
-                        "创建文件失败".showToast()
-                    }
-                }
-
-                val inputStream = contentResolver.openInputStream(this)
-                val outputStream = FileOutputStream("$path/$fileName")
-                inputStream?.run {
-                    FileUtils.copy(inputStream, outputStream)
-                    sendImage("$path/$fileName")
-                }
-            }
+            val path = "${this@StudyRoomChatActivity.externalCacheDir}/room/images"
+            val filePath = copyFileFromURI(this, path)
+            sendImage(filePath)
         }
     }
 
     private fun sendImage(file: String) {
         val url = UserApi.uploadAvatar(file)
         val messageDto = MessageDto()
-        messageDto.toRoomId = roomVo!!.roomId
+        messageDto.toRoomId = roomVo.roomId
         messageDto.content = url
         messageDto.type = 1
 
         ChatApi.sendMessage(messageDto)
-
-        messagesView?.scrollToPosition(chatMsgAdapter!!.itemCount)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         binding = ActivityStudyRoomChatBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
 
@@ -133,20 +115,51 @@ class StudyRoomChatActivity : AppCompatActivity() {
         setKeyboardListener()
 
         // 设置自习室名字
-        roomName!!.text = roomVo!!.roomName
+        roomName!!.text = roomVo.roomName
 
         // 连接
         ChatApi.connectRoom(
-            roomVo!!.roomId,
+            roomVo.roomId,
             object : MessageListener(messagesList) {
                 override fun onMessage(webSocket: WebSocket, text: String) {
                     super.onMessage(webSocket, text)
                     runOnUiThread {
                         chatMsgAdapter!!.notifyItemInserted(messagesList.size)
+                        messagesView?.scrollToPosition(messagesList.size - 1)
                     }
                 }
             }
         )
+
+        val action = intent.action  // action
+        val type = intent.type      // 类型
+
+        if (Intent.ACTION_SEND == action && type != null) {
+            val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+            //如果是媒体类型需要从数据库获取路径
+            val path = "${this@StudyRoomChatActivity.externalCacheDir}/room/images"
+            val filePath = copyFileFromURI(uri!!, path)
+            sendImage(filePath)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun copyFileFromURI(uri: Uri, path: String): String {
+        val contentResolver = this@StudyRoomChatActivity.contentResolver
+        val fileName = "${System.currentTimeMillis()}.png"
+
+        File(path).apply {
+            if (!exists() && !mkdirs()) {
+                "创建文件失败".showToast()
+            }
+        }
+
+        val inputStream = contentResolver.openInputStream(uri)
+        val outputStream = FileOutputStream("$path/$fileName")
+        inputStream?.run {
+            FileUtils.copy(inputStream, outputStream)
+        }
+        return "$path/$fileName"
     }
 
     private fun initData() {
@@ -156,11 +169,11 @@ class StudyRoomChatActivity : AppCompatActivity() {
         userVo = RequestUtil.getGson().fromJson(userInfoJson, UserVo::class.java)
 
         // 获取自习室信息
-        roomVo = intent.getSerializableExtra("room") as RoomVo?
+        roomVo = (intent.getSerializableExtra("room") as RoomVo?) ?: RoomApi.getRoomInfo()
 
         try {
             historyMessagesList =
-                ChatApi.findRoomMessagePage(1, 10, roomVo!!.roomId, System.currentTimeMillis())
+                ChatApi.findRoomMessagePage(1, 10, roomVo.roomId, System.currentTimeMillis())
             messagesList = if (historyMessagesList != null) {
                 historyMessagesList!!.records
             } else {
@@ -254,7 +267,7 @@ class StudyRoomChatActivity : AppCompatActivity() {
                 "发送消息不可为空".showToast()
             } else {
                 val messageDto = MessageDto()
-                messageDto.toRoomId = roomVo!!.roomId
+                messageDto.toRoomId = roomVo.roomId
                 messageDto.content = editMessage!!.text.toString()
                 messageDto.type = 0
 
@@ -289,7 +302,7 @@ class StudyRoomChatActivity : AppCompatActivity() {
             val newMessages = ChatApi.findRoomMessagePage(
                 pageNum,
                 10,
-                roomVo!!.roomId,
+                roomVo.roomId,
                 System.currentTimeMillis()
             )
             if (newMessages != null) {
