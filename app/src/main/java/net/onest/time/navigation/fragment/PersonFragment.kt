@@ -41,13 +41,15 @@ class PersonFragment : Fragment() {
     private var userTotalComplete: TextView? = null
     private var change: Button? = null
     private var exit: Button? = null
+    private var privacy: TextView? = null
+    private var general: TextView? = null
 
     private lateinit var binding: PersonFragmentBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         binding = PersonFragmentBinding.inflate(inflater, container, false)
         view = binding.root
 
@@ -62,6 +64,12 @@ class PersonFragment : Fragment() {
         userEdit!!.setOnClickListener { view: View? ->
             val intent = Intent(context, PersonEditActivity::class.java)
             startActivityForResult(intent, INTENT_CODE)
+        }
+
+        //隐私政策
+        privacy!!.setOnClickListener{ view: View? ->
+            val intent = Intent(context, PrivacyPolicyActivity::class.java)
+            startActivity(intent);
         }
 
         //切换账号:
@@ -85,23 +93,11 @@ class PersonFragment : Fragment() {
             requireContext().startActivity(intent)
         }
 
-        // 隐私政策
-        binding.privacyPolicySummary.setOnClickListener{ view: View? ->
-            val intent = Intent(context, PrivacyPolicyActivity::class.java)
-            startActivity(intent);
-        }
-        // 通用
-        binding.general.withOnClickInfoDialog()
-        // 辅助功能
-        binding.accessibility.withOnClickInfoDialog()
-
-
-        // 常见问题
-        binding.commonProblem.withOnClickInfoDialog()
-        // 意见反馈
-        binding.feedback.withOnClickInfoDialog()
-        // 关于时光
-        binding.aboutUs.withOnClickInfoDialog()
+        binding.accessibility.withOnClickInfoDialog("辅助功能")
+        binding.general.withOnClickInfoDialog("通用")
+        binding.commonProblem.withOnClickInfoDialog("常见问题")
+        binding.feedback.withOnClickInfoDialog("意见反馈")
+        binding.aboutUs.withOnClickInfoDialog("关于时光")
     }
 
     /**
@@ -164,6 +160,8 @@ class PersonFragment : Fragment() {
 
         change = view.findViewById(R.id.btn_change)
         exit = view.findViewById(R.id.btn_exit)
+
+        privacy = view.findViewById(R.id.privacy_policy_summary);
     }
 
     companion object {

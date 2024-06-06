@@ -53,9 +53,9 @@ class MainActivity : AppCompatActivity() {
         autoLogin()
 
         loginUser?.setText("2808021998@qq.com");
-        loginPassword?.setText("123456");
+        loginPassword?.setText("123456789");
 //        loginUser!!.setText("212296944@qq.com")
-//        loginPassword!!.setText("123456")
+//        loginPassword!!.setText("123456789")
 
         setListeners()
         setAnimator()

@@ -64,8 +64,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         //获取验证码
         getCode.setOnClickListener(view -> {
-            registerCodeKey = UserApi.getEmailCodeKey(registerEmail.getText().toString().trim());
-            startCountdown();
+            if (registerEmail.getText().toString().isEmpty()){
+                Toast.makeText(this, "请输入注册邮箱！", Toast.LENGTH_SHORT).show();
+            }else {
+                registerCodeKey = UserApi.getEmailCodeKey(registerEmail.getText().toString().trim());
+                startCountdown();
+            }
         });
     }
 
