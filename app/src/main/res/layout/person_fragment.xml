@@ -109,22 +109,18 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    android:src="@mipmap/signature"/>
                 <TextView
-                    android:id="@+id/user_today_complete"
+                    android:id="@+id/user_signature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="15dp"
-                    android:text="今日完成日程:3"
-                    android:textColor="@color/black"/>
-                <TextView
-                    android:id="@+id/user_total_complete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="5dp"
-                    android:text="累计完成日程:1314"/>
+                    android:drawablePadding="5dp"
+                    android:text="IP"/>
             </LinearLayout>
         </LinearLayout>
 
