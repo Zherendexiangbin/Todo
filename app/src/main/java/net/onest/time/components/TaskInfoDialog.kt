@@ -129,6 +129,7 @@ class TaskInfoDialog(
             val radioButtonWeek = dialogViewAban.findViewById<RadioButton>(R.id.statistics_time_data_week)
             val radioButtonMonth = dialogViewAban.findViewById<RadioButton>(R.id.statistics_time_data_month)
             var pieChart = dialogViewAban.findViewById<PieChart>(R.id.statistics_pie_chart)
+            var close = dialogViewAban.findViewById<Button>(R.id.close_pop_window)
 
             tomatoTimes.text = "${statisticByTask.tomatoTimes}"
             tomatoDuration.text = "${statisticByTask.tomatoDuration}"
@@ -189,15 +190,17 @@ class TaskInfoDialog(
                     }
                 }
             }
-        }
 
+            close.setOnClickListener {
+                dialogAban.dismiss()
+            }
+        }
 //        //改变背景:
 //        changeBackground!!.setOnClickListener {
 //
 //            parentBackground!!.background = DrawableUtil.getRandomImage(context)
 //
 //        }
-
     }
 
 

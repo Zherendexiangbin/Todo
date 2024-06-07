@@ -3,6 +3,7 @@ package net.onest.time.navigation.fragment;
 import static android.app.Activity.RESULT_OK;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -198,24 +199,21 @@ public class StudyRoomFragment extends Fragment {
                 new XPopup.Builder(getContext())
                         .dismissOnTouchOutside(false)
                         .asConfirm("", "确定退出自习室吗？",
-                        new OnConfirmListener() {
-                            @Override
-                            public void onConfirm() {
-                                btnAdd.setBackgroundResource(R.mipmap.add3);
-                                btnAdd.setHint("add");
+                                () -> {
+                                    btnAdd.setBackgroundResource(R.mipmap.add3);
+                                    btnAdd.setHint("add");
 
-                                RoomApi.userExit(roomVo.getRoomId());
-                                userVos.clear();
-                                rankingAdapter.setRankingList(userVos);
-                                rankingAdapter.notifyDataSetChanged();
+                                    RoomApi.userExit(roomVo.getRoomId());
+                                    userVos.clear();
+                                    rankingAdapter.setRankingList(userVos);
+                                    rankingAdapter.notifyDataSetChanged();
 
-                                roomName.setText("时光自习室");
-                                isMaster = false;
-                                roomManager.setVisibility(View.GONE);
-                                btnMenu.setVisibility(View.GONE);
-                                Toast.makeText(getContext(), "退出成功！", Toast.LENGTH_SHORT).show();
-                            }
-                        })
+                                    roomName.setText("时光自习室");
+                                    isMaster = false;
+                                    roomManager.setVisibility(View.GONE);
+                                    btnMenu.setVisibility(View.GONE);
+                                    Toast.makeText(getContext(), "退出成功！", Toast.LENGTH_SHORT).show();
+                                })
                         .show();
             }
         });

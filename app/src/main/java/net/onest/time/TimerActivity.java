@@ -318,6 +318,7 @@ public class TimerActivity extends AppCompatActivity {
                 mVibrator.vibrate(pattern, -1);
 
                 if(num % 2 != 0){
+                    System.out.println(num);
                     TomatoClockApi.completeTomatoClock(tomatoClockVos.get(num/2).getClockId());
                 }
 
@@ -340,11 +341,12 @@ public class TimerActivity extends AppCompatActivity {
                 //休息时间:
 //                    int rest = 5*60;//五分钟
                 //番茄钟数:
-                int clock = tomatoClockVos.get(num/2).getClockDuration()*60;
+                int clock;
 
                 //无限循环状态:
                 if(taskName.getText().toString().contains("无限循环中")){
                     if(num % 2==0 || num == loopTimes){
+                        clock = tomatoClockVos.get(0).getClockDuration()*60;
 
                         TomatoClockApi.startTomatoClock(tomatoClockVos.get(num/2).getClockId());
 
@@ -364,7 +366,8 @@ public class TimerActivity extends AppCompatActivity {
                 }
 
                 //普通状态:
-                if(num % 2 == 0){
+                if(num % 2 == 0 && (num/2 + 1) <= tomatoClockVos.size()){
+                    clock = tomatoClockVos.get(num/2).getClockDuration()*60;
                     TomatoClockApi.startTomatoClock(tomatoClockVos.get(num/2).getClockId());
                     taskName.setText(name);
                     circleTimer.setMaximumTime(clock);
@@ -385,9 +388,8 @@ public class TimerActivity extends AppCompatActivity {
             stopBtn.setOnClickListener(v -> {
                 //如果是休息时间:
                 if(taskName.getText().toString().contains("休息中")){
-                    stopClockDialog = new StopClockDialog(TimerActivity.this,taskVo,circleTimer,tomatoClockVos);
+                    stopClockDialog = new StopClockDialog(TimerActivity.this,circleTimer);
                 }else{
-
                     int time1 = Integer.parseInt(timeStr);
                     if(time1 *60 - circleTimer.getValue()<5){
                         Toast toast = Toast.makeText(TimerActivity.this, "不记录5秒以下的专注记录!", Toast.LENGTH_SHORT);

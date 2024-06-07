@@ -23,6 +23,14 @@
                 android:layout_centerInParent="true"
                 android:textSize="16dp" />
 
+            <android.widget.Button
+                android:id="@+id/close_pop_window"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/close"/>
+
         </RelativeLayout>
 
         <androidx.core.widget.NestedScrollView
@@ -204,7 +212,7 @@
                 <LinearLayout
                     android:id="@+id/layout_tomato_duration_ratio"
                     android:layout_width="match_parent"
-                    android:layout_height="380dp"
+                    android:layout_height="350dp"
                     android:layout_margin="5dp"
                     android:background="@drawable/record_fragment_shape_10dp_all_corners"
                     android:orientation="vertical"
@@ -238,7 +246,7 @@
                         android:layout_height="30dp"
                         android:layout_gravity="center"
                         android:layout_marginLeft="60dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:layout_marginRight="60dp"
                         android:background="@drawable/edge"
                         android:orientation="horizontal">
@@ -305,8 +313,7 @@
                                 android:id="@+id/statistics_pie_chart"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="5dp" />
-
+                                android:layout_marginTop="3dp" />
                         </FrameLayout>
 
                     </RelativeLayout>

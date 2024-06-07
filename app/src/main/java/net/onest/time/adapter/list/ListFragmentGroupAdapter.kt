@@ -6,6 +6,7 @@ import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.text.SpannableString
@@ -165,13 +166,25 @@ class ListFragmentGroupAdapter(
         return ChildVH(childBinding.root)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindChildViewHolder(
         childVH: ChildVH?,
         groupBean: TaskCategoryVo,
         taskVo: TaskVo?
     ) {
         childVH?.run {
-            nameTv.text = taskVo?.taskName
+            if (taskVo?.taskStatus == 2) {
+                //完成状态==设置删除线:
+                nameTv.text = taskVo?.taskName
+                nameTv.setDeleteLineColor(Color.parseColor("#ffffff")) //设置删除线的颜色
+                nameTv.setShowDeleteLine(true) //删除线是否显示
+                nameTv.setDeleteLineWidth(context, 3) //删除线显示宽度
+
+            } else {
+                nameTv.text = taskVo?.taskName
+                nameTv.setShowDeleteLine(false)
+            }
+
             timeTv.text = "${taskVo?.clockDuration} 分钟"
 
             Glide.with(context).asBitmap().load(taskVo?.background)

@@ -51,6 +51,7 @@ public class StopClockDialog extends AlertDialog {
     private TextView advance;
     private TextView cancel;
     private TextView advanceAll;
+    private TextView advanceRest;
     private TaskVo taskVo;
     private List<TomatoClockVo> tomatoClockVos = new ArrayList<>();
 
@@ -58,16 +59,22 @@ public class StopClockDialog extends AlertDialog {
     private CircleTimer circleTimer;
 
 
-    public StopClockDialog(@NonNull Context context,TaskVo taskVo,List<TomatoClockVo> tomatoClockVos){
+    public StopClockDialog(@NonNull Context context,CircleTimer circleTimer){
         super(context);
-        this.taskVo = taskVo;
-        this.tomatoClockVos = tomatoClockVos;
+        this.circleTimer = circleTimer;
+
         View view = LayoutInflater.from(context).inflate(R.layout.timer_activity_stop_pop,null);
 
         abandon = view.findViewById(R.id.abandon_btn);
         advance = view.findViewById(R.id.advance_btn);
         cancel = view.findViewById(R.id.cancel_btn);
         advanceAll = view.findViewById(R.id.advance_all_btn);
+        advanceRest = view.findViewById(R.id.advance_rest_txt);
+
+        abandon.setVisibility(View.GONE);
+        advance.setVisibility(View.GONE);
+
+        advanceAll.setVisibility(View.GONE);
 
         setListeners();
 
@@ -87,6 +94,13 @@ public class StopClockDialog extends AlertDialog {
         advance = view.findViewById(R.id.advance_btn);
         cancel = view.findViewById(R.id.cancel_btn);
         advanceAll = view.findViewById(R.id.advance_all_btn);
+        advanceRest = view.findViewById(R.id.advance_rest_txt);
+
+        abandon.setVisibility(View.VISIBLE);
+        advance.setVisibility(View.VISIBLE);
+
+        advanceRest.setVisibility(View.GONE);
+
 
         if(tomatoClockVos.size()==1){
             advanceAll.setVisibility(View.GONE);
@@ -103,6 +117,17 @@ public class StopClockDialog extends AlertDialog {
 
 
     private void setListeners() {
+        //跳过当前休息时间:
+        advanceRest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                circleTimer.setMaximumTime(0);
+                circleTimer.setInitPosition(1);
+                circleTimer.start();
+                StopClockDialog.this.dismiss();
+            }
+        });
+
         //放弃当前计时
         abandon.setOnClickListener(v -> {
             StopClockDialog.this.dismiss();
@@ -213,7 +238,7 @@ public class StopClockDialog extends AlertDialog {
             intent2.setClass(getContext(), NavigationActivity.class);
             intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
             getContext().startActivity(intent2);
-
+            StopClockDialog.this.dismiss();
         });
         //取消
         cancel.setOnClickListener(new View.OnClickListener() {
