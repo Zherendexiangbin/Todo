@@ -164,15 +164,19 @@ public class FindStudyRoomActivity extends AppCompatActivity {
                 new XPopup.Builder(context)
                         .dismissOnTouchOutside(false)
                         .asConfirm("确认加入", roomVo.getRoomName().toString(),
-                                new OnConfirmListener() {
-                                    @Override
-                                    public void onConfirm() {
+                                () -> {
+                                    try {
                                         RoomApi.requestJoin(roomVo.getRoomId());
-                                        Intent resultIntent = new Intent();
-                                        resultIntent.putExtra("request", "send");
-                                        setResult(INTENT_CODE, resultIntent);
-                                        finish();
+                                    } catch (RuntimeException e) {
+                                        Toast.makeText(
+                                                context,
+                                                "已申请加入自习室",
+                                                Toast.LENGTH_SHORT).show();
                                     }
+                                    Intent resultIntent = new Intent();
+                                    resultIntent.putExtra("request", "send");
+                                    setResult(INTENT_CODE, resultIntent);
+                                    finish();
                                 })
                         .show();
             });
@@ -180,11 +184,7 @@ public class FindStudyRoomActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            if (roomVos.size()==0){
-                return 0;
-            }else {
-                return roomVos.size();
-            }
+            return roomVos.size();
         }
 
         @Override

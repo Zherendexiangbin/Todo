@@ -13,12 +13,18 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.postDelayed
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import net.onest.time.R
@@ -29,16 +35,15 @@ import net.onest.time.api.StatisticApi
 import net.onest.time.api.UserApi
 import net.onest.time.api.dto.MessageDto
 import net.onest.time.api.utils.MessageListener
-import net.onest.time.api.utils.RequestUtil
 import net.onest.time.api.vo.MessageVo
 import net.onest.time.api.vo.Page
 import net.onest.time.api.vo.RoomVo
 import net.onest.time.api.vo.UserVo
 import net.onest.time.components.CheckInDialog
-import net.onest.time.constant.SharedPreferencesConstant
-import net.onest.time.constant.UserInfoConstant
 import net.onest.time.databinding.ActivityStudyRoomChatBinding
 import net.onest.time.entity.CheckIn
+import net.onest.time.utils.DateUtil
+import net.onest.time.utils.getUserInfoFromLocal
 import net.onest.time.utils.saveBitmapCache
 import net.onest.time.utils.showToast
 import okhttp3.WebSocket
@@ -47,38 +52,40 @@ import java.io.FileOutputStream
 import java.time.Instant
 
 class StudyRoomChatActivity : AppCompatActivity() {
-    private var userVo: UserVo? = null
+    private lateinit var userVo: UserVo
     private lateinit var roomVo: RoomVo
     private var btnBack: Button? = null
     private var btnSend: Button? = null
     private var roomName: TextView? = null
-    private var messageListener: MessageListener? = null
     private var historyMessagesList: Page<MessageVo>? = Page()
     private var pageNum = 1
     private var messagesList: MutableList<MessageVo> = ArrayList()
-    private var chatMsgAdapter: ChatMsgAdapter? = null
-    private var messagesView: RecyclerView? = null
-    private var editMessage: EditText? = null
-    private var smartRefreshLayout: SmartRefreshLayout? = null
-    private var checkIn: Button? = null
-    private var tools: LinearLayout? = null
+    private lateinit var chatMsgAdapter: ChatMsgAdapter
+    private lateinit var messagesView: RecyclerView
+    private lateinit var editMessage: EditText
+    private lateinit var smartRefreshLayout: SmartRefreshLayout
+    private lateinit var checkIn: Button
+    private lateinit var tools: LinearLayout
 
     private lateinit var binding: ActivityStudyRoomChatBinding
+    private var currentPosition = - 1
 
     @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("Range")
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        (it.data?.extras?.get("data") as Bitmap).run {
-            val path = "${this@StudyRoomChatActivity.externalCacheDir}/room/images"
-            val fileName = "${System.currentTimeMillis()}.png"
-            File(path).apply {
-                if (!exists() && !mkdirs()) {
-                    "创建文件失败".showToast()
+        (it.data?.extras?.get("data") as? Bitmap).run {
+            this ?.run {
+                val path = "${this@StudyRoomChatActivity.externalCacheDir}/room/images"
+                val fileName = "${System.currentTimeMillis()}.png"
+                File(path).apply {
+                    if (!exists() && !mkdirs()) {
+                        "创建文件失败".showToast()
+                    }
                 }
-            }
 
-            this.saveBitmapCache(path, fileName)
-            sendImage("$path/$fileName")
+                this.saveBitmapCache(path, fileName)
+                sendImage("$path/$fileName")
+            }
         }
     }
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -121,16 +128,15 @@ class StudyRoomChatActivity : AppCompatActivity() {
                 override fun onMessage(webSocket: WebSocket, text: String) {
                     super.onMessage(webSocket, text)
                     runOnUiThread {
-                        chatMsgAdapter!!.notifyItemInserted(messagesList.size)
+                        chatMsgAdapter.notifyItemInserted(messagesList.size)
+                        messagesView.smoothScrollToPosition(messagesList.size - 1)
                     }
                 }
             }
         )
 
-        val action = intent.action  // action
-        val type = intent.type      // 类型
-
-        if (Intent.ACTION_SEND == action && type != null) {
+        // 分享功能
+        if (Intent.ACTION_SEND == intent.action && intent.type != null) {
             val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
             //如果是媒体类型需要从数据库获取路径
             val path = "${this@StudyRoomChatActivity.externalCacheDir}/room/images"
@@ -160,36 +166,53 @@ class StudyRoomChatActivity : AppCompatActivity() {
 
     private fun initData() {
         // 获取用户信息
-        val userInfoJson = getSharedPreferences(SharedPreferencesConstant.USER_INFO, MODE_PRIVATE)
-            .getString(UserInfoConstant.USER_INFO, "")
-        userVo = RequestUtil.getGson().fromJson(userInfoJson, UserVo::class.java)
+        userVo = getUserInfoFromLocal()!!
 
         // 获取自习室信息
-        roomVo = (intent.getSerializableExtra("room") as RoomVo?) ?: RoomApi.getRoomInfo()
+        try {
+            roomVo = (intent.getSerializableExtra("room") as RoomVo?) ?: RoomApi.getRoomInfo()
+        } catch (e: RuntimeException) {
+            "还未加入自习室哦".showToast()
+        }
 
         try {
             historyMessagesList =
                 ChatApi.findRoomMessagePage(1, 10, roomVo.roomId, System.currentTimeMillis())
-            messagesList = if (historyMessagesList != null) {
-                historyMessagesList!!.records
-            } else {
-                ArrayList()
-            }
+            messagesList =
+                if (historyMessagesList != null) {
+                    historyMessagesList!!.records
+                } else {
+                    ArrayList()
+                }
         } catch (e: Exception) {
-            e.message!!.showToast()
+            e.message?.showToast()
         }
-        messageListener = MessageListener(messagesList)
+
         // 绑定适配器
-        val layoutManager = LinearLayoutManager(this)
-        messagesView!!.layoutManager = layoutManager
-        chatMsgAdapter = ChatMsgAdapter(this, messagesList, userVo!!.userId)
-        messagesView!!.adapter = chatMsgAdapter
+        messagesView.layoutManager = LinearLayoutManager(this)
+        chatMsgAdapter = ChatMsgAdapter(this, messagesList, userVo.userId)
+        messagesView.adapter = chatMsgAdapter
+
+        messagesView.postDelayed(500) {
+            messagesView.scrollToPosition(messagesList.size - 1)
+        }
 
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun setListeners() {
-        editMessage!!.addTextChangedListener(object : TextWatcher {
+        // 消息滚动监听器
+        messagesView.addOnScrollListener(object : OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (recyclerView.childCount > 0) {
+                    currentPosition = (recyclerView.getChildAt(0).layoutParams as RecyclerView.LayoutParams).absoluteAdapterPosition
+                }
+            }
+        })
+
+        // 选项卡
+        editMessage.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
@@ -209,9 +232,9 @@ class StudyRoomChatActivity : AppCompatActivity() {
 
         // 打卡
         binding.checkIn.setOnClickListener {
-            val statistic = StatisticApi.statistic(Instant.now().toEpochMilli())
+            val statistic = StatisticApi.statistic(DateUtil.epochMillisecond())
             val checkInData = CheckIn(
-                userVo!!.userName,
+                userVo.userName,
                 statistic.tomatoTimes,
                 statistic.tomatoDuration.toDouble(),
                 statistic.ratioByDurationOfDay
@@ -260,21 +283,21 @@ class StudyRoomChatActivity : AppCompatActivity() {
 
         // 发送文本消息
         btnSend!!.setOnClickListener { view: View? ->
-            if (editMessage!!.text.toString().isEmpty()) {
+            if (editMessage.text.toString().isEmpty()) {
                 "发送消息不可为空".showToast()
             } else {
                 val messageDto = MessageDto()
                 messageDto.toRoomId = roomVo.roomId
-                messageDto.content = editMessage!!.text.toString()
+                messageDto.content = editMessage.text.toString()
                 messageDto.type = 0
 
                 ChatApi.sendMessage(messageDto)
 
-                editMessage!!.setText("")
+                editMessage.setText("")
             }
         }
 
-        smartRefreshLayout!!.setOnRefreshListener { refreshLayout: RefreshLayout ->
+        smartRefreshLayout.setOnRefreshListener { refreshLayout: RefreshLayout ->
             pageNum += 1
             getMessages(Position.FIRST, false)
             refreshLayout.finishRefresh(500, true, false)
@@ -292,7 +315,7 @@ class StudyRoomChatActivity : AppCompatActivity() {
 
         checkIn = findViewById(R.id.check_in)
         tools = findViewById(R.id.tools)
-        tools!!.visibility = View.GONE
+        tools.visibility = View.GONE
     }
 
     // 下拉刷新获取消息
@@ -330,15 +353,15 @@ class StudyRoomChatActivity : AppCompatActivity() {
             if (position == Position.FIRST) {
                 messagesList.add(0, messageVo)
                 // 当有新消息时，刷新RecyclerView中的显示
-                chatMsgAdapter!!.notifyItemInserted(0)
+                chatMsgAdapter.notifyItemInserted(0)
             } else if (position == Position.LAST) {
                 messagesList.add(messageVo)
                 // 当有新消息时，刷新RecyclerView中的显示
-                chatMsgAdapter!!.notifyItemInserted(messagesList.size - 1)
+                chatMsgAdapter.notifyItemInserted(messagesList.size - 1)
             }
             if (scrollToEnd) {
                 // 将RecyclerView定位到最后一行
-                messagesView!!.scrollToPosition(messagesList.size - 1)
+                messagesView.scrollToPosition(messagesList.size - 1)
             }
         }
     }
@@ -358,7 +381,7 @@ class StudyRoomChatActivity : AppCompatActivity() {
             val keypadHeight = screenHeight - rect.bottom
             if (keypadHeight > screenHeight * 0.15) {
                 // 键盘弹出
-                messagesView!!.scrollToPosition(messagesList.size - 1)
+                messagesView.scrollToPosition(messagesList.size - 1)
             }
         }
     }

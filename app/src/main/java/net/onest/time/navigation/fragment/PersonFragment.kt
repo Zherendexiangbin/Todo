@@ -3,7 +3,6 @@ package net.onest.time.navigation.fragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.location.*
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +26,6 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.*
 
 class PersonFragment : Fragment() {
     private lateinit var view: View
@@ -182,5 +180,4 @@ class PersonFragment : Fragment() {
     companion object {
         private const val INTENT_CODE = 1
     }
-
 }
