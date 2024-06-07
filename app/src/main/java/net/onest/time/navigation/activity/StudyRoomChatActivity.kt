@@ -180,6 +180,7 @@ class StudyRoomChatActivity : AppCompatActivity() {
                 ArrayList()
             }
         } catch (e: Exception) {
+            e.message!!.showToast()
         }
         messageListener = MessageListener(messagesList)
         // 绑定适配器
