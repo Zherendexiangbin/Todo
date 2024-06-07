@@ -21,7 +21,6 @@ public class TomatoClock implements Serializable {
     public TomatoClock withTomatoClockVo(TomatoClockVo tomatoClockVo) {
         this.clockId = tomatoClockVo.getClockId();
         this.taskId = tomatoClockVo.getTaskId();
-        this.sequence = tomatoClockVo.getSequence();
         this.clockDuration = tomatoClockVo.getClockDuration();
         this.clockStatus = tomatoClockVo.getClockStatus().getStatus();
         this.stopReason = tomatoClockVo.getStopReason();
