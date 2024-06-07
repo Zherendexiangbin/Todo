@@ -24,6 +24,7 @@ import android.widget.PopupWindow
 import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -101,7 +102,7 @@ class StudyRoomFragment : Fragment() {
                 rankingAdapter!!.rankingList = userVos
                 rankingAdapter!!.notifyDataSetChanged()
 
-                if (roomVo!!.userId == userVo.getUserId()) {
+                if (roomVo!!.userId == userVo.userId) {
                     this.isMaster = true
                     roomManager.text = "管理员"
                     btnMenu.visibility = View.VISIBLE
@@ -118,12 +119,12 @@ class StudyRoomFragment : Fragment() {
         } catch (e: Exception) {
 
         }
-        renderNotInRoom()
+        renderIsNotInRoom()
 
         return view
     }
 
-    private fun renderNotInRoom() {
+    private fun renderIsNotInRoom() {
         if (roomVo == null) {
             notInRoom.visibility = View.VISIBLE
         } else {
@@ -207,15 +208,22 @@ class StudyRoomFragment : Fragment() {
                         btnAdd.setBackgroundResource(R.mipmap.add3)
                         btnAdd.setHint("add")
 
-                        RoomApi.userExit(roomVo!!.getRoomId())
+                        RoomApi.userExit(roomVo!!.roomId)
+
+                        // 清空当前自习室的记录
                         userVos.clear()
                         rankingAdapter!!.rankingList = userVos
                         rankingAdapter!!.notifyDataSetChanged()
-
+                        roomVo = null
+                        renderIsNotInRoom()
+                        Glide.with(requireContext())
+                            .load(ResourcesCompat.getDrawable(resources, R.drawable.logo2, requireContext().theme))
+                            .into(roomAvatar)
                         roomName.text = "时光自习室"
                         isMaster = false
                         roomManager.visibility = View.GONE
                         btnMenu.visibility = View.GONE
+
                         Toast.makeText(context, "退出成功！", Toast.LENGTH_SHORT).show()
                     }
                     .show()
@@ -253,10 +261,10 @@ class StudyRoomFragment : Fragment() {
         recyclerView?.setAdapter(rankingAdapter)
 
         btnMenu = view.findViewById(R.id.btn_room_menu)
-        btnMenu?.visibility = View.GONE
+        btnMenu.visibility = View.GONE
 
         btnAdd = view.findViewById(R.id.btn_add)
-        btnAdd?.setHint("add")
+        btnAdd.setHint("add")
     }
 
 
@@ -418,7 +426,7 @@ class StudyRoomFragment : Fragment() {
 
                             // 获取加入的自习室信息
                             roomVo = RoomApi.getRoomInfo()
-                            renderNotInRoom()
+                            renderIsNotInRoom()
 
                             Glide.with((context)!!)
                                 .load(roomVo?.roomAvatar)
@@ -432,6 +440,10 @@ class StudyRoomFragment : Fragment() {
                             btnAdd.hint = "quit"
                             dismiss()
                             Toast.makeText(context, "加入成功！", Toast.LENGTH_SHORT).show()
+
+                            userVos = RoomApi.listUsers(roomVo!!.roomId)
+                            rankingAdapter?.rankingList = userVos
+                            rankingAdapter?.notifyDataSetChanged()
                         }
                         .show()
                 }
@@ -583,7 +595,7 @@ class StudyRoomFragment : Fragment() {
                 // 查看管理员是否同意加入请求
                 try {
                     roomVo = RoomApi.getRoomInfo()
-                    renderNotInRoom()
+                    renderIsNotInRoom()
 
                     if (roomVo != null) {
                         afterManager()
@@ -598,7 +610,7 @@ class StudyRoomFragment : Fragment() {
             override fun onFinish() {
                 try {
                     roomVo = RoomApi.getRoomInfo()
-                    renderNotInRoom()
+                    renderIsNotInRoom()
 
                     if (roomVo != null) {
                         afterManager()
