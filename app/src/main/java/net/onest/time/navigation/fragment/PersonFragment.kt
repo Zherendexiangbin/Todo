@@ -7,11 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Switch
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -30,6 +26,8 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.*
+
 
 class PersonFragment : Fragment() {
     private lateinit var view: View
@@ -166,10 +164,10 @@ class PersonFragment : Fragment() {
             ChronoUnit.DAYS.between(specifiedDate, localDate).toString()
 
         //用户今日完成日程数及累计完整日程数
-
         userTodayComplete!!.text = "今日完成日程：" + 3
         userTotalComplete!!.text = "累计完成日程：" + 1144
     }
+
 
     private fun findViewById() {
         userAvatar = view.findViewById(R.id.user_avatar)
