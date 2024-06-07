@@ -1,9 +1,9 @@
 package net.onest.time.adapter.account
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import android.content.DialogInterface
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -18,12 +18,12 @@ import net.onest.time.api.vo.UserVo
 import net.onest.time.constant.SharedPreferencesConstant
 import net.onest.time.constant.UserInfoConstant
 import net.onest.time.databinding.ItemAccountBinding
-import net.onest.time.utils.showSnackBar
 import net.onest.time.utils.showToast
 
 class AccountAdapter (
     var context: Context,
     var userVoList: MutableList<UserVo>,
+    var parentDialog: Dialog
 ) : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
     private lateinit var binding: ItemAccountBinding
 
@@ -49,6 +49,9 @@ class AccountAdapter (
                 .setTitle("切换账号")
                 .setMessage("是否切换账号到${userVo.userName}？")
                 .setPositiveButton("确定") { dialog, which ->
+                    dialog.dismiss()
+                    parentDialog.dismiss()
+
                     val sharedPreferences =
                         context.getSharedPreferences(SharedPreferencesConstant.USER_INFO, MODE_PRIVATE)
 
