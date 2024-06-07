@@ -106,7 +106,8 @@ class TaskInfoDialog(
 
         //获取数据统计
         statistics!!.setOnClickListener {
-            var statisticByTask = StatisticApi.statisticByTask(
+
+            val statisticByTask = StatisticApi.statisticByTask(
                 task.taskId,
                 LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"))
             )
