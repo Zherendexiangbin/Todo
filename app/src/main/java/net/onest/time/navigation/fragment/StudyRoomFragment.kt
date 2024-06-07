@@ -489,6 +489,16 @@ class StudyRoomFragment : Fragment() {
             refresh = view2.findViewById(R.id.refresh)
             applicationList = view2.findViewById(R.id.application_list)
 
+            try {
+                userVos2 = RoomApi.findRequests(roomVo!!.roomId)
+                if (userVos2 != null) {
+                    applicationItemAdapter!!.updateData(userVos2)
+                } else {
+                    userVos2 = java.util.ArrayList()
+                }
+            } catch (e: java.lang.Exception) {
+            }
+
             // 获取自习室邀请码
             applicationCode?.setText(RoomApi.generateInvitationCode(roomVo!!.roomId))
 
@@ -614,8 +624,9 @@ class StudyRoomFragment : Fragment() {
         btnMenu!!.visibility = View.GONE
         btnAdd!!.setBackgroundResource(R.mipmap.quit)
         btnAdd!!.hint = "quit"
+        onStart()
 
-        Toast.makeText(context, "加入成功", Toast.LENGTH_SHORT).show()
+        "加入成功,请刷新自习室".showToast()
     }
 
     companion object {
