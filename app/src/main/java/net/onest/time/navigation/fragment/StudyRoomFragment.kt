@@ -43,6 +43,7 @@ import net.onest.time.api.vo.RoomVo
 import net.onest.time.api.vo.UserVo
 import net.onest.time.navigation.activity.FindStudyRoomActivity
 import net.onest.time.navigation.activity.StudyRoomChatActivity
+import net.onest.time.utils.doSpinCircleAnimation
 import net.onest.time.utils.getUserInfoFromLocal
 import net.onest.time.utils.showToast
 import java.util.concurrent.TimeUnit
@@ -365,38 +366,38 @@ class StudyRoomFragment : Fragment() {
                     context
                 )
                     .dismissOnTouchOutside(false)
-                    .asConfirm("创建自习室", setName.getText().toString(),
-                        OnConfirmListener {
-                            roomDto = RoomDto()
-                            // 设置自习室名称
-                            if ((setName.getText().toString() == "")) {
-                                roomName!!.text = "时光自习室"
-                                roomDto!!.roomName = "时光自习室"
-                            } else {
-                                roomName!!.text = setName.getText().toString()
-                                roomDto!!.roomName = setName.getText().toString()
-                            }
-                            // 设置自习室管理员
-                            roomManager!!.visibility = View.VISIBLE
-                            roomManager!!.text = "管理员"
+                    .asConfirm("创建自习室", setName.getText().toString()) {
+                        roomDto = RoomDto()
+                        // 设置自习室名称
+                        if ((setName.getText().toString() == "")) {
+                            roomName.text = "时光自习室"
+                            roomDto!!.roomName = "时光自习室"
+                        } else {
+                            roomName.text = setName.getText().toString()
+                            roomDto!!.roomName = setName.getText().toString()
+                        }
 
-                            // 设置自习室头像
-                            Glide.with((context)!!)
-                                .load(userVo.avatar)
-                                .into((roomAvatar)!!)
-                            roomDto!!.roomAvatar = userVo.avatar
+                        // 设置自习室管理员
+                        roomManager.visibility = View.VISIBLE
+                        roomManager.text = "管理员"
 
-                            isMaster = true
-                            btnMenu!!.visibility = View.VISIBLE
-                            btnAdd!!.setBackgroundResource(R.mipmap.quit)
-                            btnAdd!!.hint = "dissolution"
+                        // 设置自习室头像
+                        Glide.with((context)!!)
+                            .load(userVo.avatar)
+                            .into((roomAvatar))
+                        roomDto!!.roomAvatar = userVo.avatar
 
-                            // 创建自习室，获取自习室信息
-                            roomVo = RoomApi.createRoom(roomDto)
+                        isMaster = true
+                        btnMenu.visibility = View.VISIBLE
+                        btnAdd.setBackgroundResource(R.mipmap.quit)
+                        btnAdd.hint = "dissolution"
 
-                            dismiss()
-                            Toast.makeText(context, "创建成功！", Toast.LENGTH_SHORT).show()
-                        })
+                        // 创建自习室，获取自习室信息
+                        roomVo = RoomApi.createRoom(roomDto)
+
+                        dismiss()
+                        Toast.makeText(context, "创建成功！", Toast.LENGTH_SHORT).show()
+                    }
                     .show()
             })
 
@@ -512,15 +513,16 @@ class StudyRoomFragment : Fragment() {
             }
 
             // 获取自习室邀请码
-            applicationCode?.setText(RoomApi.generateInvitationCode(roomVo!!.roomId))
+            applicationCode?.text = RoomApi.generateInvitationCode(roomVo!!.roomId)
 
             // 刷新获取房间申请列表
-            refresh?.setOnClickListener(View.OnClickListener { view1: View? ->
+            refresh?.setOnClickListener { view1: View? ->
+                view1?.doSpinCircleAnimation(360f)
                 userVos2 = RoomApi.findRequests(roomVo!!.roomId)
                 if (userVos2 != null) {
                     applicationItemAdapter!!.updateData(userVos2)
                 }
-            })
+            }
 
             // 绑定数据
             val manager: RecyclerView.LayoutManager = LinearLayoutManager(
@@ -551,7 +553,6 @@ class StudyRoomFragment : Fragment() {
         } else if (((requestCode == REQUEST_CODE) && resultCode == INTENT_CODE) && data != null) {
             // 处理页面跳转结果
             addMenu!!.dismiss()
-            afterRequest()
         }
     }
 
@@ -588,54 +589,20 @@ class StudyRoomFragment : Fragment() {
         }
     }
 
-    fun afterRequest() {
-        object : CountDownTimer((15 * 1000).toLong(), 1000) {
-            override fun onTick(l: Long) {
-                val seconds = TimeUnit.MILLISECONDS.toSeconds(l).toInt()
-                // 查看管理员是否同意加入请求
-                try {
-                    roomVo = RoomApi.getRoomInfo()
-                    renderIsNotInRoom()
-
-                    if (roomVo != null) {
-                        afterManager()
-                        cancel()
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(context, "等待管理员同意：" + seconds + "s", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-
-            override fun onFinish() {
-                try {
-                    roomVo = RoomApi.getRoomInfo()
-                    renderIsNotInRoom()
-
-                    if (roomVo != null) {
-                        afterManager()
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(context, "管理员未同意", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }.start()
-    }
-
     // 管理员同意加入请求
     private fun afterManager() {
         userVos = RoomApi.listUsers(roomVo!!.roomId)
 
         Glide.with(requireContext())
             .load(roomVo!!.roomAvatar)
-            .into(roomAvatar!!)
-        roomName!!.text = roomVo!!.roomName
-        roomManager!!.text = "成员"
+            .into(roomAvatar)
+        roomName.text = roomVo!!.roomName
+        roomManager.text = "成员"
 
         isMaster = false
-        btnMenu!!.visibility = View.GONE
-        btnAdd!!.setBackgroundResource(R.mipmap.quit)
-        btnAdd!!.hint = "quit"
+        btnMenu.visibility = View.GONE
+        btnAdd.setBackgroundResource(R.mipmap.quit)
+        btnAdd.hint = "quit"
         onStart()
 
         "加入成功,请刷新自习室".showToast()
