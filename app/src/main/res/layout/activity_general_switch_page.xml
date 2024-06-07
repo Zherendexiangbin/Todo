@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp">
+        <Switch
+            android:id="@+id/message_remind_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingLeft="10dp"
+            android:thumb="@mipmap/sphere"
+            android:track="@drawable/switch_shape"
+            android:text="消息接收提醒"
+            android:checked="true"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <Switch
+            android:id="@+id/mode_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/message_remind_switch"
+            android:layout_marginTop="18dp"
+            android:paddingLeft="10dp"
+            android:thumb="@mipmap/sphere"
+            android:track="@drawable/switch_shape"
+            android:text="深色模式"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <Switch
+            android:id="@+id/landscape_screen_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mode_switch"
+            android:layout_marginTop="18dp"
+            android:paddingLeft="10dp"
+            android:thumb="@mipmap/sphere"
+            android:track="@drawable/switch_shape"
+            android:text="开启横屏模式"
+            tools:ignore="UseSwitchCompatOrMaterialXml"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
