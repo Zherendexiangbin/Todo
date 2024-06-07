@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -65,6 +66,7 @@ class StudyRoomChatActivity : AppCompatActivity() {
     private var editMessage: EditText? = null
     private var smartRefreshLayout: SmartRefreshLayout? = null
     private var checkIn: Button? = null
+    private var tools: LinearLayout? = null
 
     private lateinit var binding: ActivityStudyRoomChatBinding
 
@@ -295,6 +297,8 @@ class StudyRoomChatActivity : AppCompatActivity() {
         btnSend = findViewById(R.id.btn_send)
 
         checkIn = findViewById(R.id.check_in)
+        tools = findViewById(R.id.tools)
+        tools!!.visibility = View.GONE
     }
 
     // 下拉刷新获取消息

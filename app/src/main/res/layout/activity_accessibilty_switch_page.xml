@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp">
+    <Switch
+        android:id="@+id/plugins_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingLeft="10dp"
+        android:thumb="@mipmap/sphere"
+        android:track="@drawable/switch_shape"
+        android:text="插件"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <Switch
+        android:id="@+id/screenshot_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/plugins_switch"
+        android:layout_marginTop="18dp"
+        android:paddingLeft="10dp"
+        android:thumb="@mipmap/sphere"
+        android:track="@drawable/switch_shape"
+        android:text="摇动手机截屏"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <Switch
+        android:id="@+id/privacy_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/screenshot_switch"
+        android:layout_marginTop="18dp"
+        android:paddingLeft="10dp"
+        android:thumb="@mipmap/sphere"
+        android:track="@drawable/switch_shape"
+        android:text="隐私授权"
+        tools:ignore="UseSwitchCompatOrMaterialXml"/>
+
+    <Switch
+        android:id="@+id/translate_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/privacy_switch"
+        android:layout_marginTop="18dp"
+        android:paddingLeft="10dp"
+        android:thumb="@mipmap/sphere"
+        android:track="@drawable/switch_shape"
+        android:text="翻译"
+        tools:ignore="UseSwitchCompatOrMaterialXml"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
