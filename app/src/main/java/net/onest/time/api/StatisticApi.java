@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import net.onest.time.api.utils.RequestUtil;
 import net.onest.time.api.utils.ResponseErrorException;
 import net.onest.time.api.vo.UserVo;
+import net.onest.time.api.vo.statistic.DayTomatoStatistic;
 import net.onest.time.api.vo.statistic.StatisticVo;
 import net.onest.time.api.vo.statistic.StopReasonRatio;
 
@@ -28,6 +29,8 @@ public class StatisticApi {
 
     // 统计中断原因
     private final static String STATISTIC_STOP_REASON = "/stopReason";
+    // 获得简化版今日统计数据
+    private final static String SIMPLE_STATISTIC_TODAY = "/simpleStatisticToday";
 
 
     public static StatisticVo statistic() {
@@ -73,5 +76,12 @@ public class StatisticApi {
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC_STOP_REASON)
                 .get()
                 .buildAndSend(new TypeToken<List<StopReasonRatio>>(){});
+    }
+
+    public static DayTomatoStatistic simpleStatisticToday() {
+        return RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + SIMPLE_STATISTIC_TODAY)
+                .get()
+                .buildAndSend(new TypeToken<DayTomatoStatistic>(){});
     }
 }
