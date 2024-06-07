@@ -166,6 +166,7 @@ class PersonFragment : Fragment() {
             ChronoUnit.DAYS.between(specifiedDate, localDate).toString()
 
         //用户今日完成日程数及累计完整日程数
+
         userTodayComplete!!.text = "今日完成日程：" + 3
         userTotalComplete!!.text = "累计完成日程：" + 1144
     }
