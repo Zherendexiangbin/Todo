@@ -125,7 +125,6 @@ class StudyRoomChatActivity : AppCompatActivity() {
                     super.onMessage(webSocket, text)
                     runOnUiThread {
                         chatMsgAdapter!!.notifyItemInserted(messagesList.size)
-                        messagesView?.scrollToPosition(messagesList.size - 1)
                     }
                 }
             }

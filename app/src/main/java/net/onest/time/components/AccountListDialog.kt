@@ -42,7 +42,10 @@ class AccountListDialogBuilder(
 
         binding.accountList.apply {
             layoutManager = LinearLayoutManager(this@AccountListDialogBuilder.activity)
-            adapter = AccountAdapter(this@AccountListDialogBuilder.activity, userVoList)
+            adapter = AccountAdapter(
+                this@AccountListDialogBuilder.activity,
+                userVoList,
+                this@AccountListDialogBuilder)
         }
     }
 
