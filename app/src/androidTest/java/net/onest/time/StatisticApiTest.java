@@ -14,12 +14,6 @@ import java.util.List;
 public class StatisticApiTest {
 
     @Test
-    public void statistic() {
-        StatisticVo statisticVo = StatisticApi.statistic();
-        System.out.println(statisticVo);
-    }
-
-    @Test
     public void statisticTime() {
         Long timestamp = 1716190853000L;
         StatisticVo statisticVo = StatisticApi.statistic(timestamp);

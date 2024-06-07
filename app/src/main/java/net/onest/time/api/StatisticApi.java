@@ -32,14 +32,6 @@ public class StatisticApi {
     // 获得简化版今日统计数据
     private final static String SIMPLE_STATISTIC_TODAY = "/simpleStatisticToday";
 
-
-    public static StatisticVo statistic() {
-        return RequestUtil.builder()
-                .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC)
-                .get()
-                .buildAndSend(StatisticVo.class);
-    }
-
     public static StatisticVo statistic(Long timestamp) {
         return RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC + timestamp)
