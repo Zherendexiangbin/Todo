@@ -26,6 +26,7 @@ import net.onest.time.api.vo.TaskVo
 import net.onest.time.api.vo.statistic.StatisticVo
 import net.onest.time.components.holder.AdapterHolder
 import net.onest.time.utils.*
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -109,7 +110,7 @@ class TaskInfoDialog(
 
             val statisticByTask = StatisticApi.statisticByTask(
                 task.taskId,
-                LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"))
+                LocalDate.now().atStartOfDay(ZoneOffset.of("+8")).toEpochSecond() * 1000
             )
 
             val builder = Builder(getContext(), R.style.CustomDialogStyle)
