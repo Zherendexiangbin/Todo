@@ -37,13 +37,11 @@ class PersonFragment : Fragment() {
     private var userId: TextView? = null
     private var userCreateAt: TextView? = null
     private var userTotalDay: TextView? = null
-    private var userTodayComplete: TextView? = null
-    private var userTotalComplete: TextView? = null
+    private var userSignature: TextView? = null
     private var change: Button? = null
     private var exit: Button? = null
     private var privacy: TextView? = null
     private var general: TextView? = null
-
     private lateinit var binding: PersonFragmentBinding
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -163,11 +161,9 @@ class PersonFragment : Fragment() {
         userTotalDay!!.text =
             ChronoUnit.DAYS.between(specifiedDate, localDate).toString()
 
-        //用户今日完成日程数及累计完整日程数
-        userTodayComplete!!.text = "今日完成日程：" + 3
-        userTotalComplete!!.text = "累计完成日程：" + 1144
+        //个性签名
+        userSignature!!.text = userVo.signature
     }
-
 
     private fun findViewById() {
         userAvatar = view.findViewById(R.id.user_avatar)
@@ -176,9 +172,7 @@ class PersonFragment : Fragment() {
         userId = view.findViewById(R.id.user_id)
         userCreateAt = view.findViewById(R.id.user_create_time)
         userTotalDay = view.findViewById(R.id.user_total_day)
-        userTodayComplete = view.findViewById(R.id.user_today_complete)
-        userTotalComplete = view.findViewById(R.id.user_total_complete)
-
+        userSignature = view.findViewById(R.id.user_signature)
         change = view.findViewById(R.id.btn_change)
         exit = view.findViewById(R.id.btn_exit)
         general = view.findViewById(R.id.general)
