@@ -13,11 +13,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -43,13 +39,12 @@ import net.onest.time.constant.SharedPreferencesConstant
 import net.onest.time.constant.UserInfoConstant
 import net.onest.time.databinding.ActivityStudyRoomChatBinding
 import net.onest.time.entity.CheckIn
-import net.onest.time.utils.createBitmap
 import net.onest.time.utils.saveBitmapCache
-import net.onest.time.utils.saveBitmapGallery
 import net.onest.time.utils.showToast
 import okhttp3.WebSocket
 import java.io.File
 import java.io.FileOutputStream
+import java.time.Instant
 
 class StudyRoomChatActivity : AppCompatActivity() {
     private var userVo: UserVo? = null
@@ -127,7 +122,6 @@ class StudyRoomChatActivity : AppCompatActivity() {
                     super.onMessage(webSocket, text)
                     runOnUiThread {
                         chatMsgAdapter!!.notifyItemInserted(messagesList.size)
-                        messagesView?.scrollToPosition(messagesList.size - 1)
                     }
                 }
             }
@@ -182,6 +176,7 @@ class StudyRoomChatActivity : AppCompatActivity() {
                 ArrayList()
             }
         } catch (e: Exception) {
+            e.message!!.showToast()
         }
         messageListener = MessageListener(messagesList)
         // 绑定适配器
@@ -189,6 +184,7 @@ class StudyRoomChatActivity : AppCompatActivity() {
         messagesView!!.layoutManager = layoutManager
         chatMsgAdapter = ChatMsgAdapter(this, messagesList, userVo!!.userId)
         messagesView!!.adapter = chatMsgAdapter
+
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -213,7 +209,7 @@ class StudyRoomChatActivity : AppCompatActivity() {
 
         // 打卡
         binding.checkIn.setOnClickListener {
-            val statistic = StatisticApi.statistic()
+            val statistic = StatisticApi.statistic(Instant.now().toEpochMilli())
             val checkInData = CheckIn(
                 userVo!!.userName,
                 statistic.tomatoTimes,

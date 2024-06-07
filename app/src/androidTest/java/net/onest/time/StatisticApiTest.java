@@ -3,6 +3,7 @@ package net.onest.time;
 import net.onest.time.api.StatisticApi;
 import net.onest.time.api.TaskApi;
 import net.onest.time.api.vo.TaskVo;
+import net.onest.time.api.vo.statistic.DayTomatoStatistic;
 import net.onest.time.api.vo.statistic.StatisticVo;
 import net.onest.time.api.vo.statistic.StopReasonRatio;
 
@@ -11,12 +12,6 @@ import org.junit.Test;
 import java.util.List;
 
 public class StatisticApiTest {
-
-    @Test
-    public void statistic() {
-        StatisticVo statisticVo = StatisticApi.statistic();
-        System.out.println(statisticVo);
-    }
 
     @Test
     public void statisticTime() {
@@ -44,5 +39,11 @@ public class StatisticApiTest {
     public void statisticStopReason() {
         List<StopReasonRatio> stopReasonRatios = StatisticApi.statisticStopReason();
         System.out.println(stopReasonRatios);
+    }
+
+    @Test
+    public void simpleStatisticToday() {
+        DayTomatoStatistic dayTomatoStatistic = StatisticApi.simpleStatisticToday();
+        System.out.println(dayTomatoStatistic);
     }
 }
