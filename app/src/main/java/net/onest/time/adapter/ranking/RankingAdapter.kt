@@ -72,7 +72,6 @@ class RankingAdapter(
                     .setTitle(userVo.userName)
                     .setIcon(holder.avatar.drawable)
                     .setMessage("userId：" + userVo.userId + "\n"
-                                    + "email：" + UserApi.getUserInfo(userVo.userId).email + "\n"
                                     + "个性签名：" + userVo.signature + "\n"
                                     + "专注时长：" + userVo.tomatoDuration + "分钟")
                     .setPositiveButton("确定"){dialog, which ->

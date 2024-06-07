@@ -49,6 +49,9 @@ public class RoomApi {
     // 管理员同意用户加入自习室
     private final static String ACCEPT_REQUEST = "/manager/acceptRequest";
 
+    // 管理员拒绝用户加入自习室
+    private final static String REJECT_REQUEST = "/manager/rejectRequest";
+
     // 管理员查询所有的加入自习室的请求
     private final static String FIND_REQUESTS = "/manager/requests";
 
@@ -136,6 +139,13 @@ public class RoomApi {
     public static void acceptRequest(Long roomId, Long userId) {
         RequestUtil.builder()
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + ACCEPT_REQUEST + "?roomId=" + roomId + "&userId=" + userId)
+                .post()
+                .buildAndSend();
+    }
+
+    public static void rejectRequest(Long roomId, Long userId) {
+        RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + REJECT_REQUEST + "?roomId=" + roomId + "&userId=" + userId)
                 .post()
                 .buildAndSend();
     }

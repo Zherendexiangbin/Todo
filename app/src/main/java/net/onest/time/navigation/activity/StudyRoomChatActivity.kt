@@ -68,17 +68,19 @@ class StudyRoomChatActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("Range")
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        (it.data?.extras?.get("data") as Bitmap).run {
-            val path = "${this@StudyRoomChatActivity.externalCacheDir}/room/images"
-            val fileName = "${System.currentTimeMillis()}.png"
-            File(path).apply {
-                if (!exists() && !mkdirs()) {
-                    "创建文件失败".showToast()
+        (it.data?.extras?.get("data") as? Bitmap).run {
+            this ?.run {
+                val path = "${this@StudyRoomChatActivity.externalCacheDir}/room/images"
+                val fileName = "${System.currentTimeMillis()}.png"
+                File(path).apply {
+                    if (!exists() && !mkdirs()) {
+                        "创建文件失败".showToast()
+                    }
                 }
-            }
 
-            this.saveBitmapCache(path, fileName)
-            sendImage("$path/$fileName")
+                this.saveBitmapCache(path, fileName)
+                sendImage("$path/$fileName")
+            }
         }
     }
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -165,7 +167,11 @@ class StudyRoomChatActivity : AppCompatActivity() {
         userVo = RequestUtil.getGson().fromJson(userInfoJson, UserVo::class.java)
 
         // 获取自习室信息
-        roomVo = (intent.getSerializableExtra("room") as RoomVo?) ?: RoomApi.getRoomInfo()
+        try {
+            roomVo = (intent.getSerializableExtra("room") as RoomVo?) ?: RoomApi.getRoomInfo()
+        } catch (e: RuntimeException) {
+            "还未加入自习室哦".showToast()
+        }
 
         try {
             historyMessagesList =
