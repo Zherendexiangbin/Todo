@@ -46,4 +46,12 @@ public class StatisticApiTest {
         DayTomatoStatistic dayTomatoStatistic = StatisticApi.simpleStatisticToday();
         System.out.println(dayTomatoStatistic);
     }
+
+    @Test
+    public void statisticByCategory() {
+        Long categoryId = 54L;
+        Long timestamp = 1717861338085L;
+        StatisticVo statisticVo = StatisticApi.statisticByCategory(categoryId, timestamp);
+        System.out.println(statisticVo);
+    }
 }

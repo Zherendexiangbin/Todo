@@ -96,4 +96,10 @@ public class RoomApiTest {
         RoomVo roomInfo = RoomApi.getRoomInfo();
         System.out.println(roomInfo);
     }
+
+    @Test
+    public void findRequestsUser() {
+        List<RoomVo> requests = RoomApi.findRequests();
+        System.out.println(requests);
+    }
 }

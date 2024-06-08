@@ -29,8 +29,12 @@ public class StatisticApi {
 
     // 统计中断原因
     private final static String STATISTIC_STOP_REASON = "/stopReason";
+
     // 获得简化版今日统计数据
     private final static String SIMPLE_STATISTIC_TODAY = "/simpleStatisticToday";
+
+    // 每个清单集合的统计数据
+    private final static String STATISTIC_BY_CATEGORY = "/category";
 
     public static StatisticVo statistic(Long timestamp) {
         return RequestUtil.builder()
@@ -75,5 +79,12 @@ public class StatisticApi {
                 .url(ServerConstant.HTTP_ADDRESS + PREFIX + SIMPLE_STATISTIC_TODAY)
                 .get()
                 .buildAndSend(new TypeToken<DayTomatoStatistic>(){});
+    }
+
+    public static StatisticVo statisticByCategory(Long categoryId, Long timestamp) {
+        return RequestUtil.builder()
+                .url(ServerConstant.HTTP_ADDRESS + PREFIX + STATISTIC_BY_CATEGORY + "/" + categoryId + "/" + timestamp)
+                .get()
+                .buildAndSend(new TypeToken<StatisticVo>(){});
     }
 }

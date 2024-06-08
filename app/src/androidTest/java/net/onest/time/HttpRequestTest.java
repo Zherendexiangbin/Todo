@@ -61,10 +61,6 @@ public class HttpRequestTest {
         TaskApi.complete(3L);
     }
 
-    @Test
-    public void statistic() {
-        System.out.println(StatisticApi.statistic());
-    }
 
     @Test
     public void findRooms() {
