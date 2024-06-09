@@ -157,6 +157,7 @@ class ListFragmentGroupAdapter(
     ) {
         holder?.run {
             nameTv.text = groupBean.categoryName
+
             addBtn.setOnClickListener {
                 groupBean.categoryId?.let {
                     AddTaskMoreDialog(
@@ -172,12 +173,8 @@ class ListFragmentGroupAdapter(
 
             //数据获取:
             statistics!!.setOnClickListener {
-
-                TODO("数据获取")
-                val statisticByTask = StatisticApi.statisticByTask(
-                    groupBean.categoryId,
-                    LocalDate.now().atStartOfDay(ZoneOffset.of("+8")).toEpochSecond() * 1000
-                )
+                val statisticByCategory = StatisticApi.statisticByCategory(groupBean.categoryId,
+                    LocalDate.now().atStartOfDay(ZoneOffset.of("+8")).toEpochSecond() * 1000)
 
                 val builder = AlertDialog.Builder(context, R.style.CustomDialogStyle)
                 val inflater = LayoutInflater.from(context)
@@ -198,17 +195,17 @@ class ListFragmentGroupAdapter(
                 var pieChart = dialogViewAban.findViewById<PieChart>(R.id.statistics_pie_chart)
                 var close = dialogViewAban.findViewById<Button>(R.id.close_pop_window)
 
-                tomatoTimes.text = "${statisticByTask.tomatoTimes}"
-                tomatoDuration.text = "${statisticByTask.tomatoDuration}"
-                averageTomatoTimes.text = "${statisticByTask.avgTomatoTimes}"
-                averageTomatoDuration.text = "${statisticByTask.avgTomatoDuration}"
+                tomatoTimes.text = "${statisticByCategory.tomatoTimes}"
+                tomatoDuration.text = "${statisticByCategory.tomatoDuration}"
+                averageTomatoTimes.text = "${statisticByCategory.avgTomatoTimes}"
+                averageTomatoDuration.text = "${statisticByCategory.avgTomatoDuration}"
 
 
-                val pieEntries = statisticByTask.ratioByDurationOfDay.map {
+                val pieEntries = statisticByCategory.ratioByDurationOfDay.map {
                     PieEntry(it.ratio.toFloat(), it.taskName)
                 }
 
-                val colors = statisticByTask.ratioByDurationOfDay.map {
+                val colors = statisticByCategory.ratioByDurationOfDay.map {
                     ColorUtil.getColorByRgb(null)
                 }
 
@@ -218,11 +215,11 @@ class ListFragmentGroupAdapter(
                 radioGroup!!.setOnCheckedChangeListener { group, checkedId ->
                     when (checkedId) {
                         R.id.statistics_time_data_day -> {
-                            val pieEntries = statisticByTask.ratioByDurationOfDay.map {
+                            val pieEntries = statisticByCategory.ratioByDurationOfDay.map {
                                 PieEntry(it.ratio.toFloat(), it.taskName)
                             }
 
-                            val colors = statisticByTask.ratioByDurationOfDay.map {
+                            val colors = statisticByCategory.ratioByDurationOfDay.map {
                                 ColorUtil.getColorByRgb(null)
                             }
 
@@ -231,11 +228,11 @@ class ListFragmentGroupAdapter(
                         }
 
                         R.id.statistics_time_data_week -> {
-                            val pieEntries = statisticByTask.ratioByDurationOfWeek.map {
+                            val pieEntries = statisticByCategory.ratioByDurationOfWeek.map {
                                 PieEntry(it.ratio.toFloat(), it.taskName)
                             }
 
-                            val colors = statisticByTask.ratioByDurationOfWeek.map {
+                            val colors = statisticByCategory.ratioByDurationOfWeek.map {
                                 ColorUtil.getColorByRgb(null)
                             }
 
@@ -244,11 +241,11 @@ class ListFragmentGroupAdapter(
                         }
 
                         R.id.statistics_time_data_month -> {
-                            val pieEntries = statisticByTask.ratioByDurationOfMonth.map {
+                            val pieEntries = statisticByCategory.ratioByDurationOfMonth.map {
                                 PieEntry(it.ratio.toFloat(), it.taskName)
                             }
 
-                            val colors = statisticByTask.ratioByDurationOfMonth.map {
+                            val colors = statisticByCategory.ratioByDurationOfMonth.map {
                                 ColorUtil.getColorByRgb(null)
                             }
 

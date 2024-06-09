@@ -5,6 +5,7 @@ import android.app.DatePickerDialog.OnDateSetListener
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
@@ -64,6 +65,7 @@ class AddTaskMoreDialog(
     private val task = TaskDto().withDefault()
 
     private fun setListeners() {
+
         higherSet!!.setOnClickListener {
             val builder = Builder(context, R.style.CustomDialogStyle)
             val inflater = LayoutInflater.from(context)
@@ -306,4 +308,5 @@ class AddTaskMoreDialog(
         task.categoryId = categoryId
         setListeners()
     }
+
 }
