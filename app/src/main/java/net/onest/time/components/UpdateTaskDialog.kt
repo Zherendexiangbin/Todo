@@ -78,6 +78,8 @@ class UpdateTaskDialog (
 
         dialog.window!!.setContentView(dialogView)
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+        itemName?.requestFocus()
 
         itemName!!.setText(task.taskName)
 
@@ -127,11 +129,6 @@ class UpdateTaskDialog (
                 }
             })
 
-        // 文本框获取焦点
-        itemName?.requestFocus()
-
-        getWindow()?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
-
         setListeners()
 
     }
@@ -145,9 +142,9 @@ class UpdateTaskDialog (
 
         itemName?.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
-                showKeyboard(v)
+                showSoftInput(itemName)
             } else {
-                hideKeyboard(v)
+                hideSoftInput(itemName)
             }
         }
 
@@ -325,13 +322,31 @@ class UpdateTaskDialog (
         popRela = dialogView.findViewById(R.id.todo_add_item_pop_background)
     }
 
-    private fun showKeyboard(view: View) {
-        val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+//    private fun showKeyboard(view: View) {
+//        val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+//    }
+//
+//    private fun hideKeyboard(view: View) {
+//        val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.hideSoftInputFromWindow(view.windowToken, 0)
+//    }
+
+    // 隐藏软键盘
+    fun hideSoftInput(view: View?) {
+        if (view != null) {
+            val manager =
+                context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            manager.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
-    private fun hideKeyboard(view: View) {
-        val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    // 显示软键盘
+    fun showSoftInput( view: View?) {
+        if (view != null) {
+            val manager =
+                context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            manager.showSoftInput(view, 0)
+        }
     }
 }

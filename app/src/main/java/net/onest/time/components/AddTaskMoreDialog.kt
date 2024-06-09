@@ -4,24 +4,26 @@ import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.app.Dialog
 import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getSystemService
 import com.google.android.material.textfield.TextInputEditText
 import com.lxj.xpopup.XPopup
 import net.onest.time.R
 import net.onest.time.api.TaskApi
-import net.onest.time.api.TaskCategoryApi
-import net.onest.time.api.dto.TaskCategoryDto
 import net.onest.time.api.dto.TaskDto
 import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.holder.AdapterHolder
 import net.onest.time.utils.showToast
 import java.util.*
+
 
 /**
  * 同AddTaskDialog，但有更多选项
@@ -235,6 +237,14 @@ class AddTaskMoreDialog(
         }
 
         addNo!!.setOnClickListener { dismiss() }
+
+        itemName!!.setOnFocusChangeListener { v, hasFocus ->
+            if(hasFocus){
+                showSoftInput(itemName)
+            }else{
+                hideSoftInput(itemName)
+            }
+        }
     }
 
     private fun getViews(dialogView: View) {
@@ -242,7 +252,7 @@ class AddTaskMoreDialog(
         addYes = dialogView.findViewById(R.id.add_todo_item_yes)
         addNo = dialogView.findViewById(R.id.add_todo_item_no)
         itemNameAbout = dialogView.findViewById(R.id.todo_item_about)
-        itemName = dialogView.findViewById(R.id.todo_item_name)
+        itemName = dialogView.findViewById(R.id.list_child_todo_item_name)
         goalWorkload = dialogView.findViewById(R.id.goal_workload)
         habitWorkload = dialogView.findViewById(R.id.habit_workload)
         todoWant = dialogView.findViewById(R.id.todo_item_want)
@@ -307,6 +317,26 @@ class AddTaskMoreDialog(
         habitLinear!!.visibility = View.GONE
         task.categoryId = categoryId
         setListeners()
+
+        window?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+    }
+
+    // 隐藏软键盘
+    fun hideSoftInput(view: View?) {
+        if (view != null) {
+            val manager =
+                context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            manager.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+    // 显示软键盘
+    fun showSoftInput( view: View?) {
+        if (view != null) {
+            val manager =
+                context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            manager.showSoftInput(view, 0)
+        }
     }
 
 }
