@@ -19,15 +19,12 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.google.android.material.textfield.TextInputEditText
 import net.onest.time.R
 import net.onest.time.api.StatisticApi
 import net.onest.time.api.vo.TaskVo
-import net.onest.time.api.vo.statistic.StatisticVo
 import net.onest.time.components.holder.AdapterHolder
 import net.onest.time.utils.*
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 class TaskInfoDialog(
@@ -99,7 +96,6 @@ class TaskInfoDialog(
             UpdateTaskDialog(
                 context,
                 task,
-                tasks,
                 adapter,
                 this@TaskInfoDialog
             )
