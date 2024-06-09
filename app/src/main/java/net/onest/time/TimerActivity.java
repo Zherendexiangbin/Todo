@@ -191,9 +191,10 @@ public class TimerActivity extends AppCompatActivity {
         if("countDown".equals(intent.getStringExtra("method"))){
             timeTxt.setVisibility(View.GONE);
 //        circleTimer.setInitPosition(60);
+
             int time = Integer.parseInt(timeStr);
-            circleTimer.setMaximumTime(time*60);
-            circleTimer.setInitPosition(time*60+1);
+            circleTimer.setMaximumTime(taskVo.getClockDuration()*60);
+            circleTimer.setInitPosition(taskVo.getClockDuration()*60+1);
 
             if("go".equals(str)){
                 circleTimer.start();
