@@ -6,9 +6,12 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.LinearLayout
 import net.onest.time.R
 import net.onest.time.api.dto.TaskDto
 import net.onest.time.utils.withCustomAlphaAnimation
@@ -29,6 +32,7 @@ class HigherSetDialog(
     private lateinit var clockAbout: Button
     private lateinit var btnYes: Button
     private lateinit var btnNo: Button
+    private lateinit var rootLin: LinearLayout
 
 
     init {
@@ -40,6 +44,7 @@ class HigherSetDialog(
         setListeners()
         show()
 
+        window?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
         window!!.setContentView(view)
         window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
@@ -52,9 +57,44 @@ class HigherSetDialog(
         clockAbout = view.findViewById(R.id.todo_clock_times_about)
         btnYes = view.findViewById(R.id.add_todo_higher_setting_item_yes)
         btnNo = view.findViewById(R.id.add_todo_higher_setting_item_no)
+
+        rootLin = view.findViewById<LinearLayout>(R.id.root_layout_high_set)
     }
 
     private fun setListeners() {
+        // 取消焦点
+        rootLin.setOnClickListener {
+            remark?.clearFocus()
+            clockTimes?.clearFocus()
+            rest?.clearFocus()
+            hideSoftInput(rootLin!!)
+        }
+
+        //获取焦点:
+        remark.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                showSoftInput(remark)
+            } else {
+                hideSoftInput(remark)
+            }
+        }
+
+        clockTimes.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                showSoftInput(clockTimes)
+            } else {
+                hideSoftInput(clockTimes)
+            }
+        }
+
+        rest.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                showSoftInput(rest)
+            } else {
+                hideSoftInput(rest)
+            }
+        }
+
         // 什么是单次循环次数
         clockAbout.setOnClickListener { v: View? ->
             TipDialog(
@@ -84,5 +124,17 @@ class HigherSetDialog(
             dismiss()
         }
         btnNo.setOnClickListener { dismiss() }
+    }
+
+    // 隐藏软键盘
+    private fun hideSoftInput(view: View) {
+        (view.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    // 显示软键盘
+    private fun showSoftInput(view: View) {
+        (view.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .showSoftInput(view, 0)
     }
 }

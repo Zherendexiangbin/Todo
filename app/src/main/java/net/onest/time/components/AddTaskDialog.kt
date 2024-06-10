@@ -52,6 +52,8 @@ class AddTaskDialog(
     private var higherSet: TextView? = null
     private var popRela: RelativeLayout? = null
 
+    private lateinit var rootLayout: LinearLayout
+
     private val task = TaskDto().withDefault()
 
     init {
@@ -78,6 +80,12 @@ class AddTaskDialog(
     }
 
     private fun setListeners() {
+        // 取消焦点
+        rootLayout.setOnClickListener {
+            itemName?.clearFocus()
+            hideKeyboard(itemName!!)
+        }
+
         higherSet!!.setOnClickListener { view: View? ->
             HigherSetDialog(context, task)
         }
@@ -220,6 +228,8 @@ class AddTaskDialog(
 
         higherSet = view.findViewById(R.id.todo_fragment_add_item_higher_setting)
         popRela = view.findViewById(R.id.todo_add_item_pop_background)
+
+        rootLayout = view.findViewById<LinearLayout>(R.id.root_layout)
     }
 
     private fun showKeyboard(view: View) {
