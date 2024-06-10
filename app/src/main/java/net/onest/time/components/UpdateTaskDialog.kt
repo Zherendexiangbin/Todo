@@ -1,5 +1,6 @@
 package net.onest.time.components
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Bitmap
@@ -80,9 +81,7 @@ class UpdateTaskDialog (
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         window?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
         itemName?.requestFocus()
-
         itemName!!.setText(task.taskName)
-
 
         when (task.type) {
             // 倒计时
@@ -342,11 +341,9 @@ class UpdateTaskDialog (
     }
 
     // 显示软键盘
-    fun showSoftInput( view: View?) {
-        if (view != null) {
-            val manager =
-                context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            manager.showSoftInput(view, 0)
-        }
+    @SuppressLint("ServiceCast")
+    fun showSoftInput(view: View?) {
+        val manager = this.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        manager.showSoftInput(view,  InputMethodManager.SHOW_IMPLICIT)
     }
 }
