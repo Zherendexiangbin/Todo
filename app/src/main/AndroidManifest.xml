@@ -122,6 +122,8 @@
 
         <activity android:name=".navigation.activity.PrivacyPolicyActivity"
             android:exported="false"/>
-    </application>
 
+        <activity android:name=".navigation.activity.AboutAppActivity"
+            android:exported="false"/>
+        </application>
 </manifest>

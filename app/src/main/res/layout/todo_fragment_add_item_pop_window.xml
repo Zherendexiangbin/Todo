@@ -78,9 +78,10 @@
                     android:textColorHint="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/todo_item_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                    android:id="@+id/todo_item_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="text"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button

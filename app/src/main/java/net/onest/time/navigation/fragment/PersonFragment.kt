@@ -8,9 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat.recreate
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
 import net.onest.time.AccountSafeActivity
 import net.onest.time.MainActivity
 import net.onest.time.R
@@ -18,10 +21,10 @@ import net.onest.time.api.UserApi
 import net.onest.time.components.AccountListDialogBuilder
 import net.onest.time.constant.SharedPreferencesConstant
 import net.onest.time.databinding.PersonFragmentBinding
+import net.onest.time.navigation.activity.AboutAppActivity
 import net.onest.time.navigation.activity.PersonEditActivity
 import net.onest.time.navigation.activity.PrivacyPolicyActivity
 import net.onest.time.utils.applicationContext
-import net.onest.time.utils.withOnClickInfoDialog
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -57,7 +60,7 @@ class PersonFragment : Fragment() {
         return view
     }
 
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    @SuppressLint("UseSwitchCompatOrMaterialCode", "MissingInflatedId")
     private fun setListeners() {
         //点击进入用户信息编辑页面
         userEdit!!.setOnClickListener { view: View? ->
@@ -92,28 +95,87 @@ class PersonFragment : Fragment() {
             requireContext().startActivity(intent)
         }
 
+        //关于时光
+        binding.aboutUs.setOnClickListener {
+            val intent = Intent(requireContext(), AboutAppActivity::class.java)
+            requireContext().startActivity(intent)
+        }
+
 //        binding.accessibility.withOnClickInfoDialog("辅助功能")
 //        binding.general.withOnClickInfoDialog("通用")
-        binding.commonProblem.withOnClickInfoDialog("常见问题")
-        binding.feedback.withOnClickInfoDialog("意见反馈")
-        binding.aboutUs.withOnClickInfoDialog("关于时光")
+//        binding.commonProblem.withOnClickInfoDialog("常见问题")
+//        binding.feedback.withOnClickInfoDialog("意见反馈")
+//        binding.aboutUs.withOnClickInfoDialog("关于时光")
 
+        //通用
         binding.general.setOnClickListener{
             val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val generalView = inflater.inflate(R.layout.activity_general_switch_page, null)
-//            val switch = view.findViewById<Switch>(R.id.message_remind_switch)
+            val generalView = inflater.inflate(R.layout.activity_general_switch_dialog, null)
+            val remindSwitch = generalView.findViewById<Switch>(R.id.message_remind_switch)
+            val modeSwitch = generalView.findViewById<Switch>(R.id.mode_switch)
+            val screenSwitch = generalView.findViewById<Switch>(R.id.landscape_screen_switch)
+            remindSwitch?.setOnClickListener {
+                if (remindSwitch.isChecked){
+                    Toast.makeText(requireContext(), "已开启", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(requireContext(), "已关闭", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+//            modeSwitch?.setOnClickListener{
+//                if (AppCompatDelegate.getDefaultNightMode()==AppCompatDelegate.MODE_NIGHT_YES){
+//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//                }else{
+//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//                }
+//                recreate(requireActivity())
+//            }
             MaterialAlertDialogBuilder(requireContext())
                     .setTitle("通用")
                     .setView(generalView)
                     .show()
         }
 
+        //辅助功能
         binding.accessibility.setOnClickListener{
             val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val accessibilityView = inflater.inflate(R.layout.activity_accessibilty_switch_page, null)
             MaterialAlertDialogBuilder(requireContext())
                     .setTitle("辅助功能")
                     .setView(accessibilityView)
+                    .show()
+        }
+
+        ///常见问题
+        binding.commonProblem.setOnClickListener{
+            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val generalView = inflater.inflate(R.layout.activity_commonproblem_dialog, null)
+            val editInfo = generalView.findViewById<TextView>(R.id.edit_info)
+            editInfo?.setOnClickListener {
+                Toast.makeText(requireContext(), "我的-个人信息编辑", Toast.LENGTH_SHORT).show()
+            }
+            val joinRoom = generalView.findViewById<TextView>(R.id.join_room)
+            joinRoom?.setOnClickListener {
+                Toast.makeText(requireContext(), "邀请码或查询申请加入自习室", Toast.LENGTH_SHORT).show()
+            }
+            MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("常见问题")
+                    .setView(generalView)
+                    .show()
+        }
+
+        //意见反馈
+        binding.feedback.setOnClickListener {
+            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val generalView = inflater.inflate(R.layout.activity_feedback_dialog, null)
+            val inputText = generalView.findViewById<TextInputEditText>(R.id.edt_feedback)
+            MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("意见反馈")
+                    .setView(generalView)
+                    .setPositiveButton("确定") { dialog, which ->
+                        Toast.makeText(requireContext(), "反馈已提交", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    }
                     .show()
         }
     }
