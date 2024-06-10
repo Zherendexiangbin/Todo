@@ -65,10 +65,9 @@ public class TimerActivity extends AppCompatActivity {
 
     private StopClockDialog stopClockDialog;
 
-    private long taskId;
+
     private String timeStr;//倒计时时间
     private String str ;//是否开始
-    private String name;//任务名
 
     //震动提醒
     private Vibrator mVibrator;
@@ -176,16 +175,14 @@ public class TimerActivity extends AppCompatActivity {
 
 
         intent = getIntent();
-        name = intent.getStringExtra("name");
         timeStr = intent.getStringExtra("time");
         str = intent.getStringExtra("start");
-        taskId = intent.getLongExtra("taskId",0);
         taskVo = (TaskVo) intent.getSerializableExtra("task");
 
         rest = taskVo.getRestTime();//休息时间  min
         loopTimes = Objects.requireNonNull(taskVo.getEstimate()).get(0);//循环次数
 
-        taskName.setText(name);
+        taskName.setText(taskVo.getTaskName());
 
 //设置倒计时:
         if("countDown".equals(intent.getStringExtra("method"))){
@@ -201,11 +198,8 @@ public class TimerActivity extends AppCompatActivity {
             }
 
             //对于倒计时:若是超过5秒，添加倒计时的番茄钟
-            long taskId = taskVo.getTaskId();
-            if(taskId!=0L){
-                tomatoClockVos = TomatoClockApi.addTomatoClock(taskId);
-                Toast.makeText(this, "开始添加番茄钟", Toast.LENGTH_SHORT).show();
-            }
+            tomatoClockVos = TomatoClockApi.addTomatoClock(taskVo.getTaskId());
+            Toast.makeText(this, "开始添加番茄钟", Toast.LENGTH_SHORT).show();
 
             if(pauseTime==0){
                 Toast toast = Toast.makeText(TimerActivity.this, "本次任务的暂停限制时间已用完!", Toast.LENGTH_SHORT);
@@ -263,7 +257,7 @@ public class TimerActivity extends AppCompatActivity {
                     Toast toast = Toast.makeText(TimerActivity.this, "关闭无限循环模式!", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.TOP,0,0);
                     toast.show();
-                    taskName.setText(name);
+                    taskName.setText(taskVo.getTaskName());
                 }else{
 
                     android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(TimerActivity.this);
@@ -282,7 +276,7 @@ public class TimerActivity extends AppCompatActivity {
 
                     forever.setOnClickListener(view->{
                         Toast.makeText(TimerActivity.this, "你选择了无限循环模式!", Toast.LENGTH_SHORT).show();
-                        taskName.setText(name+ "    无限循环中");
+                        taskName.setText(taskVo.getTaskName()+ "    无限循环中");
                         dialog.dismiss();
                     });
 
@@ -370,7 +364,7 @@ public class TimerActivity extends AppCompatActivity {
                 if(num % 2 == 0 && (num/2 + 1) <= tomatoClockVos.size()){
                     clock = tomatoClockVos.get(num/2).getClockDuration()*60;
                     TomatoClockApi.startTomatoClock(tomatoClockVos.get(num/2).getClockId());
-                    taskName.setText(name);
+                    taskName.setText(taskVo.getTaskName());
                     circleTimer.setMaximumTime(clock);
                     circleTimer.setInitPosition(clock + 1);
                     circleTimer.start();
@@ -505,11 +499,9 @@ public class TimerActivity extends AppCompatActivity {
                 updateCountdownText();
                 //对于正向计时:若是超过5秒，添加正向计时的番茄钟
                 if(mTimeLeftInMillis/1000 == 5){
-                    if(taskId != 0){
-                        tomatoClockVos = TomatoClockApi.addTomatoClock(taskId);
-                        TomatoClockApi.startTomatoClock(tomatoClockVos.get(0).getClockId());
+                    if(taskVo.getTaskId() != 0){
+                        tomatoClockVos = TomatoClockApi.addTomatoClock(taskVo.getTaskId());
                         Log.e("番茄钟","添加");
-                        Toast.makeText(TimerActivity.this, "开始添加番茄钟"+mTimeLeftInMillis, Toast.LENGTH_SHORT).show();
                     }
                 }
             }

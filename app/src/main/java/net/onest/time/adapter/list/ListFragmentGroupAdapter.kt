@@ -38,6 +38,7 @@ import net.onest.time.TimerActivity
 import net.onest.time.adapter.list.ListFragmentGroupAdapter.ChildVH
 import net.onest.time.adapter.list.ListFragmentGroupAdapter.GroupVH
 import net.onest.time.api.StatisticApi
+import net.onest.time.api.TaskApi
 import net.onest.time.api.TaskCategoryApi
 import net.onest.time.api.vo.TaskCategoryVo
 import net.onest.time.api.vo.TaskVo
@@ -318,7 +319,7 @@ class ListFragmentGroupAdapter(
         return ChildVH(childBinding.root)
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onBindChildViewHolder(
         childVH: ChildVH?,
         groupBean: TaskCategoryVo,
@@ -327,7 +328,7 @@ class ListFragmentGroupAdapter(
         childVH?.run {
             if (taskVo?.taskStatus == 2) {
                 //完成状态==设置删除线:
-                nameTv.text = taskVo?.taskName
+                nameTv.text = taskVo.taskName
                 nameTv.setDeleteLineColor(Color.parseColor("#ffffff")) //设置删除线的颜色
                 nameTv.setShowDeleteLine(true) //删除线是否显示
                 nameTv.setDeleteLineWidth(context, 3) //删除线显示宽度
@@ -337,7 +338,14 @@ class ListFragmentGroupAdapter(
                 nameTv.setShowDeleteLine(false)
             }
 
-            timeTv.text = "${taskVo?.clockDuration} 分钟"
+            if (taskVo?.type == 0) {
+                timeTv.text = taskVo.clockDuration.toString() + " 分钟"
+            } else if (taskVo?.type == 1) {
+                timeTv.text = "正向计时"
+            } else {
+                timeTv.text = "普通待办"
+            }
+//            timeTv.text = "${taskVo?.clockDuration} 分钟"
 
             Glide.with(context).asBitmap().load(taskVo?.background)
                 .into(object : SimpleTarget<Bitmap?>() {
@@ -358,28 +366,22 @@ class ListFragmentGroupAdapter(
                     intent!!.setClass(context, TimerActivity::class.java)
                     intent!!.putExtra("method", "forWard")
                     intent!!.putExtra("task", taskVo)
-                    intent!!.putExtra("name", taskVo.taskName)
                     context.startActivity(
                         intent, ActivityOptions.makeSceneTransitionAnimation(
                             context as Activity, startBtn, "fab"
                         ).toBundle()
                     )
                 } else if (taskVo?.type == 2) {
-                    // 普通待办 不计时
-//                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    val spannableString = SpannableString(
-                        taskVo.taskName
-                    )
-                    spannableString.setSpan(
-                        StrikethroughSpan(),
-                        0,
-                        spannableString.length,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
 
-                    taskVo.taskName = spannableString.toString()
-                    //                    TextView textView = findViewById(R.id.textView);
-//                    textView.setText(spannableString);
+                    XPopup.Builder(context)
+                        .asConfirm(
+                            "", "该待办为不计时待办，点击确认完成即可完成一次。\n \n确定要完成一次吗？"
+                        ) {
+                            TaskApi.complete(taskVo.taskId) //完成任务
+                            notifyDataSetChanged()
+                        }
+                        .show()
+
                 } else {
                     // 倒计时：
                     intent = Intent()
@@ -387,11 +389,9 @@ class ListFragmentGroupAdapter(
                         timeTv.text.toString().split(" ".toRegex()).dropLastWhile { it.isEmpty() }
                             .toTypedArray()
                     val num = parts[0]
-                    //                int num = Integer.parseInt(parts[0]);
+
                     intent!!.putExtra("time", num)
                     intent!!.putExtra("method", "countDown")
-                    intent!!.putExtra("name", taskVo?.taskName)
-                    intent!!.putExtra("taskId", taskVo?.taskId)
                     intent!!.putExtra("start", "go")
                     intent!!.putExtra("task", taskVo)
                     intent!!.setClass(context, TimerActivity::class.java)

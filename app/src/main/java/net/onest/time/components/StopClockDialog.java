@@ -1,5 +1,7 @@
 package net.onest.time.components;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -14,7 +16,9 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,9 +75,9 @@ public class StopClockDialog extends AlertDialog {
         advanceAll = view.findViewById(R.id.advance_all_btn);
         advanceRest = view.findViewById(R.id.advance_rest_txt);
 
+        advanceRest.setVisibility(View.VISIBLE);
         abandon.setVisibility(View.GONE);
         advance.setVisibility(View.GONE);
-
         advanceAll.setVisibility(View.GONE);
 
         setListeners();
@@ -136,6 +140,10 @@ public class StopClockDialog extends AlertDialog {
             View dialogViewAban = inflater.inflate(R.layout.timer_activity_abandon,null);
             final Dialog dialogAban = builder.create();
             dialogAban.show();
+            dialogAban.getWindow().clearFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                    | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
+            );
             dialogAban.getWindow().setContentView(dialogViewAban);
             dialogAban.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -143,6 +151,7 @@ public class StopClockDialog extends AlertDialog {
             Button abandonNo = dialogViewAban.findViewById(R.id.timer_activity_abandon_no);
             TextInputEditText abandonReason = dialogViewAban.findViewById(R.id.abandon_reason);
             PieChart abandonReasonChart = dialogAban.findViewById(R.id.abandon_reason_pie_chart);
+            LinearLayout root = dialogAban.findViewById(R.id.root_linear_stop);
 
 
             String descriptionStr = "本月打断原因分析";
@@ -193,6 +202,26 @@ public class StopClockDialog extends AlertDialog {
             }
 
             setPieChartData(abandonReasonChart,yVals,colors);
+
+            abandonReason.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        showInput(abandonReason);
+                    } else {
+                        hideInput();
+                    }
+                }
+            });
+
+            assert root != null;
+            root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    abandonReason.clearFocus();
+                    hideInput();
+                }
+            });
 
             abandonYes.setOnClickListener(v12 -> {
                 //获取放弃原因!
@@ -282,5 +311,28 @@ public class StopClockDialog extends AlertDialog {
 //        pieChart.animateX(1000); //X轴动画
         abandonReasonChart.animateXY(1000,1000);//XY两轴混合动画
     }
+
+    /**
+     * 显示键盘
+     *
+     * @param et 输入焦点
+     */
+    public void showInput(final EditText et) {
+        et.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInput(et, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    /**
+     * 隐藏键盘
+     */
+    protected void hideInput() {
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+        View v = getWindow().peekDecorView();
+        if (null != v) {
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
+
 
 }
