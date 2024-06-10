@@ -1,6 +1,5 @@
 package net.onest.time.components
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Bitmap
@@ -15,6 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
@@ -32,13 +32,13 @@ import net.onest.time.api.dto.TaskDto
 import net.onest.time.api.vo.TaskVo
 import net.onest.time.components.holder.AdapterHolder
 import net.onest.time.utils.DrawableUtil
+import net.onest.time.utils.doSpinCircleAnimation
 import net.onest.time.utils.showToast
 import net.onest.time.utils.withCustomAlphaAnimation
 
-class UpdateTaskDialog (
+class UpdateTaskDialog(
     private val context: Context,
     private val task: TaskVo,
-    private val tasks: List<TaskVo>,
     private val adapter: AdapterHolder,
     private val dialog: Dialog
 ) : AlertDialog(
@@ -63,10 +63,10 @@ class UpdateTaskDialog (
     private var setTimeThreeTxt: TextView? = null
     private var higherSet: TextView? = null
     private var popRela: RelativeLayout? = null
+    private lateinit var rootLayout: LinearLayout
 
     init {
-
-//        Toast.makeText(context, "你点击了" + task.taskName, Toast.LENGTH_SHORT).show()
+        dialog.dismiss()
 
         //设置弹窗：
         val dialogView = LayoutInflater.from(context)
@@ -75,12 +75,19 @@ class UpdateTaskDialog (
 
         getViews(dialogView) //获取控件
 
-        dialog.show()
+        show()
 
-        dialog.window!!.setContentView(dialogView)
-        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        window?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
-        itemName?.requestFocus()
+        window?.clearFlags(
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                    or WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
+        )
+
+        window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+        window?.setContentView(dialogView)
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+
         itemName!!.setText(task.taskName)
 
         when (task.type) {
@@ -133,17 +140,23 @@ class UpdateTaskDialog (
     }
 
     private fun setListeners() {
+        // 取消焦点
+        rootLayout.setOnClickListener {
+            itemName?.clearFocus()
+            hideSoftInput()
+        }
 
         //改变背景：
         relaChange!!.setOnClickListener {
+            relaChange?.doSpinCircleAnimation(-360f)
             popRela!!.background = DrawableUtil.getRandomImage(context)
         }
 
         itemName?.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
-                showSoftInput(itemName)
+                showSoftInput()
             } else {
-                hideSoftInput(itemName)
+                hideSoftInput()
             }
         }
 
@@ -281,15 +294,12 @@ class UpdateTaskDialog (
                     task.type = 2
                 }
             }
-
-            val taskVo = TaskApi.updateTask(TaskDto().withTaskVo(task))
-//            adapter.notifyItemChanged(tasks.indexOf(taskVo))
             adapter.notifyDataSetChanged()
 
-            dialog.dismiss()
+            dismiss()
         }
 
-        addNo!!.setOnClickListener { dialog.dismiss() }
+        addNo!!.setOnClickListener { dismiss() }
     }
 
     private fun getViews(dialogView: View) {
@@ -319,31 +329,19 @@ class UpdateTaskDialog (
 
         higherSet = dialogView.findViewById(R.id.todo_fragment_add_item_higher_setting)
         popRela = dialogView.findViewById(R.id.todo_add_item_pop_background)
+
+        rootLayout = dialogView.findViewById(R.id.root_layout)
     }
 
-//    private fun showKeyboard(view: View) {
-//        val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
-//    }
-//
-//    private fun hideKeyboard(view: View) {
-//        val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//        imm.hideSoftInputFromWindow(view.windowToken, 0)
-//    }
-
     // 隐藏软键盘
-    fun hideSoftInput(view: View?) {
-        if (view != null) {
-            val manager =
-                context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            manager.hideSoftInputFromWindow(view.windowToken, 0)
-        }
+    private fun hideSoftInput() {
+        (itemName?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(itemName?.windowToken, 0)
     }
 
     // 显示软键盘
-    @SuppressLint("ServiceCast")
-    fun showSoftInput(view: View?) {
-        val manager = this.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        manager.showSoftInput(view,  InputMethodManager.SHOW_IMPLICIT)
+    private fun showSoftInput() {
+        (itemName?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .showSoftInput(itemName, 0)
     }
 }

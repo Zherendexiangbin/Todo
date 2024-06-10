@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,27 +45,21 @@ public class ApplicationItemAdapter extends RecyclerView.Adapter<ApplicationItem
         holder.agree.setOnClickListener(view -> {
             RoomApi.acceptRequest(roomId, userVo.getUserId());
             userVoList.remove(position);
+            Toast.makeText(context, "已同意" + userVo.getUserName() + "的请求", Toast.LENGTH_SHORT).show();
             notifyDataSetChanged();
         });
 
         holder.refuse.setOnClickListener(view -> {
+            RoomApi.rejectRequest(roomId, userVo.getUserId());
             userVoList.remove(position);
+            Toast.makeText(context, "已拒绝" + userVo.getUserName() + "的请求", Toast.LENGTH_SHORT).show();
             notifyDataSetChanged();
         });
     }
 
     @Override
     public int getItemCount(){
-        if (userVoList.size()==0){
-            return 0;
-        }else{
-            return userVoList.size();
-        }
-    }
-
-    @Override
-    public  int getItemViewType(int position){
-        return position;
+        return userVoList.size();
     }
 
     @NonNull
