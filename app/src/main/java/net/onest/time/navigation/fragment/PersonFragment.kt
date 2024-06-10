@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat.recreate
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -23,7 +25,6 @@ import net.onest.time.navigation.activity.AboutAppActivity
 import net.onest.time.navigation.activity.PersonEditActivity
 import net.onest.time.navigation.activity.PrivacyPolicyActivity
 import net.onest.time.utils.applicationContext
-import net.onest.time.utils.withOnClickInfoDialog
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -109,13 +110,26 @@ class PersonFragment : Fragment() {
         //通用
         binding.general.setOnClickListener{
             val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val generalView = inflater.inflate(R.layout.activity_general_switch_page, null)
+            val generalView = inflater.inflate(R.layout.activity_general_switch_dialog, null)
             val remindSwitch = generalView.findViewById<Switch>(R.id.message_remind_switch)
             val modeSwitch = generalView.findViewById<Switch>(R.id.mode_switch)
             val screenSwitch = generalView.findViewById<Switch>(R.id.landscape_screen_switch)
             remindSwitch?.setOnClickListener {
-                Toast.makeText(requireContext(), "已开启", Toast.LENGTH_SHORT).show()
+                if (remindSwitch.isChecked){
+                    Toast.makeText(requireContext(), "已开启", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(requireContext(), "已关闭", Toast.LENGTH_SHORT).show()
+                }
             }
+
+//            modeSwitch?.setOnClickListener{
+//                if (AppCompatDelegate.getDefaultNightMode()==AppCompatDelegate.MODE_NIGHT_YES){
+//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//                }else{
+//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//                }
+//                recreate(requireActivity())
+//            }
             MaterialAlertDialogBuilder(requireContext())
                     .setTitle("通用")
                     .setView(generalView)

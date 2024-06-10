@@ -20,7 +20,7 @@
         app:layout_constraintTop_toBottomOf="@+id/edit_info"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="18dp"
         android:drawableRight="@mipmap/arrow_right"
         android:text="如何加入自习室?"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
