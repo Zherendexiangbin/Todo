@@ -40,6 +40,10 @@ android {
 }
 
 dependencies {
+    // photoview
+    // https://mvnrepository.com/artifact/com.github.chrisbanes/PhotoView
+    implementation group: 'com.github.chrisbanes', name: 'PhotoView', version: '2.3.0'
+
     // smart refresh
     implementation 'io.github.scwang90:refresh-layout-kernel:2.1.0'
     implementation  'io.github.scwang90:refresh-header-classics:2.1.0'    //经典刷新头

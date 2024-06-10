@@ -209,7 +209,7 @@ public class StopClockDialog extends AlertDialog {
                     if (hasFocus) {
                         showInput(abandonReason);
                     } else {
-                        hideInput();
+                        hideInput(abandonReason);
                     }
                 }
             });
@@ -219,7 +219,7 @@ public class StopClockDialog extends AlertDialog {
                 @Override
                 public void onClick(View v) {
                     abandonReason.clearFocus();
-                    hideInput();
+                    hideInput(abandonReason);
                 }
             });
 
@@ -276,6 +276,7 @@ public class StopClockDialog extends AlertDialog {
                 StopClockDialog.this.dismiss();
             }
         });
+
     }
 
     //打断原因
@@ -326,13 +327,9 @@ public class StopClockDialog extends AlertDialog {
     /**
      * 隐藏键盘
      */
-    protected void hideInput() {
+    protected void hideInput(final EditText et) {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
-        View v = getWindow().peekDecorView();
-        if (null != v) {
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-        }
+        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
     }
-
 
 }

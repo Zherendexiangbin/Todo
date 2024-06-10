@@ -1,5 +1,6 @@
 package net.onest.time.utils
 
+import android.animation.Animator
 import android.view.View
 import android.view.ViewPropertyAnimator
 import android.view.animation.AlphaAnimation
@@ -58,4 +59,24 @@ fun View.doSpinCircleAnimation(rotation: Float = 90f, duration: Long = 500) {
         animator.rotation(0f)
         animator.duration = 0
     }
+}
+
+fun View.doFadeInAnimation(duration: Long = 300) {
+    var animator: ViewPropertyAnimator? = null
+
+    this.alpha = 0f
+    animator = this.animate()
+        .alpha(1f)
+        .setDuration(duration)
+}
+
+fun View.doFadeOutAnimation(duration: Long = 300) {
+    var animator: ViewPropertyAnimator? = null
+
+    animator = this.animate()
+        .alpha(0f)
+        .setDuration(duration)
+        .withEndAction {
+            this.visibility = View.INVISIBLE
+        }
 }

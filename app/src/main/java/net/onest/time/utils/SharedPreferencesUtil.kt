@@ -1,6 +1,7 @@
 package net.onest.time.utils
 
 import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import net.onest.time.api.utils.RequestUtil
 import net.onest.time.api.vo.UserVo
 import net.onest.time.constant.SharedPreferencesConstant
@@ -19,3 +20,12 @@ fun getUserInfoFromLocal() = applicationContext()
                 RequestUtil.getGson().fromJson(this, UserVo::class.java)
             }
         }
+
+fun setUserInfoFromLocal(userInfo: UserVo) {
+    applicationContext()
+        .applicationContext
+        .getSharedPreferences(SharedPreferencesConstant.USER_INFO, AppCompatActivity.MODE_PRIVATE)
+        .edit()
+        .putString(UserInfoConstant.USER_INFO, RequestUtil.getGson().toJson(userInfo))
+        .apply()
+}
