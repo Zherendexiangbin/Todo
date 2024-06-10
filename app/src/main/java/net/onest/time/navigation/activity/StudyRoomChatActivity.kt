@@ -43,13 +43,13 @@ import net.onest.time.components.CheckInDialog
 import net.onest.time.databinding.ActivityStudyRoomChatBinding
 import net.onest.time.entity.CheckIn
 import net.onest.time.utils.DateUtil
+import net.onest.time.utils.doFadeOutAnimation
 import net.onest.time.utils.getUserInfoFromLocal
 import net.onest.time.utils.saveBitmapCache
 import net.onest.time.utils.showToast
 import okhttp3.WebSocket
 import java.io.File
 import java.io.FileOutputStream
-import java.time.Instant
 import java.util.*
 
 
@@ -192,7 +192,7 @@ class StudyRoomChatActivity : AppCompatActivity() {
 
         // 绑定适配器
         messagesView.layoutManager = LinearLayoutManager(this)
-        chatMsgAdapter = ChatMsgAdapter(this, messagesList, userVo.userId)
+        chatMsgAdapter = ChatMsgAdapter(this, messagesList, userVo.userId, binding.photoView, binding.mask)
         messagesView.adapter = chatMsgAdapter
 
         messagesView.postDelayed(500) {
@@ -203,6 +203,12 @@ class StudyRoomChatActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun setListeners() {
+        // 点击图片消失
+        binding.photoView.setOnClickListener {
+            binding.mask.visibility = View.INVISIBLE
+            it.doFadeOutAnimation()
+        }
+
         // 消息滚动监听器
         messagesView.addOnScrollListener(object : OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

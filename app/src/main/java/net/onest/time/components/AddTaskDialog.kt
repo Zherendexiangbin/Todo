@@ -145,10 +145,11 @@ class AddTaskDialog(
             XPopup.Builder(context)
                 .asInputConfirm(
                     "自定义番茄钟时间",
-                    "输入倒计时分钟数:" ) {
-                    text -> setTimeGroupThree!!.text = "$text 分钟"
+                    "输入倒计时分钟数:"
+                ) { text ->
+                    setTimeGroupThree!!.text = "$text 分钟"
                 }
-                .show()
+                    .show()
         }
 
         addYes!!.setOnClickListener {

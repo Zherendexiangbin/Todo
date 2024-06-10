@@ -6,16 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.github.chrisbanes.photoview.PhotoView
 import net.onest.time.api.vo.MessageVo
 import net.onest.time.databinding.ItemChatMessageLeftImageBinding
 import net.onest.time.databinding.ItemChatMessageLeftTextBinding
 import net.onest.time.databinding.ItemChatMessageRightImageBinding
 import net.onest.time.databinding.ItemChatMessageRightTextBinding
+import net.onest.time.utils.doFadeInAnimation
+import net.onest.time.utils.doSpinCircleAnimation
 
 class ChatMsgAdapter(
     private val context: Context,
     private val msgList: List<MessageVo>,
-    private val userId: Long
+    private val userId: Long,
+    private val photoView: PhotoView,
+    private val mask: View
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var leftTextBinding: ItemChatMessageLeftTextBinding
     private lateinit var leftImageBinding: ItemChatMessageLeftImageBinding
@@ -89,6 +94,13 @@ class ChatMsgAdapter(
                 Glide.with(context)
                     .load(msg.content)
                     .into(holder.image)
+
+                holder.image.setOnClickListener {
+                    photoView.doFadeInAnimation()
+                    photoView.setImageDrawable(holder.image.drawable)
+                    photoView.visibility = View.VISIBLE
+                    this@ChatMsgAdapter.mask.visibility = View.VISIBLE
+                }
             }
             is RightTextViewHolder -> {
                 holder.username.text = msg.fromUserName
@@ -105,6 +117,13 @@ class ChatMsgAdapter(
                 Glide.with(context)
                     .load(msg.content)
                     .into(holder.image)
+
+                holder.image.setOnClickListener {
+                    photoView.doFadeInAnimation()
+                    photoView.setImageDrawable(holder.image.drawable)
+                    photoView.visibility = View.VISIBLE
+                    this@ChatMsgAdapter.mask.visibility = View.VISIBLE
+                }
             }
         }
     }
