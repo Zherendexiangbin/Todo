@@ -64,6 +64,7 @@
         android:id="@+id/check_version"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         app:layout_constraintTop_toBottomOf="@+id/line1"
         app:layout_constraintStart_toStartOf="@+id/line1"
         app:layout_constraintEnd_toEndOf="@+id/line1"
