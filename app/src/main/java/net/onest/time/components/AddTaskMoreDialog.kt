@@ -63,59 +63,65 @@ class AddTaskMoreDialog(
     private var habitTimeUnits: Spinner? = null
     private var goalLinear: LinearLayout? = null
     private var habitLinear: LinearLayout? = null
+    private var rootLayout: LinearLayout? = null
 
     private val task = TaskDto().withDefault()
 
     private fun setListeners() {
 
         higherSet!!.setOnClickListener {
-            val builder = Builder(context, R.style.CustomDialogStyle)
-            val inflater = LayoutInflater.from(context)
-            val dialogView = inflater.inflate(R.layout.todo_fragment_add_higher_setting, null)
-            val dialog: Dialog = builder.create()
-            dialog.show()
-            dialog.window!!.setContentView(dialogView)
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            val remark = dialog.findViewById<EditText>(R.id.todo_fragment_add_higher_remark)
-            val clockTimes = dialog.findViewById<EditText>(R.id.todo_fragment_add_clock_times)
-            val rest = dialog.findViewById<EditText>(R.id.todo_fragment_add_rest_time)
-            val clockAbout = dialog.findViewById<Button>(R.id.todo_clock_times_about)
-            val btnYes = dialog.findViewById<Button>(R.id.add_todo_higher_setting_item_yes)
-            val btnNo = dialog.findViewById<Button>(R.id.add_todo_higher_setting_item_no)
-            clockAbout.setOnClickListener {
-                XPopup.Builder(context)
-                    .asConfirm(
-                        "什么是单次循环次数",
-                        """
-     举例:
-     小明每次学习想学75分钟，但是75分钟太长学的太累，那么可以设定一个番茄钟的时间为25分钟，单次预期循环次数为3次。
-     这样的番茄钟就会按照:
-     学习25分钟-休息-学习25分钟-休息-学习25分钟-休息(共循环三次)
-     来执行
-     """.trimIndent(),
-                        "关闭",
-                        "确认",
-                        { Toast.makeText(context, "click", Toast.LENGTH_SHORT) },
-                        null,
-                        false,
-                        R.layout.my_confim_popup
-                    ) //绑定已有布局
-                    .show()
-            }
-            btnYes.setOnClickListener { dialog.dismiss() }
-            btnNo.setOnClickListener { dialog.dismiss() }
+
+            HigherSetDialog(context, task)
+
+//            val builder = Builder(context, R.style.CustomDialogStyle)
+//            val inflater = LayoutInflater.from(context)
+//            val dialogView = inflater.inflate(R.layout.todo_fragment_add_higher_setting, null)
+//            val dialog: Dialog = builder.create()
+//            dialog.show()
+//            dialog.window!!.setContentView(dialogView)
+//            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//            val remark = dialog.findViewById<EditText>(R.id.todo_fragment_add_higher_remark)
+//            val clockTimes = dialog.findViewById<EditText>(R.id.todo_fragment_add_clock_times)
+//            val rest = dialog.findViewById<EditText>(R.id.todo_fragment_add_rest_time)
+//            val clockAbout = dialog.findViewById<Button>(R.id.todo_clock_times_about)
+//            val btnYes = dialog.findViewById<Button>(R.id.add_todo_higher_setting_item_yes)
+//            val btnNo = dialog.findViewById<Button>(R.id.add_todo_higher_setting_item_no)
+//
+//            clockAbout.setOnClickListener {
+//                XPopup.Builder(context)
+//                    .asConfirm(
+//                        "什么是单次循环次数",
+//                        """
+//                         举例:
+//                         小明每次学习想学75分钟，但是75分钟太长学的太累，那么可以设定一个番茄钟的时间为25分钟，单次预期循环次数为3次。
+//                         这样的番茄钟就会按照:
+//                         学习25分钟-休息-学习25分钟-休息-学习25分钟-休息(共循环三次)
+//                         来执行
+//                         """.trimIndent(),
+//                        "关闭",
+//                        "确认",
+//                        { Toast.makeText(context, "click", Toast.LENGTH_SHORT) },
+//                        null,
+//                        false,
+//                        R.layout.my_confim_popup
+//                    ) //绑定已有布局
+//                    .show()
+//            }
+//            btnYes.setOnClickListener { dialog.dismiss() }
+//            btnNo.setOnClickListener { dialog.dismiss() }
         }
+
         itemNameAbout!!.setOnClickListener {
             XPopup.Builder(context)
                 .asConfirm(
                     "什么是番茄钟",
                     """
-     1.番茄钟是全身心工作25分钟，休息5分钟的工作方法。
-     2.输入事项名称，点击√按钮即可添加一个标准的番茄钟待办。
-     3.点击代办卡片上的开始按钮就可以开始一个番茄钟啦
-     """.trimIndent(),
+                     1.番茄钟是全身心工作25分钟，休息5分钟的工作方法。
+                     2.输入事项名称，点击√按钮即可添加一个标准的番茄钟待办。
+                     3.点击代办卡片上的开始按钮就可以开始一个番茄钟啦
+                     """.trimIndent(),
                     "关闭",
-                    "番茄钟牛逼",
+                    "确定",
                     { Toast.makeText(context, "click", Toast.LENGTH_SHORT) },
                     null,
                     false,
@@ -123,6 +129,7 @@ class AddTaskMoreDialog(
                 ) //绑定已有布局
                 .show()
         }
+
         todoWant!!.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.want_one -> {
@@ -144,6 +151,7 @@ class AddTaskMoreDialog(
                 }
             }
         }
+
         todoSetTime!!.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.set_time_one -> {
@@ -245,6 +253,11 @@ class AddTaskMoreDialog(
                 hideSoftInput(itemName)
             }
         }
+
+        rootLayout!!.setOnClickListener {
+            itemName!!.clearFocus()
+            hideSoftInput(itemName!!)
+        }
     }
 
     private fun getViews(dialogView: View) {
@@ -277,6 +290,7 @@ class AddTaskMoreDialog(
         habitTimeUnits = dialogView.findViewById(R.id.habit_time_units)
         goalLinear = dialogView.findViewById(R.id.todo_item_goal)
         habitLinear = dialogView.findViewById(R.id.todo_item_habit)
+        rootLayout = dialogView.findViewById(R.id.root_layout_collections_item)
     }
 
     /**

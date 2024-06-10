@@ -143,7 +143,7 @@ class UpdateTaskDialog(
         // 取消焦点
         rootLayout.setOnClickListener {
             itemName?.clearFocus()
-            hideSoftInput()
+            hideSoftInput(itemName!!)
         }
 
         //改变背景：
@@ -154,9 +154,9 @@ class UpdateTaskDialog(
 
         itemName?.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
-                showSoftInput()
+                showSoftInput(itemName!!)
             } else {
-                hideSoftInput()
+                hideSoftInput(itemName!!)
             }
         }
 
@@ -166,6 +166,10 @@ class UpdateTaskDialog(
             val dialogView = inflater.inflate(R.layout.todo_fragment_add_higher_setting, null)
             val dialog: Dialog = builder.create()
             dialog.show()
+            dialog.window?.clearFlags(
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        or WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
+            )
             dialog.window!!.setContentView(dialogView)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
@@ -176,6 +180,40 @@ class UpdateTaskDialog(
             val clockAbout = dialog.findViewById<Button>(R.id.todo_clock_times_about)
             val btnYes = dialog.findViewById<Button>(R.id.add_todo_higher_setting_item_yes)
             val btnNo = dialog.findViewById<Button>(R.id.add_todo_higher_setting_item_no)
+            val rootLin = dialog.findViewById<LinearLayout>(R.id.root_layout_high_set)
+
+            // 取消焦点
+            rootLin.setOnClickListener {
+                remark?.clearFocus()
+                clockTimes?.clearFocus()
+                rest?.clearFocus()
+                hideSoftInput(rootLin!!)
+            }
+
+            //获取焦点:
+            remark.setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    showSoftInput(remark)
+                } else {
+                    hideSoftInput(remark)
+                }
+            }
+
+            clockTimes.setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    showSoftInput(clockTimes)
+                } else {
+                    hideSoftInput(clockTimes)
+                }
+            }
+
+            rest.setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    showSoftInput(rest)
+                } else {
+                    hideSoftInput(rest)
+                }
+            }
 
             // 什么是单次循环次数
             clockAbout.setOnClickListener { v: View? ->
@@ -334,14 +372,14 @@ class UpdateTaskDialog(
     }
 
     // 隐藏软键盘
-    private fun hideSoftInput() {
-        (itemName?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-            .hideSoftInputFromWindow(itemName?.windowToken, 0)
+    private fun hideSoftInput(view: View) {
+        (view.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     // 显示软键盘
-    private fun showSoftInput() {
-        (itemName?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-            .showSoftInput(itemName, 0)
+    private fun showSoftInput(view: View) {
+        (view.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .showSoftInput(view, 0)
     }
 }

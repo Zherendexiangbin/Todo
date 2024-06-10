@@ -11,6 +11,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.RadioGroup
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.textfield.TextInputEditText
@@ -38,6 +39,7 @@ class UpdateCategoryDialog(
     private var groupTwo: RadioGroup? = null
     private var edit: TextInputEditText? = null
     private var editLayout: TextInputLayout? = null
+    private var rootLin: LinearLayout? = null
 
     init {
         val dialogView = LayoutInflater.from(getContext())
@@ -61,6 +63,12 @@ class UpdateCategoryDialog(
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setListeners() {
+        //取消焦点:
+        rootLin!!.setOnClickListener {
+            edit!!.clearFocus()
+            hideKeyboard(edit!!)
+        }
+
         groupOne!!.setOnCheckedChangeListener { group, checkedId ->
             if (groupOne!!.checkedRadioButtonId != -1
                 && groupTwo!!.checkedRadioButtonId != -1
@@ -166,6 +174,8 @@ class UpdateCategoryDialog(
         groupTwo = dialogView.findViewById(R.id.list_fragment_pop_window_group_two)
         edit = dialogView.findViewById(R.id.list_fragment_group_edit)
         editLayout = dialogView.findViewById(R.id.list_fragment_group_edit_layout)
+
+        rootLin = dialogView.findViewById(R.id.root_linear_collections)
     }
 
     private fun setEditColor(color: String) {
