@@ -74,153 +74,153 @@
                 android:background="@drawable/help" />
         </LinearLayout>
 
-        <RadioGroup
-            android:id="@+id/todo_item_want"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:padding="10dp"
-            android:layout_marginTop="10dp">
-            <RadioButton
-                android:id="@+id/want_one"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="普通番茄钟"
-                android:checked="true"
-                style="@style/radiobtn_style"/>
-            <RadioButton
-                android:id="@+id/want_two"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="定目标"
-                android:layout_marginLeft="20dp"
-                style="@style/radiobtn_style"/>
-            <RadioButton
-                android:id="@+id/want_three"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="养习惯"
-                android:layout_marginLeft="20dp"
-                style="@style/radiobtn_style" />
-        </RadioGroup>
+<!--        <RadioGroup-->
+<!--            android:id="@+id/todo_item_want"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:gravity="center"-->
+<!--            android:padding="10dp"-->
+<!--            android:layout_marginTop="10dp">-->
+<!--            <RadioButton-->
+<!--                android:id="@+id/want_one"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="普通番茄钟"-->
+<!--                android:checked="true"-->
+<!--                style="@style/radiobtn_style"/>-->
+<!--            <RadioButton-->
+<!--                android:id="@+id/want_two"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="定目标"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                style="@style/radiobtn_style"/>-->
+<!--            <RadioButton-->
+<!--                android:id="@+id/want_three"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="养习惯"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                style="@style/radiobtn_style" />-->
+<!--        </RadioGroup>-->
 
-        <!--    定目标内容：-->
-        <LinearLayout
-            android:id="@+id/todo_item_goal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <!--        设置目标日期：-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="我想在  " />
-                <TextView
-                    android:id="@+id/goal_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="设定目标日期"
-                    android:padding="5dp"
-                    android:background="@drawable/shape_10dp_all_corners"
-                    android:textColor="#ff8c00" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="  之前" />
-            </LinearLayout>
-            <!--        填写完成量：-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="一共完成  " />
+<!--        &lt;!&ndash;    定目标内容：&ndash;&gt;-->
+<!--        <LinearLayout-->
+<!--            android:id="@+id/todo_item_goal"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
+<!--            &lt;!&ndash;        设置目标日期：&ndash;&gt;-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:gravity="center">-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="我想在  " />-->
+<!--                <TextView-->
+<!--                    android:id="@+id/goal_date"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="设定目标日期"-->
+<!--                    android:padding="5dp"-->
+<!--                    android:background="@drawable/shape_10dp_all_corners"-->
+<!--                    android:textColor="#ff8c00" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="  之前" />-->
+<!--            </LinearLayout>-->
+<!--            &lt;!&ndash;        填写完成量：&ndash;&gt;-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:gravity="center">-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="一共完成  " />-->
 
-                <EditText
-                        android:id="@+id/goal_workload"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:hint="填写完成量"
-                        android:paddingHorizontal="5dp"
-                        android:textColorHint="#ff8c00"
-                        android:background="@drawable/shape_10dp_all_corners"
-                        android:textColor="#ff8c00" />
+<!--                <EditText-->
+<!--                        android:id="@+id/goal_workload"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:hint="填写完成量"-->
+<!--                        android:paddingHorizontal="5dp"-->
+<!--                        android:textColorHint="#ff8c00"-->
+<!--                        android:background="@drawable/shape_10dp_all_corners"-->
+<!--                        android:textColor="#ff8c00" />-->
 
-                <Spinner
-                    android:id="@+id/goal_units"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/time_spinner"
-                    android:gravity="end" />
-            </LinearLayout>
-            <TextView
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="最后一步，设置单次专注的时长:"/>
-        </LinearLayout>
+<!--                <Spinner-->
+<!--                    android:id="@+id/goal_units"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:entries="@array/time_spinner"-->
+<!--                    android:gravity="end" />-->
+<!--            </LinearLayout>-->
+<!--            <TextView-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center"-->
+<!--                android:text="最后一步，设置单次专注的时长:"/>-->
+<!--        </LinearLayout>-->
 
-        <!--    养习惯：-->
-        <LinearLayout
-            android:id="@+id/todo_item_habit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="我想  " />
-                <Spinner
-                    android:id="@+id/habit_date_units"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/time_spinner_two"
-                    android:gravity="end"/>
-            </LinearLayout>
+<!--        &lt;!&ndash;    养习惯：&ndash;&gt;-->
+<!--        <LinearLayout-->
+<!--            android:id="@+id/todo_item_habit"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:orientation="vertical"-->
+<!--            android:layout_marginTop="10dp">-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content">-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="我想  " />-->
+<!--                <Spinner-->
+<!--                    android:id="@+id/habit_date_units"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:entries="@array/time_spinner_two"-->
+<!--                    android:gravity="end"/>-->
+<!--            </LinearLayout>-->
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginTop="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="完成  "
-                    android:layout_gravity="center_vertical"/>
-                <EditText
-                    android:id="@+id/habit_workload"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="填写完成量"
-                    android:textColorHint="#ff8c00"
-                    android:padding="5dp"
-                    android:background="@drawable/shape_10dp_all_corners"
-                    android:textColor="@color/black" />
-                <Spinner
-                    android:id="@+id/habit_time_units"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/time_spinner"
-                    android:gravity="right"/>
-            </LinearLayout>
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_marginTop="10dp">-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="完成  "-->
+<!--                    android:layout_gravity="center_vertical"/>-->
+<!--                <EditText-->
+<!--                    android:id="@+id/habit_workload"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:hint="填写完成量"-->
+<!--                    android:textColorHint="#ff8c00"-->
+<!--                    android:padding="5dp"-->
+<!--                    android:background="@drawable/shape_10dp_all_corners"-->
+<!--                    android:textColor="@color/black" />-->
+<!--                <Spinner-->
+<!--                    android:id="@+id/habit_time_units"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:entries="@array/time_spinner"-->
+<!--                    android:gravity="right"/>-->
+<!--            </LinearLayout>-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
 
         <RadioGroup

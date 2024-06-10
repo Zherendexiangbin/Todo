@@ -38,31 +38,31 @@ class AddTaskMoreDialog(
     private var addYes: Button? = null
     private var addNo: Button? = null
     private var itemNameAbout: Button? = null
-    private var goalWorkload: EditText? = null
-    private var habitWorkload: EditText? = null
+//    private var goalWorkload: EditText? = null
+//    private var habitWorkload: EditText? = null
     private var itemName: TextInputEditText? = null
-    private var todoWant: RadioGroup? = null
+//    private var todoWant: RadioGroup? = null
     private var todoSetTime: RadioGroup? = null
     private var setTimeGroup: RadioGroup? = null
-    private var wantOne: RadioButton? = null
-    private var wantTwo: RadioButton? = null
-    private var wantThree: RadioButton? = null
+//    private var wantOne: RadioButton? = null
+//    private var wantTwo: RadioButton? = null
+//    private var wantThree: RadioButton? = null
     private var setTimeOne: RadioButton? = null
     private var setTimeTwo: RadioButton? = null
     private var setTimeThree: RadioButton? = null
     private var setTimeGroupOne: RadioButton? = null
     private var setTimeGroupTwo: RadioButton? = null
     private var setTimeGroupThree: RadioButton? = null
-    private var goalDate: TextView? = null
+//    private var goalDate: TextView? = null
     private var setTimeOneTxt: TextView? = null
     private var setTimeTwoTxt: TextView? = null
     private var setTimeThreeTxt: TextView? = null
     private var higherSet: TextView? = null
-    private var goalUnits: Spinner? = null
-    private var habitDateUnits: Spinner? = null
-    private var habitTimeUnits: Spinner? = null
-    private var goalLinear: LinearLayout? = null
-    private var habitLinear: LinearLayout? = null
+//    private var goalUnits: Spinner? = null
+//    private var habitDateUnits: Spinner? = null
+//    private var habitTimeUnits: Spinner? = null
+//    private var goalLinear: LinearLayout? = null
+//    private var habitLinear: LinearLayout? = null
     private var rootLayout: LinearLayout? = null
 
     private val task = TaskDto().withDefault()
@@ -130,27 +130,27 @@ class AddTaskMoreDialog(
                 .show()
         }
 
-        todoWant!!.setOnCheckedChangeListener { group, checkedId ->
-            when (checkedId) {
-                R.id.want_one -> {
-                    //普通番茄钟
-                    goalLinear!!.visibility = View.GONE
-                    habitLinear!!.visibility = View.GONE
-                }
-
-                R.id.want_two -> {
-                    //定目标
-                    goalLinear!!.visibility = View.VISIBLE
-                    habitLinear!!.visibility = View.GONE
-                }
-
-                R.id.want_three -> {
-                    //养习惯
-                    goalLinear!!.visibility = View.GONE
-                    habitLinear!!.visibility = View.VISIBLE
-                }
-            }
-        }
+//        todoWant!!.setOnCheckedChangeListener { group, checkedId ->
+//            when (checkedId) {
+//                R.id.want_one -> {
+//                    //普通番茄钟
+//                    goalLinear!!.visibility = View.GONE
+//                    habitLinear!!.visibility = View.GONE
+//                }
+//
+//                R.id.want_two -> {
+//                    //定目标
+//                    goalLinear!!.visibility = View.VISIBLE
+//                    habitLinear!!.visibility = View.GONE
+//                }
+//
+//                R.id.want_three -> {
+//                    //养习惯
+//                    goalLinear!!.visibility = View.GONE
+//                    habitLinear!!.visibility = View.VISIBLE
+//                }
+//            }
+//        }
 
         todoSetTime!!.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
@@ -177,14 +177,15 @@ class AddTaskMoreDialog(
             }
         }
 
-        //定目标之"设置日期"：
-        goalDate!!.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val mYear = calendar[Calendar.YEAR]
-            val mMonth = calendar[Calendar.MONTH]
-            val mDay = calendar[Calendar.DAY_OF_MONTH]
-            DatePickerDialog(context, onDateSetListener, mYear, mMonth, mDay).show()
-        }
+//        //定目标之"设置日期"：
+//        goalDate!!.setOnClickListener {
+//            val calendar = Calendar.getInstance()
+//            val mYear = calendar[Calendar.YEAR]
+//            val mMonth = calendar[Calendar.MONTH]
+//            val mDay = calendar[Calendar.DAY_OF_MONTH]
+//            DatePickerDialog(context, onDateSetListener, mYear, mMonth, mDay).show()
+//        }
+
         setTimeGroupThree!!.setOnClickListener {
             Toast.makeText(context, setTimeGroupThree!!.text.toString() + "", Toast.LENGTH_SHORT)
                 .show()
@@ -241,6 +242,9 @@ class AddTaskMoreDialog(
             } catch (e: RuntimeException) {
                 e.message?.showToast()
             }
+
+            adapter.notifyDataSetChanged()
+
             dismiss()
         }
 
@@ -266,57 +270,57 @@ class AddTaskMoreDialog(
         addNo = dialogView.findViewById(R.id.add_todo_item_no)
         itemNameAbout = dialogView.findViewById(R.id.todo_item_about)
         itemName = dialogView.findViewById(R.id.list_child_todo_item_name)
-        goalWorkload = dialogView.findViewById(R.id.goal_workload)
-        habitWorkload = dialogView.findViewById(R.id.habit_workload)
-        todoWant = dialogView.findViewById(R.id.todo_item_want)
+//        goalWorkload = dialogView.findViewById(R.id.goal_workload)
+//        habitWorkload = dialogView.findViewById(R.id.habit_workload)
+//        todoWant = dialogView.findViewById(R.id.todo_item_want)
         todoSetTime = dialogView.findViewById(R.id.todo_item_set_time)
         setTimeGroup = dialogView.findViewById(R.id.set_time_one_group)
-        wantOne = dialogView.findViewById(R.id.want_one)
-        wantTwo = dialogView.findViewById(R.id.want_two)
-        wantThree = dialogView.findViewById(R.id.want_three)
+//        wantOne = dialogView.findViewById(R.id.want_one)
+//        wantTwo = dialogView.findViewById(R.id.want_two)
+//        wantThree = dialogView.findViewById(R.id.want_three)
         setTimeOne = dialogView.findViewById(R.id.set_time_one)
         setTimeTwo = dialogView.findViewById(R.id.set_time_two)
         setTimeThree = dialogView.findViewById(R.id.set_time_three)
         setTimeGroupOne = dialogView.findViewById(R.id.set_time_one_group_one)
         setTimeGroupTwo = dialogView.findViewById(R.id.set_time_one_group_two)
         setTimeGroupThree = dialogView.findViewById(R.id.set_time_one_group_three)
-        goalDate = dialogView.findViewById(R.id.goal_date)
+//        goalDate = dialogView.findViewById(R.id.goal_date)
         setTimeOneTxt = dialogView.findViewById(R.id.set_time_one_txt)
         setTimeTwoTxt = dialogView.findViewById(R.id.set_time_two_txt)
         setTimeThreeTxt = dialogView.findViewById(R.id.set_time_three_txt)
         higherSet = dialogView.findViewById(R.id.list_fragment_add_item_higher_setting)
-        goalUnits = dialogView.findViewById(R.id.goal_units)
-        habitDateUnits = dialogView.findViewById(R.id.habit_date_units)
-        habitTimeUnits = dialogView.findViewById(R.id.habit_time_units)
-        goalLinear = dialogView.findViewById(R.id.todo_item_goal)
-        habitLinear = dialogView.findViewById(R.id.todo_item_habit)
+//        goalUnits = dialogView.findViewById(R.id.goal_units)
+//        habitDateUnits = dialogView.findViewById(R.id.habit_date_units)
+//        habitTimeUnits = dialogView.findViewById(R.id.habit_time_units)
+//        goalLinear = dialogView.findViewById(R.id.todo_item_goal)
+//        habitLinear = dialogView.findViewById(R.id.todo_item_habit)
         rootLayout = dialogView.findViewById(R.id.root_layout_collections_item)
     }
 
     /**
      * 日期选择器对话框监听
      */
-    private val onDateSetListener = OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-        val days: String
-        days = if (monthOfYear + 1 < 10) {
-            if (dayOfMonth < 10) {
-                StringBuffer().append(year).append("年").append("0").append(monthOfYear + 1)
-                    .append("月").append("0").append(dayOfMonth).append("日").toString()
-            } else {
-                StringBuffer().append(year).append("年").append("0").append(monthOfYear + 1)
-                    .append("月").append(dayOfMonth).append("日").toString()
-            }
-        } else {
-            if (dayOfMonth < 10) {
-                StringBuffer().append(year).append("年").append(monthOfYear + 1).append("月")
-                    .append("0").append(dayOfMonth).append("日").toString()
-            } else {
-                StringBuffer().append(year).append("年").append(monthOfYear + 1).append("月")
-                    .append(dayOfMonth).append("日").toString()
-            }
-        }
-        goalDate!!.text = days
-    }
+//    private val onDateSetListener = OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+//        val days: String
+//        days = if (monthOfYear + 1 < 10) {
+//            if (dayOfMonth < 10) {
+//                StringBuffer().append(year).append("年").append("0").append(monthOfYear + 1)
+//                    .append("月").append("0").append(dayOfMonth).append("日").toString()
+//            } else {
+//                StringBuffer().append(year).append("年").append("0").append(monthOfYear + 1)
+//                    .append("月").append(dayOfMonth).append("日").toString()
+//            }
+//        } else {
+//            if (dayOfMonth < 10) {
+//                StringBuffer().append(year).append("年").append(monthOfYear + 1).append("月")
+//                    .append("0").append(dayOfMonth).append("日").toString()
+//            } else {
+//                StringBuffer().append(year).append("年").append(monthOfYear + 1).append("月")
+//                    .append(dayOfMonth).append("日").toString()
+//            }
+//        }
+//        goalDate!!.text = days
+//    }
 
     init {
         val dialogView = LayoutInflater.from(context)
@@ -327,8 +331,8 @@ class AddTaskMoreDialog(
         window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         setTimeTwoTxt!!.visibility = View.GONE
         setTimeThreeTxt!!.visibility = View.GONE
-        goalLinear!!.visibility = View.GONE
-        habitLinear!!.visibility = View.GONE
+//        goalLinear!!.visibility = View.GONE
+//        habitLinear!!.visibility = View.GONE
         task.categoryId = categoryId
         setListeners()
 

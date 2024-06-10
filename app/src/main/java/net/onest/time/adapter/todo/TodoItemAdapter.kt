@@ -107,8 +107,7 @@ class TodoItemAdapter(private val context: Context, itemListByDay: List<TaskVo>)
                     intent = Intent()
                     intent!!.setClass(context, TimerActivity::class.java)
                     intent!!.putExtra("method", "forWard")
-                    intent!!.putExtra("name", itemListByDay[position].taskName)
-                    intent!!.putExtra("taskId", itemListByDay[position].taskId)
+                    intent!!.putExtra("task", itemListByDay[position])
                     context.startActivity(
                         intent, ActivityOptions.makeSceneTransitionAnimation(
                             context as Activity, holders.btn, "fab"
@@ -138,13 +137,10 @@ class TodoItemAdapter(private val context: Context, itemListByDay: List<TaskVo>)
                         .toTypedArray()
                     val num = parts[0]
                     //                int num = Integer.parseInt(parts[0]);
-                    intent?.run {
-                        putExtra("task",task)
-                    }
+
                     intent!!.putExtra("time", num)
+                    intent!!.putExtra("task", itemListByDay[position])
                     intent!!.putExtra("method", "countDown")
-                    intent!!.putExtra("name", itemListByDay[position].taskName)
-                    intent!!.putExtra("taskId", itemListByDay[position].taskId)
                     intent!!.putExtra("start", "go")
                     intent!!.setClass(context, TimerActivity::class.java)
                     context.startActivity(
