@@ -108,43 +108,43 @@ class PersonFragment : Fragment() {
 //        binding.aboutUs.withOnClickInfoDialog("关于时光")
 
         //通用
-        binding.general.setOnClickListener{
-            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val generalView = inflater.inflate(R.layout.activity_general_switch_dialog, null)
-            val remindSwitch = generalView.findViewById<Switch>(R.id.message_remind_switch)
-            val modeSwitch = generalView.findViewById<Switch>(R.id.mode_switch)
-            val screenSwitch = generalView.findViewById<Switch>(R.id.landscape_screen_switch)
-            remindSwitch?.setOnClickListener {
-                if (remindSwitch.isChecked){
-                    Toast.makeText(requireContext(), "已开启", Toast.LENGTH_SHORT).show()
-                }else{
-                    Toast.makeText(requireContext(), "已关闭", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-//            modeSwitch?.setOnClickListener{
-//                if (AppCompatDelegate.getDefaultNightMode()==AppCompatDelegate.MODE_NIGHT_YES){
-//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//        binding.general.setOnClickListener{
+//            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+//            val generalView = inflater.inflate(R.layout.activity_general_switch_dialog, null)
+//            val remindSwitch = generalView.findViewById<Switch>(R.id.message_remind_switch)
+//            val modeSwitch = generalView.findViewById<Switch>(R.id.mode_switch)
+//            val screenSwitch = generalView.findViewById<Switch>(R.id.landscape_screen_switch)
+//            remindSwitch?.setOnClickListener {
+//                if (remindSwitch.isChecked){
+//                    Toast.makeText(requireContext(), "已开启", Toast.LENGTH_SHORT).show()
 //                }else{
-//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//                    Toast.makeText(requireContext(), "已关闭", Toast.LENGTH_SHORT).show()
 //                }
-//                recreate(requireActivity())
 //            }
-            MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("通用")
-                    .setView(generalView)
-                    .show()
-        }
+//
+////            modeSwitch?.setOnClickListener{
+////                if (AppCompatDelegate.getDefaultNightMode()==AppCompatDelegate.MODE_NIGHT_YES){
+////                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+////                }else{
+////                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+////                }
+////                recreate(requireActivity())
+////            }
+//            MaterialAlertDialogBuilder(requireContext())
+//                    .setTitle("通用")
+//                    .setView(generalView)
+//                    .show()
+//        }
 
         //辅助功能
-        binding.accessibility.setOnClickListener{
-            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val accessibilityView = inflater.inflate(R.layout.activity_accessibilty_switch_page, null)
-            MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("辅助功能")
-                    .setView(accessibilityView)
-                    .show()
-        }
+//        binding.accessibility.setOnClickListener{
+//            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+//            val accessibilityView = inflater.inflate(R.layout.activity_accessibilty_switch_page, null)
+//            MaterialAlertDialogBuilder(requireContext())
+//                    .setTitle("辅助功能")
+//                    .setView(accessibilityView)
+//                    .show()
+//        }
 
         ///常见问题
         binding.commonProblem.setOnClickListener{
@@ -165,19 +165,19 @@ class PersonFragment : Fragment() {
         }
 
         //意见反馈
-        binding.feedback.setOnClickListener {
-            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val generalView = inflater.inflate(R.layout.activity_feedback_dialog, null)
-            val inputText = generalView.findViewById<TextInputEditText>(R.id.edt_feedback)
-            MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("意见反馈")
-                    .setView(generalView)
-                    .setPositiveButton("确定") { dialog, which ->
-                        Toast.makeText(requireContext(), "反馈已提交", Toast.LENGTH_SHORT).show()
-                        dialog.dismiss()
-                    }
-                    .show()
-        }
+//        binding.feedback.setOnClickListener {
+//            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+//            val generalView = inflater.inflate(R.layout.activity_feedback_dialog, null)
+//            val inputText = generalView.findViewById<TextInputEditText>(R.id.edt_feedback)
+//            MaterialAlertDialogBuilder(requireContext())
+//                    .setTitle("意见反馈")
+//                    .setView(generalView)
+//                    .setPositiveButton("确定") { dialog, which ->
+//                        Toast.makeText(requireContext(), "反馈已提交", Toast.LENGTH_SHORT).show()
+//                        dialog.dismiss()
+//                    }
+//                    .show()
+//        }
     }
 
     /**
@@ -237,7 +237,7 @@ class PersonFragment : Fragment() {
         userSignature = view.findViewById(R.id.user_signature)
         change = view.findViewById(R.id.btn_change)
         exit = view.findViewById(R.id.btn_exit)
-        general = view.findViewById(R.id.general)
+//        general = view.findViewById(R.id.general)
         privacy = view.findViewById(R.id.privacy_policy_summary);
     }
 
