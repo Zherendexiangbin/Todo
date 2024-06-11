@@ -13,12 +13,9 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.text.InputFilter.LengthFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewPropertyAnimator
-import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -45,10 +42,17 @@ import net.onest.time.api.StatisticApi
 import net.onest.time.api.vo.statistic.StatisticVo
 import net.onest.time.databinding.RecordFragmentBinding
 import net.onest.time.navigation.activity.RankingListActivity
-import net.onest.time.utils.*
-import okhttp3.internal.wait
+import net.onest.time.utils.ColorUtil
+import net.onest.time.utils.DateUtil
+import net.onest.time.utils.createBitmap
+import net.onest.time.utils.dayString
+import net.onest.time.utils.doShakeAnimation
+import net.onest.time.utils.drawUserWatermark
+import net.onest.time.utils.monthString
+import net.onest.time.utils.saveBitmapCache
+import net.onest.time.utils.showToast
+import net.onest.time.utils.weekString
 import java.time.Instant
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.SortedMap
@@ -340,7 +344,7 @@ class RecordFragment : Fragment() {
                 return ""
             }
         }
-        barHor!!.axisLeft.axisMaximum = 2000f //Y轴最大数值
+        barHor!!.axisLeft.axisMaximum = 480f //Y轴最大数值
         barHor!!.axisLeft.axisMinimum = 0f //Y轴最小数值
 
         //设置动画

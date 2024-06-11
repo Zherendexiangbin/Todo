@@ -26,6 +26,7 @@ import net.onest.time.navigation.activity.RegisterActivity
 import net.onest.time.navigation.activity.ResetPasswordActivity
 import net.onest.time.utils.StringUtil.isEmail
 import net.onest.time.utils.StringUtil.isPhone
+import net.onest.time.utils.setUserInfoFromLocal
 
 class MainActivity : AppCompatActivity() {
     private var logo: ImageView? = null
@@ -73,13 +74,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (userInfo != null) {
-            application
-                .applicationContext
-                .getSharedPreferences(SharedPreferencesConstant.USER_INFO, MODE_PRIVATE)
-                .edit()
-                .putString(UserInfoConstant.USER_INFO, RequestUtil.getGson().toJson(userInfo))
-                .apply()
-
+            setUserInfoFromLocal(userInfo)
             loginSuccess()
         }
     }
@@ -99,6 +94,7 @@ class MainActivity : AppCompatActivity() {
                 var token: String? = null
                 try {
                     token = UserApi.login(userDto)
+                    setUserInfoFromLocal(UserApi.getUserInfo())
                 } catch (e: Exception) {
                     Log.e(TAG, e.message!!)
                 }

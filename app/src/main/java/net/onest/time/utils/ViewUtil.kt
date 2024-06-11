@@ -1,9 +1,7 @@
 package net.onest.time.utils
 
-import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -18,15 +16,15 @@ import android.view.View
 import android.view.Window
 import androidx.core.content.FileProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.gson.reflect.TypeToken
-import net.onest.time.MainActivity
 import net.onest.time.api.utils.RequestUtil
-import net.onest.time.api.vo.Message
 import net.onest.time.api.vo.UserVo
 import net.onest.time.constant.SharedPreferencesConstant
 import net.onest.time.constant.UserInfoConstant
 import java.io.File
 import java.time.LocalDate
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 
 /**
  * 将View转换成Bitmap
@@ -115,9 +113,30 @@ fun Bitmap.drawUserWatermark(): Bitmap {
     val userVo = RequestUtil.getGson().fromJson(json, UserVo::class.java)
     val username = "@${userVo.userName}"
 
-    canvas.drawText(username, this.width - username.length * 36 - 44f, this.height - 44f, paint)
+    canvas.drawText(username, this.width - getPx(username) - 44f, this.height - 44f, paint)
 
     return this
+}
+
+private fun getPx(username: String): Int {
+    var sum = 0
+    for (c in username) {
+        if (checkCountName(c.toString())) {
+            sum += 64
+        } else {
+            sum += 32
+        }
+    }
+    return sum
+}
+
+private fun checkCountName(countname: String): Boolean {
+    val p: Pattern = Pattern.compile("[\u4e00-\u9fa5]")
+    val m: Matcher = p.matcher(countname)
+    if (m.find()) {
+        return true
+    }
+    return false
 }
 
 fun View.withOnClickInfoDialog(
