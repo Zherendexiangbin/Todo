@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:background="@drawable/shape_bottom_ivory">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/shape_bottom_ivory">
     <!--查看自习室加入请求信息、邀请码-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,6 +32,17 @@
             android:text="555 - 123"
             android:textSize="20sp"
             android:textColor="@color/black"/>
+        <Button
+                android:id="@+id/share_invitation_code"
+                android:layout_gravity="center"
+                android:padding="0dp"
+                android:layout_marginEnd="14dp"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:icon="@mipmap/share"
+                app:iconTint="@color/black"
+                android:backgroundTint="@color/transparent"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
