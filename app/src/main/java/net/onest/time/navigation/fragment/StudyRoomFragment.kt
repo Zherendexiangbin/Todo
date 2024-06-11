@@ -461,6 +461,7 @@ class StudyRoomFragment : Fragment() {
         private var refresh: ImageView? = null
         private var applicationList: RecyclerView? = null
         private var applicationItemAdapter: ApplicationItemAdapter? = null
+        private lateinit var shareInvitationCode: Button
         private var userVos2: List<UserVo>? = ArrayList()
 
         init {
@@ -501,6 +502,7 @@ class StudyRoomFragment : Fragment() {
             applicationCode = view2.findViewById(R.id.application_code)
             refresh = view2.findViewById(R.id.refresh)
             applicationList = view2.findViewById(R.id.application_list)
+            shareInvitationCode = view2.findViewById(R.id.share_invitation_code)
 
             try {
                 userVos2 = RoomApi.findRequests(roomVo!!.roomId)
@@ -514,6 +516,19 @@ class StudyRoomFragment : Fragment() {
 
             // 获取自习室邀请码
             applicationCode?.text = RoomApi.generateInvitationCode(roomVo!!.roomId)
+
+            // 分享邀请码
+            shareInvitationCode.setOnClickListener {
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.putExtra(Intent.EXTRA_TEXT, """
+                    我在Time自习室学习，快来加入我们吧！
+                    自习室邀请码：${applicationCode?.text}
+                """.trimIndent())
+
+                intent.setType("text/plain");
+
+                context?.startActivity(intent)
+            }
 
             // 刷新获取房间申请列表
             refresh?.setOnClickListener { view1: View? ->
